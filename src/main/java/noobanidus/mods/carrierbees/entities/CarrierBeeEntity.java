@@ -82,7 +82,7 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
   @Override
   protected void registerGoals() {
     this.goalSelector.addGoal(0, new CarrierBeeEntity.StingGoal(this, 1.4D, true));
-    this.goalSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true);
+    this.goalSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
     this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D));
     this.goalSelector.addGoal(3, new TemptGoal(this, 1.25D, Ingredient.fromTag(ItemTags.field_226159_I_), false));
     this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.25D));
