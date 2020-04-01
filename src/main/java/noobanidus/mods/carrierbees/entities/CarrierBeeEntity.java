@@ -24,7 +24,6 @@ import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.DamageSource;
@@ -45,8 +44,8 @@ import noobanidus.mods.carrierbees.CarrierBees;
 import noobanidus.mods.carrierbees.init.ModEntities;
 
 import javax.annotation.Nullable;
-import java.util.EnumSet;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
   private static final DataParameter<Byte> multipleByteTracker = EntityDataManager.createKey(CarrierBeeEntity.class, DataSerializers.BYTE);
@@ -56,6 +55,8 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
   private float lastPitch;
   private int ticksSinceSting;
   private int ticksInsideWater;
+  private List<EffectBuilder> effects = new ArrayList<>();
+  private float attackDamage = -1;
 
   public CarrierBeeEntity(EntityType<? extends CarrierBeeEntity> type, World world) {
     super(type, world);
@@ -82,9 +83,6 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
   @Override
   protected void registerGoals() {
     this.goalSelector.addGoal(0, new CarrierBeeEntity.StingGoal(this, 1.4D, true));
-    this.goalSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
-    this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D));
-    this.goalSelector.addGoal(3, new TemptGoal(this, 1.25D, Ingredient.fromTag(ItemTags.field_226159_I_), false));
     this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.25D));
     this.goalSelector.addGoal(8, new CarrierBeeEntity.WanderGoal());
     this.goalSelector.addGoal(9, new SwimGoal(this));
@@ -101,6 +99,12 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
       tag.putString("HurtBy", this.targetPlayer.toString());
     } else {
       tag.putString("HurtBy", "");
+    }
+    tag.putFloat("attackDamage", attackDamage);
+    if (!effects.isEmpty()) {
+      ListNBT list = new ListNBT();
+      list.addAll(effects.stream().map(EffectBuilder::asTag).collect(Collectors.toList()));
+      tag.put("effects", list);
     }
   }
 
@@ -119,6 +123,31 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
         this.recentlyHit = this.getRevengeTimer();
       }
     }
+    if (tag.contains("attackDamage", Constants.NBT.TAG_INT)) {
+      attackDamage = (float) tag.getInt("attackDamage");
+    } else if (tag.contains("attackDamage", Constants.NBT.TAG_FLOAT)) {
+      attackDamage = tag.getFloat("attackDamage");
+    }
+    effects.clear();
+    if (tag.contains("effects", Constants.NBT.TAG_LIST)) {
+      ListNBT listEffects = tag.getList("effects", Constants.NBT.TAG_COMPOUND);
+      for (int i = 0; i < listEffects.size(); i++) {
+        CompoundNBT thisTag = listEffects.getCompound(i);
+        if (thisTag.contains("d", Constants.NBT.TAG_INT) && thisTag.contains("n", Constants.NBT.TAG_STRING) && thisTag.contains("a", Constants.NBT.TAG_INT)) {
+          ResourceLocation rl = new ResourceLocation(thisTag.getString("n"));
+          Effect e = ForgeRegistries.POTIONS.getValue(rl);
+          if (e == null) {
+            CarrierBees.LOG.error("Invalid effect name: '" + rl.toString() + "', full tag: " + thisTag.toString());
+          } else {
+            int dur = thisTag.getInt("d");
+            int amp = thisTag.getInt("a");
+            effects.add(new EffectBuilder(e, dur, amp));
+          }
+        } else {
+          CarrierBees.LOG.error("Invalid effect tag: " + thisTag.toString());
+        }
+      }
+    }
   }
 
   @Override
@@ -131,39 +160,20 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
         this.applyEnchantments(this, target);
         if (target instanceof LivingEntity) {
           ((LivingEntity) target).setStingerCount(((LivingEntity) target).getStingerCount() + 1);
-          Effect e = Effects.POISON;
-          int dur = -1;
-          int amp = 0;
-          if (data.contains("effects", Constants.NBT.TAG_LIST)) {
-            ListNBT effectData = data.getList("effects", Constants.NBT.TAG_COMPOUND);
-            if (!effectData.isEmpty()) {
-              int index = rand.nextInt(effectData.size());
-              CompoundNBT effect = effectData.getCompound(index);
-              if (effect.contains("d", Constants.NBT.TAG_INT) && effect.contains("n", Constants.NBT.TAG_STRING) && effect.contains("a", Constants.NBT.TAG_INT)) {
-                String name = effect.getString("n");
-                Effect potionEffect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(name));
-                if (potionEffect == null) {
-                  CarrierBees.LOG.error("Effect Data for bee " + this + " contains invalid effect name: " + name + " is not valid. Full data: " + effect.toString());
-                } else {
-                  dur = effect.getInt("d");
-                  amp = effect.getInt("a");
-                  e = potionEffect;
-                }
-              } else {
-                CarrierBees.LOG.error("Effect Data for bee " + this + " contains invalid effect: missing duration, name or amplifier: " + effect.toString());
-              }
-            }
-          }
-          if (dur == -1) {
+          if (effects.isEmpty()) {
+            Effect e = Effects.POISON;
+            int dur = 0;
             if (this.world.getDifficulty() == Difficulty.NORMAL) {
               dur = 10 * 20;
             } else if (this.world.getDifficulty() == Difficulty.HARD) {
               dur = 18 * 20;
             }
-          }
 
-          if (dur > 0) {
-            ((LivingEntity) target).addPotionEffect(new EffectInstance(e, dur, amp));
+            if (dur > 0) {
+              ((LivingEntity) target).addPotionEffect(new EffectInstance(e, dur, 0));
+            }
+          } else {
+            ((LivingEntity) target).addPotionEffect(effects.get(rand.nextInt(effects.size())).build());
           }
         }
 
@@ -175,14 +185,12 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
       return attacked;
     }
 
-    if (data.contains("attackDamage", Constants.NBT.TAG_FLOAT)) {
-      damage = data.getFloat("attackDamage");
-    } else if (data.contains("attackDamage", Constants.NBT.TAG_INT)) {
-      damage = (float) data.getInt("attackDamage");
-    }
-
-    if (damage <= 0.0f) {
-      return false;
+    if (attackDamage != -1.0f) {
+      if (attackDamage == 0) {
+        return false;
+      } else {
+        return target.attackEntityFrom(DamageSource.causeMobDamage(this), attackDamage);
+      }
     }
 
     return target.attackEntityFrom(DamageSource.causeMobDamage(this), damage);
@@ -430,12 +438,12 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
 
     @Override
     public boolean shouldExecute() {
-      return super.shouldExecute() && CarrierBeeEntity.this.isAngry() && !CarrierBeeEntity.this.hasStung();
+      return super.shouldExecute() && CarrierBeeEntity.this.isAngry();
     }
 
     @Override
     public boolean shouldContinueExecuting() {
-      return super.shouldContinueExecuting() && CarrierBeeEntity.this.isAngry() && !CarrierBeeEntity.this.hasStung();
+      return super.shouldContinueExecuting() && CarrierBeeEntity.this.isAngry();
     }
   }
 
@@ -513,7 +521,7 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
 
     private boolean canSting() {
       CarrierBeeEntity bee = (CarrierBeeEntity) this.goalOwner;
-      return bee.isAngry() && !bee.hasStung();
+      return bee.isAngry();
     }
   }
 
@@ -527,6 +535,30 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
       if (bee instanceof CarrierBeeEntity && this.goalOwner.canEntityBeSeen(target) && ((CarrierBeeEntity) bee).setBeeAttacker(target)) {
         bee.setAttackTarget(target);
       }
+    }
+  }
+
+  public static class EffectBuilder {
+    private Effect effect;
+    private int duration;
+    private int amplifier;
+
+    public EffectBuilder(Effect effect, int duration, int amplifier) {
+      this.effect = effect;
+      this.duration = duration;
+      this.amplifier = amplifier;
+    }
+
+    public EffectInstance build() {
+      return new EffectInstance(effect, duration, amplifier);
+    }
+
+    public CompoundNBT asTag() {
+      CompoundNBT tag = new CompoundNBT();
+      tag.putInt("d", duration);
+      tag.putInt("a", amplifier);
+      tag.putString("n", Objects.requireNonNull(effect.getRegistryName()).toString());
+      return tag;
     }
   }
 }
