@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -95,6 +96,7 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
     super.writeAdditional(tag);
     tag.putBoolean("HasStung", this.hasStung());
     tag.putInt("Anger", this.getAnger());
+    PacketBuffer
     if (this.targetPlayer != null) {
       tag.putString("HurtBy", this.targetPlayer.toString());
     } else {
