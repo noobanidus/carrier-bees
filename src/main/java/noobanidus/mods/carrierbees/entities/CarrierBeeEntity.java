@@ -11,10 +11,8 @@ import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -25,7 +23,6 @@ import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -42,6 +39,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.registries.ForgeRegistries;
 import noobanidus.mods.carrierbees.CarrierBees;
+import noobanidus.mods.carrierbees.entities.projectiles.HoneyCombEntity;
 import noobanidus.mods.carrierbees.init.ModEntities;
 
 import javax.annotation.Nullable;
@@ -84,11 +82,13 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
   @Override
   protected void registerGoals() {
     this.goalSelector.addGoal(0, new CarrierBeeEntity.StingGoal(this, 1.4D, true));
+    this.goalSelector.addGoal(1, new CarrierBeeEntity.HoneycombProjectileAttackGoal(this));
     this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.25D));
+    this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
     this.goalSelector.addGoal(8, new CarrierBeeEntity.WanderGoal());
     this.goalSelector.addGoal(9, new SwimGoal(this));
     this.targetSelector.addGoal(1, (new CarrierBeeEntity.AngerGoal(this)).setCallsForHelp());
-    this.targetSelector.addGoal(2, new CarrierBeeEntity.AttackPlayerGoal(this));
+    this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, (pos) -> Math.abs(pos.getY() - this.getY()) <= 4.0D));
   }
 
   @Override
@@ -96,7 +96,6 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
     super.writeAdditional(tag);
     tag.putBoolean("HasStung", this.hasStung());
     tag.putInt("Anger", this.getAnger());
-    PacketBuffer
     if (this.targetPlayer != null) {
       tag.putString("HurtBy", this.targetPlayer.toString());
     } else {
@@ -154,7 +153,6 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
 
   @Override
   public boolean attackEntityAsMob(Entity target) {
-    CompoundNBT data = getPersistentData();
     float damage = ((int) this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getValue());
     if (!hasStung()) {
       boolean attacked = target.attackEntityFrom(DamageSource.sting(this), damage);
@@ -322,7 +320,7 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
     super.registerAttributes();
     this.getAttributes().registerAttribute(SharedMonsterAttributes.FLYING_SPEED);
     this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(16.0D);
-    this.getAttribute(SharedMonsterAttributes.FLYING_SPEED).setBaseValue(0.72D);
+    this.getAttribute(SharedMonsterAttributes.FLYING_SPEED).setBaseValue(0.32D);
     this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.33D);
     this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(4.0D);
     this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(128.0D);
@@ -500,33 +498,6 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
     }
   }
 
-  static class AttackPlayerGoal extends NearestAttackableTargetGoal<PlayerEntity> {
-    AttackPlayerGoal(CarrierBeeEntity bee) {
-      super(bee, PlayerEntity.class, true);
-    }
-
-    @Override
-    public boolean shouldExecute() {
-      return this.canSting() && super.shouldExecute();
-    }
-
-    @Override
-    public boolean shouldContinueExecuting() {
-      boolean canSting = this.canSting();
-      if (canSting && this.goalOwner.getAttackTarget() != null) {
-        return super.shouldContinueExecuting();
-      } else {
-        this.target = null;
-        return false;
-      }
-    }
-
-    private boolean canSting() {
-      CarrierBeeEntity bee = (CarrierBeeEntity) this.goalOwner;
-      return bee.isAngry();
-    }
-  }
-
   class AngerGoal extends HurtByTargetGoal {
     AngerGoal(CarrierBeeEntity bee) {
       super(bee);
@@ -536,6 +507,67 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
     protected void setAttackTarget(MobEntity bee, LivingEntity target) {
       if (bee instanceof CarrierBeeEntity && this.goalOwner.canEntityBeSeen(target) && ((CarrierBeeEntity) bee).setBeeAttacker(target)) {
         bee.setAttackTarget(target);
+      }
+    }
+  }
+
+  static class HoneycombProjectileAttackGoal extends Goal {
+    private final CarrierBeeEntity parentEntity;
+    public int attackTimer;
+
+    public HoneycombProjectileAttackGoal(CarrierBeeEntity bee) {
+      this.parentEntity = bee;
+    }
+
+    /**
+     * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
+     * method as well.
+     */
+    @Override
+    public boolean shouldExecute() {
+      return this.parentEntity.getAttackTarget() != null;
+    }
+
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    @Override
+    public void startExecuting() {
+      this.attackTimer = 0;
+    }
+
+    /**
+     * Reset the task's internal state. Called when this task is interrupted by another one
+     */
+    @Override
+    public void resetTask() {
+    }
+
+    /**
+     * Keep ticking a continuous task that has already been started
+     */
+    @Override
+    public void tick() {
+      LivingEntity livingentity = this.parentEntity.getAttackTarget();
+      if (livingentity == null) {
+        return;
+      }
+      if (livingentity.getDistanceSq(this.parentEntity) < 400D && this.parentEntity.canEntityBeSeen(livingentity)) {
+        World world = this.parentEntity.world;
+        ++this.attackTimer;
+        if (this.attackTimer == 20) {
+          Vec3d vec3d = this.parentEntity.getPositionVec();
+          //getLook(1.0F);
+          double d2 = livingentity.getX() - (this.parentEntity.getX() /*+ vec3d.x * 4.0D*/);
+          double d3 = livingentity.getBodyY(0.5D) - (0.5D + this.parentEntity.getBodyY(0.5D));
+          double d4 = livingentity.getZ() - (this.parentEntity.getZ() /*+ vec3d.z * 4.0D*/);
+          HoneyCombEntity honeycomb = new HoneyCombEntity(this.parentEntity, d2, d3, d4, world);
+          honeycomb.setPosition(this.parentEntity.getX(), this.parentEntity.getBodyY(0.5D) + 0.5D, honeycomb.getZ());
+          world.addEntity(honeycomb);
+          this.attackTimer = -40;
+        }
+      } else if (this.attackTimer > 0) {
+        --this.attackTimer;
       }
     }
   }

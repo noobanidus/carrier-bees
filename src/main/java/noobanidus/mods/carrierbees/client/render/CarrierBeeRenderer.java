@@ -29,6 +29,7 @@ public class CarrierBeeRenderer extends MobRenderer<CarrierBeeEntity, CarrierBee
     stack.pop();
   }
 
+  @Override
   public ResourceLocation getEntityTexture(CarrierBeeEntity bee) {
     if (bee.isAngry()) {
       return ANGRY_SKIN;

@@ -23,6 +23,7 @@ public class BeeHeldItemLayer<T extends CarrierBeeEntity, M extends CarrierBeeMo
     super(bee);
   }
 
+  @Override
   public void render(MatrixStack matrixStack, IRenderTypeBuffer buffer, int light, T entity, float p_225628_5_, float p_225628_6_, float p_225628_7_, float p_225628_8_, float p_225628_9_, float p_225628_10_) {
     ItemStack itemstack = entity.getHeldItemMainhand();
     if (itemstack.isEmpty()) {
