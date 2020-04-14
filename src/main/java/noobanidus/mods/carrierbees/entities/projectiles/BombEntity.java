@@ -7,7 +7,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.DamagingProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.particles.IParticleData;
@@ -21,6 +20,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
+import noobanidus.mods.carrierbees.config.ConfigManager;
+import noobanidus.mods.carrierbees.entities.BombleBeeEntity;
 import noobanidus.mods.carrierbees.init.ModEntities;
 import noobanidus.mods.carrierbees.world.BeeExplosion;
 
@@ -30,31 +31,13 @@ import noobanidus.mods.carrierbees.world.BeeExplosion;
 )
 public class BombEntity extends DamagingProjectileEntity implements IEntityAdditionalSpawnData, IRendersAsItem {
   public static ItemStack BOMB = new ItemStack(Items.TNT);
-  private float size = 1.5f;
-  private float damage = 6f;
 
   public BombEntity(EntityType<? extends BombEntity> type, World world) {
     super(type, world);
   }
 
-  @Override
-  public void writeAdditional(CompoundNBT tag) {
-    super.writeAdditional(tag);
-    tag.putFloat("damage", damage);
-    tag.putFloat("size", size);
-  }
-
-  @Override
-  public void readAdditional(CompoundNBT tag) {
-    super.readAdditional(tag);
-    damage = tag.getFloat("damage");
-    size = tag.getFloat("size");
-  }
-
-  public BombEntity(LivingEntity parent, double accelX, double accelY, double accelZ, float size, float damage, World world) {
+  public BombEntity(LivingEntity parent, double accelX, double accelY, double accelZ, World world) {
     super(ModEntities.BOMB_PROJECTILE.get(), parent, accelX, accelY, accelZ, world);
-    this.size = size;
-    this.damage = damage;
   }
 
   @Override
@@ -80,11 +63,11 @@ public class BombEntity extends DamagingProjectileEntity implements IEntityAddit
         EntityRayTraceResult eray = (EntityRayTraceResult) ray;
         Entity entity = eray.getEntity();
         if (entity != this && entity != this.shootingEntity) {
-          entity.attackEntityFrom(DamageSource.causeExplosionDamage(this.shootingEntity), damage);
+          entity.attackEntityFrom(DamageSource.GENERIC, ConfigManager.getExplosionDamage());
         }
       }
     }
-    BeeExplosion.createExplosion(this.world, this, this.getX(), this.getBodyY(0.0625D), this.getZ(), size, damage);
+    BeeExplosion.createExplosion(this.world, this, this.getX(), this.getBodyY(0.0625D), this.getZ());
     if (!world.isRemote) {
       this.remove();
     }
@@ -97,8 +80,6 @@ public class BombEntity extends DamagingProjectileEntity implements IEntityAddit
 
   @Override
   public void writeSpawnData(PacketBuffer buffer) {
-    buffer.writeFloat(damage);
-    buffer.writeFloat(size);
     buffer.writeDouble(accelerationX);
     buffer.writeDouble(accelerationY);
     buffer.writeDouble(accelerationZ);
@@ -106,8 +87,6 @@ public class BombEntity extends DamagingProjectileEntity implements IEntityAddit
 
   @Override
   public void readSpawnData(PacketBuffer additionalData) {
-    damage = additionalData.readFloat();
-    size = additionalData.readFloat();
     accelerationX = additionalData.readDouble();
     accelerationY = additionalData.readDouble();
     accelerationZ = additionalData.readDouble();

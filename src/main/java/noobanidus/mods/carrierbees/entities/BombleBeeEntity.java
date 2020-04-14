@@ -45,8 +45,8 @@ public class BombleBeeEntity extends AnimalEntity implements IFlyingAnimal {
   private float currentPitch;
   private float lastPitch;
   private int ticksInsideWater;
-  private float explosionDamage;
-  private float explosionSize;
+  public float explosionDamage;
+  public float explosionSize;
 
   public BombleBeeEntity(EntityType<? extends BombleBeeEntity> type, World world) {
     super(type, world);
@@ -72,13 +72,13 @@ public class BombleBeeEntity extends AnimalEntity implements IFlyingAnimal {
 
   @Override
   protected void registerGoals() {
-    this.goalSelector.addGoal(0, new AvoidEntityGoal<>(this, PlayerEntity.class, 16.0f, 6.5D, 1.8D));
+    this.goalSelector.addGoal(0, new AvoidEntityGoal<>(this, PlayerEntity.class, 8.0f, 6.5D, 1.8D));
     this.goalSelector.addGoal(1, new BombProjectileAttackGoal(this));
-    this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 48.0F));
+    this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 12.0F));
     this.goalSelector.addGoal(8, new BombleBeeEntity.WanderGoal());
     this.goalSelector.addGoal(9, new SwimGoal(this));
     this.targetSelector.addGoal(1, (new BombleBeeEntity.AngerGoal(this)).setCallsForHelp());
-    this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 48, true, false, (pos) -> Math.abs(pos.getY() - this.getY()) <= 48.0D));
+    this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 12, true, false, (pos) -> Math.abs(pos.getY() - this.getY()) <= 12.0D));
   }
 
   @Override
@@ -154,7 +154,6 @@ public class BombleBeeEntity extends AnimalEntity implements IFlyingAnimal {
     if (target != null) {
       this.targetPlayer = target.getUniqueID();
     }
-
   }
 
   @Override
@@ -195,7 +194,7 @@ public class BombleBeeEntity extends AnimalEntity implements IFlyingAnimal {
   @Override
   public void onDeath(DamageSource death) {
     super.onDeath(death);
-    BeeExplosion.createExplosion(this.world, this, this.getX(), this.getBodyY(0.0625D), this.getZ(), explosionSize, explosionDamage);
+    BeeExplosion.createExplosion(this.world, this, this.getX(), this.getBodyY(0.0625D), this.getZ());
   }
 
   @Override
@@ -203,8 +202,8 @@ public class BombleBeeEntity extends AnimalEntity implements IFlyingAnimal {
     super.registerAttributes();
     this.getAttributes().registerAttribute(SharedMonsterAttributes.FLYING_SPEED);
     this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(30.0D);
-    this.getAttribute(SharedMonsterAttributes.FLYING_SPEED).setBaseValue(0.82D);
-    this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.53D);
+    this.getAttribute(SharedMonsterAttributes.FLYING_SPEED).setBaseValue(2.52D);
+    this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(2.53D);
     this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(128.0D);
   }
 
@@ -400,7 +399,7 @@ public class BombleBeeEntity extends AnimalEntity implements IFlyingAnimal {
           double d2 = livingentity.getX() - this.parentEntity.getX();
           double d3 = livingentity.getBodyY(0.5D) - (0.5D + this.parentEntity.getBodyY(0.5D));
           double d4 = livingentity.getZ() - this.parentEntity.getZ();
-          BombEntity bomb = new BombEntity(this.parentEntity, d2, d3, d4, parentEntity.explosionSize, parentEntity.explosionDamage, world);
+          BombEntity bomb = new BombEntity(this.parentEntity, d2, d3, d4, world);
           bomb.setPosition(this.parentEntity.getX(), this.parentEntity.getBodyY(0.5D) + 0.5D, bomb.getZ());
           world.addEntity(bomb);
           this.attackTimer = -40;

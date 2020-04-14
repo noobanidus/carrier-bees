@@ -15,6 +15,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
+import noobanidus.mods.carrierbees.config.ConfigManager;
 import noobanidus.mods.carrierbees.entities.BombleBeeEntity;
 import noobanidus.mods.carrierbees.entities.projectiles.BombEntity;
 
@@ -28,13 +29,11 @@ public class BeeExplosion extends Explosion {
   private final double y;
   private final double z;
   private final Entity exploder;
-  private final float size;
-  private final float damage;
   private DamageSource damageSource;
   private final Vec3d position;
 
-  public static BeeExplosion createExplosion(World world, Entity entity, double x, double y, double z, float size, float damage) {
-    final BeeExplosion explosion = new BeeExplosion(world, entity, x, y, z, size, damage, Mode.BREAK);
+  public static BeeExplosion createExplosion(World world, Entity entity, double x, double y, double z) {
+    final BeeExplosion explosion = new BeeExplosion(world, entity, x, y, z, Mode.BREAK);
     if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(world, explosion)) return explosion;
 
     explosion.doExplosionA();
@@ -42,12 +41,10 @@ public class BeeExplosion extends Explosion {
     return explosion;
   }
 
-  public BeeExplosion(World world, @Nullable Entity entity, double x, double y, double z, float size, float damage, Explosion.Mode mode) {
-    super(world, entity, x, y, z, size, false, mode);
+  private BeeExplosion(World world, @Nullable Entity entity, double x, double y, double z, Explosion.Mode mode) {
+    super(world, entity, x, y, z, 4f, false, mode);
     this.world = world;
     this.exploder = entity;
-    this.size = size;
-    this.damage = damage;
     this.x = x;
     this.y = y;
     this.z = z;
@@ -57,7 +54,7 @@ public class BeeExplosion extends Explosion {
 
   @Override
   public void doExplosionA() {
-    float f3 = this.size * 2.0F;
+    float f3 = ConfigManager.getExplosionSize() * 2f;
     int k1 = MathHelper.floor(this.x - (double) f3 - 1.0D);
     int l1 = MathHelper.floor(this.x + (double) f3 + 1.0D);
     int i2 = MathHelper.floor(this.y - (double) f3 - 1.0D);
@@ -72,7 +69,7 @@ public class BeeExplosion extends Explosion {
         continue;
       }
       if (entity instanceof LivingEntity) {
-        entity.attackEntityFrom(this.getDamageSource(), damage);
+        entity.attackEntityFrom(this.getDamageSource(), ConfigManager.getExplosionDamage());
       }
     }
   }
@@ -84,7 +81,7 @@ public class BeeExplosion extends Explosion {
       this.world.playSound(this.x, this.y, this.z, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F, false);
     }
 
-    if (!(this.size < 2.0F)) {
+    if (!(ConfigManager.getExplosionSize() < 2.0F)) {
       this.world.addParticle(ParticleTypes.EXPLOSION_EMITTER, this.x, this.y, this.z, 1.0D, 0.0D, 0.0D);
     } else {
       this.world.addParticle(ParticleTypes.EXPLOSION, this.x, this.y, this.z, 1.0D, 0.0D, 0.0D);

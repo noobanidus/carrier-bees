@@ -34,8 +34,8 @@ public class CarrierBees {
   };
 
   public CarrierBees() {
-/*    ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigManager.COMMON_CONFIG);
-    ConfigManager.loadConfig(ConfigManager.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve(MODID + "-common.toml"));*/
+    ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigManager.COMMON_CONFIG);
+    ConfigManager.loadConfig(ConfigManager.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve(MODID + "-common.toml"));
 
     IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
     modBus.addListener(CommonSetup::setup);

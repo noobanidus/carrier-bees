@@ -54,7 +54,7 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
   private int ticksSinceSting;
   private int ticksInsideWater;
   private List<EffectBuilder> effects = new ArrayList<>();
-  private float attackDamage = -1;
+  public float attackDamage = -1;
 
   public CarrierBeeEntity(EntityType<? extends CarrierBeeEntity> type, World world) {
     super(type, world);
@@ -69,10 +69,6 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
   protected void registerData() {
     super.registerData();
     this.dataManager.register(multipleByteTracker, (byte) 0);
-  }
-
-  public float getAttackDamage() {
-    return attackDamage;
   }
 
   @Override
@@ -202,10 +198,6 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
     this.updateBodyPitch();
   }
 
-  private void addParticle(World world, double x1, double x2, double z1, double z2, double yy, IParticleData particle) {
-    world.addParticle(particle, MathHelper.lerp(world.rand.nextDouble(), x1, x2), yy, MathHelper.lerp(world.rand.nextDouble(), z1, z2), 0.0D, 0.0D, 0.0D);
-  }
-
   @OnlyIn(Dist.CLIENT)
   public float getBodyPitch(float partialTicks) {
     return MathHelper.lerp(partialTicks, this.lastPitch, this.currentPitch);
@@ -290,7 +282,7 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
     if (flag) {
       this.dataManager.set(multipleByteTracker, (byte) (this.dataManager.get(multipleByteTracker) | value));
     } else {
-      this.dataManager.set(multipleByteTracker, (byte) ((Byte) this.dataManager.get(multipleByteTracker) & ~value));
+      this.dataManager.set(multipleByteTracker, (byte) (this.dataManager.get(multipleByteTracker) & ~value));
     }
   }
 
@@ -303,8 +295,8 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
     super.registerAttributes();
     this.getAttributes().registerAttribute(SharedMonsterAttributes.FLYING_SPEED);
     this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(16.0D);
-    this.getAttribute(SharedMonsterAttributes.FLYING_SPEED).setBaseValue(0.32D);
-    this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.33D);
+    this.getAttribute(SharedMonsterAttributes.FLYING_SPEED).setBaseValue(0.12D);
+    this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.12D);
     this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(4.0D);
     this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(128.0D);
   }
@@ -520,7 +512,7 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
           double d2 = livingentity.getX() - this.parentEntity.getX();
           double d3 = livingentity.getBodyY(0.5D) - (0.5D + this.parentEntity.getBodyY(0.5D));
           double d4 = livingentity.getZ() - this.parentEntity.getZ();
-          HoneyCombEntity honeycomb = new HoneyCombEntity(this.parentEntity, d2, d3, d4, this.parentEntity.getAttackDamage(), world);
+          HoneyCombEntity honeycomb = new HoneyCombEntity(this.parentEntity, d2, d3, d4, world);
           honeycomb.setPosition(this.parentEntity.getX(), this.parentEntity.getBodyY(0.5D) + 0.5D, honeycomb.getZ());
           world.addEntity(honeycomb);
           this.attackTimer = -40;
