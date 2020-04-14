@@ -24,6 +24,10 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import noobanidus.mods.carrierbees.init.ModEntities;
 
+@OnlyIn(
+   value = Dist.CLIENT,
+   _interface = IRendersAsItem.class
+)
 public class HoneyCombEntity extends DamagingProjectileEntity implements IEntityAdditionalSpawnData, IRendersAsItem {
   public static ItemStack HONEY_COMB = new ItemStack(Items.field_226635_pU_);
 

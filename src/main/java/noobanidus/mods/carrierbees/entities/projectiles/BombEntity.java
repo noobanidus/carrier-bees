@@ -31,6 +31,10 @@ import noobanidus.mods.carrierbees.entities.BombleBeeEntity;
 import noobanidus.mods.carrierbees.init.ModEntities;
 import noobanidus.mods.carrierbees.world.BeeExplosion;
 
+@OnlyIn(
+   value = Dist.CLIENT,
+   _interface = IRendersAsItem.class
+)
 public class BombEntity extends DamagingProjectileEntity implements IEntityAdditionalSpawnData, IRendersAsItem {
   private static final DataParameter<Float> size = EntityDataManager.createKey(BombEntity.class, DataSerializers.FLOAT);
 
