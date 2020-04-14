@@ -16,7 +16,6 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.particles.IParticleData;
 import net.minecraft.pathfinding.FlyingPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.pathfinding.PathNodeType;
@@ -39,6 +38,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.registries.ForgeRegistries;
 import noobanidus.mods.carrierbees.CarrierBees;
+import noobanidus.mods.carrierbees.config.ConfigManager;
 import noobanidus.mods.carrierbees.entities.projectiles.HoneyCombEntity;
 import noobanidus.mods.carrierbees.init.ModEntities;
 
@@ -80,7 +80,9 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
   @Override
   protected void registerGoals() {
     this.goalSelector.addGoal(0, new CarrierBeeEntity.StingGoal(this, 1.4D, true));
-    this.goalSelector.addGoal(1, new CarrierBeeEntity.HoneycombProjectileAttackGoal(this));
+    if (ConfigManager.getHoneycombDamage() > 0) {
+      this.goalSelector.addGoal(1, new CarrierBeeEntity.HoneycombProjectileAttackGoal(this));
+    }
     this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.25D));
     this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
     this.goalSelector.addGoal(8, new CarrierBeeEntity.WanderGoal());
@@ -478,7 +480,7 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
      */
     @Override
     public boolean shouldExecute() {
-      return this.parentEntity.getAttackTarget() != null && this.parentEntity.attackDamage > 0;
+      return this.parentEntity.getAttackTarget() != null;
     }
 
     /**
@@ -513,7 +515,7 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
           double d3 = livingentity.getBodyY(0.5D) - (0.5D + this.parentEntity.getBodyY(0.5D));
           double d4 = livingentity.getZ() - this.parentEntity.getZ();
           HoneyCombEntity honeycomb = new HoneyCombEntity(this.parentEntity, d2, d3, d4, world);
-          honeycomb.setPosition(this.parentEntity.getX(), this.parentEntity.getBodyY(0.5D) + 0.5D, honeycomb.getZ());
+          honeycomb.setPosition(this.parentEntity.getX(), this.parentEntity.getBodyY(0.5D) + 0.2D, honeycomb.getZ());
           world.addEntity(honeycomb);
           this.attackTimer = -40;
         }
