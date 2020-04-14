@@ -14,6 +14,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import noobanidus.mods.carrierbees.config.ConfigManager;
 import noobanidus.mods.carrierbees.init.ModEntities;
+import noobanidus.mods.carrierbees.init.ModLang;
 import noobanidus.mods.carrierbees.setup.ClientSetup;
 import noobanidus.mods.carrierbees.setup.CommonSetup;
 import org.apache.logging.log4j.LogManager;
@@ -48,5 +49,6 @@ public class CarrierBees {
     REGISTRATE.itemGroup(() -> GROUP);
 
     ModEntities.load();
+    ModLang.load();
   }
 }

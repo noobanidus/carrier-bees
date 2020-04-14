@@ -113,21 +113,6 @@ public class CarrierBeeModel<T extends CarrierBeeEntity> extends AgeableModel<T>
       this.body.rotateAngleZ = 0.0F;
     }
 
-    if (!entity.isAngry()) {
-      this.body.rotateAngleX = 0.0F;
-      this.body.rotateAngleY = 0.0F;
-      this.body.rotateAngleZ = 0.0F;
-      if (!onGround) {
-        v1 = MathHelper.cos(netHeadYaw * 0.18F);
-        this.body.rotateAngleX = 0.1F + v1 * 3.1415927F * 0.025F;
-        this.leftAntenna.rotateAngleX = v1 * 3.1415927F * 0.03F;
-        this.rightAntenna.rotateAngleX = v1 * 3.1415927F * 0.03F;
-        this.frontLegs.rotateAngleX = -v1 * 3.1415927F * 0.1F + 0.3926991F;
-        this.backLegs.rotateAngleX = -v1 * 3.1415927F * 0.05F + 0.7853982F;
-        this.body.rotationPointY = 19.0F - MathHelper.cos(netHeadYaw * 0.18F) * 0.9F;
-      }
-    }
-
     if (this.bodyPitch > 0.0F) {
       this.body.rotateAngleX = ModelUtils.interpolateAngle(this.body.rotateAngleX, 3.0915928F, this.bodyPitch);
     }

@@ -48,7 +48,6 @@ import java.util.stream.Collectors;
 
 public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
   private static final DataParameter<Byte> multipleByteTracker = EntityDataManager.createKey(CarrierBeeEntity.class, DataSerializers.BYTE);
-  private static final DataParameter<Integer> anger = EntityDataManager.createKey(CarrierBeeEntity.class, DataSerializers.VARINT);
   private UUID targetPlayer;
   private float currentPitch;
   private float lastPitch;
@@ -70,7 +69,10 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
   protected void registerData() {
     super.registerData();
     this.dataManager.register(multipleByteTracker, (byte) 0);
-    this.dataManager.register(anger, 0);
+  }
+
+  public float getAttackDamage() {
+    return attackDamage;
   }
 
   @Override
@@ -95,7 +97,6 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
   public void writeAdditional(CompoundNBT tag) {
     super.writeAdditional(tag);
     tag.putBoolean("HasStung", this.hasStung());
-    tag.putInt("Anger", this.getAnger());
     if (this.targetPlayer != null) {
       tag.putString("HurtBy", this.targetPlayer.toString());
     } else {
@@ -113,7 +114,6 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
   public void readAdditional(CompoundNBT tag) {
     super.readAdditional(tag);
     this.setHasStung(tag.getBoolean("HasStung"));
-    this.setAnger(tag.getInt("Anger"));
     String hurtBy = tag.getString("HurtBy");
     if (!hurtBy.isEmpty()) {
       this.targetPlayer = UUID.fromString(hurtBy);
@@ -250,39 +250,22 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
       }
     }
 
-    if (this.isAngry()) {
-      int angerLevel = this.getAnger();
-      this.setAnger(angerLevel - 1);
-      LivingEntity target = this.getAttackTarget();
-      if (angerLevel == 0 && target != null) {
-        this.setBeeAttacker(target);
-      }
+    LivingEntity target = this.getAttackTarget();
+    if (target != null) {
+      this.setBeeAttacker(target);
     }
-  }
-
-  public boolean isAngry() {
-    return this.getAnger() > 0;
-  }
-
-  private int getAnger() {
-    return this.dataManager.get(anger);
-  }
-
-  private void setAnger(int anger) {
-    this.dataManager.set(CarrierBeeEntity.anger, anger);
   }
 
   @Override
   protected void func_213387_K() {
     super.func_213387_K();
-    //DebugPacketSender.sendBeeDebugData(this);
   }
 
   @Override
   public void livingTick() {
     super.livingTick();
     if (!this.world.isRemote) {
-      boolean nearby = this.isAngry() && !this.hasStung() && this.getAttackTarget() != null && this.getAttackTarget().getDistanceSq(this) < 4.0D;
+      boolean nearby = !this.hasStung() && this.getAttackTarget() != null && this.getAttackTarget().getDistanceSq(this) < 4.0D;
       this.setNearTarget(nearby);
     }
   }
@@ -395,7 +378,6 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
   }
 
   public boolean setBeeAttacker(Entity target) {
-    this.setAnger(400 + this.rand.nextInt(400));
     if (target instanceof LivingEntity) {
       this.setRevengeTarget((LivingEntity) target);
     }
@@ -427,36 +409,15 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
     this.setMotion(this.getMotion().add(0.0D, 0.01D, 0.0D));
   }
 
-  private boolean isWithinDistance(BlockPos pos, int distance) {
-    return pos.withinDistance(new BlockPos(this), (double) distance);
-  }
-
   class StingGoal extends MeleeAttackGoal {
     StingGoal(CreatureEntity entity, double speed, boolean longMemory) {
       super(entity, speed, longMemory);
-    }
-
-    @Override
-    public boolean shouldExecute() {
-      return super.shouldExecute() && CarrierBeeEntity.this.isAngry();
-    }
-
-    @Override
-    public boolean shouldContinueExecuting() {
-      return super.shouldContinueExecuting() && CarrierBeeEntity.this.isAngry();
     }
   }
 
   class BeeLookController extends LookController {
     BeeLookController(MobEntity entity) {
       super(entity);
-    }
-
-    @Override
-    public void tick() {
-      if (!CarrierBeeEntity.this.isAngry()) {
-        super.tick();
-      }
     }
 
     @Override
@@ -525,7 +486,7 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
      */
     @Override
     public boolean shouldExecute() {
-      return this.parentEntity.getAttackTarget() != null;
+      return this.parentEntity.getAttackTarget() != null && this.parentEntity.attackDamage > 0;
     }
 
     /**
@@ -556,12 +517,10 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
         World world = this.parentEntity.world;
         ++this.attackTimer;
         if (this.attackTimer == 20) {
-          Vec3d vec3d = this.parentEntity.getPositionVec();
-          //getLook(1.0F);
-          double d2 = livingentity.getX() - (this.parentEntity.getX() /*+ vec3d.x * 4.0D*/);
+          double d2 = livingentity.getX() - this.parentEntity.getX();
           double d3 = livingentity.getBodyY(0.5D) - (0.5D + this.parentEntity.getBodyY(0.5D));
-          double d4 = livingentity.getZ() - (this.parentEntity.getZ() /*+ vec3d.z * 4.0D*/);
-          HoneyCombEntity honeycomb = new HoneyCombEntity(this.parentEntity, d2, d3, d4, world);
+          double d4 = livingentity.getZ() - this.parentEntity.getZ();
+          HoneyCombEntity honeycomb = new HoneyCombEntity(this.parentEntity, d2, d3, d4, this.parentEntity.getAttackDamage(), world);
           honeycomb.setPosition(this.parentEntity.getX(), this.parentEntity.getBodyY(0.5D) + 0.5D, honeycomb.getZ());
           world.addEntity(honeycomb);
           this.attackTimer = -40;

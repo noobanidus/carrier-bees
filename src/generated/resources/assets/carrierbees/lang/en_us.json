@@ -1,4 +1,8 @@
 {
+  "entity.carrierbees.bomb_projectile": "Bomb Projectile",
+  "entity.carrierbees.bomble_bee": "Bomble Bee",
   "entity.carrierbees.carrier_bee": "Carrier Bee",
+  "entity.carrierbees.honey_comb_projectile": "Honey Comb Projectile",
+  "item.carrierbees.bomble_bee_spawn_egg": "Bomble Bee Spawn Egg",
   "item.carrierbees.carrier_bee_spawn_egg": "Carrier Bee Spawn Egg"
 }

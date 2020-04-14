@@ -114,7 +114,7 @@ public class BombleBeeModel<T extends BombleBeeEntity> extends AgeableModel<T> {
       this.body.rotateAngleZ = 0.0F;
     }
 
-    if (!entity.isAngry()) {
+/*    if (!entity.isAngry()) {
       this.body.rotateAngleX = 0.0F;
       this.body.rotateAngleY = 0.0F;
       this.body.rotateAngleZ = 0.0F;
@@ -127,7 +127,7 @@ public class BombleBeeModel<T extends BombleBeeEntity> extends AgeableModel<T> {
         this.backLegs.rotateAngleX = -v1 * 3.1415927F * 0.05F + 0.7853982F;
         this.body.rotationPointY = 19.0F - MathHelper.cos(netHeadYaw * 0.18F) * 0.9F;
       }
-    }
+    }*/
 
     if (this.bodyPitch > 0.0F) {
       this.body.rotateAngleX = ModelUtils.interpolateAngle(this.body.rotateAngleX, 3.0915928F, this.bodyPitch);

@@ -14,7 +14,6 @@ import noobanidus.mods.carrierbees.entities.CarrierBeeEntity;
 @OnlyIn(Dist.CLIENT)
 public class CarrierBeeRenderer extends MobRenderer<CarrierBeeEntity, CarrierBeeModel<CarrierBeeEntity>> {
   private static final ResourceLocation ANGRY_SKIN = new ResourceLocation("textures/entity/bee/bee_angry.png");
-  private static final ResourceLocation PASSIVE_SKIN = new ResourceLocation("textures/entity/bee/bee.png");
 
   public CarrierBeeRenderer(EntityRendererManager bee) {
     super(bee, new CarrierBeeModel<>(), 0.4F);
@@ -31,10 +30,6 @@ public class CarrierBeeRenderer extends MobRenderer<CarrierBeeEntity, CarrierBee
 
   @Override
   public ResourceLocation getEntityTexture(CarrierBeeEntity bee) {
-    if (bee.isAngry()) {
-      return ANGRY_SKIN;
-    } else {
-      return PASSIVE_SKIN;
-    }
+    return ANGRY_SKIN;
   }
 }

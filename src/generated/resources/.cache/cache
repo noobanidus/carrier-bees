@@ -1,3 +1,6 @@
-b7f0fdda2bb2392c333050eab241e5c8e0c12383 assets\carrierbees\lang\en_ud.json
-a6b93f51a892c696fdab087c7c863cd3c712b07a assets\carrierbees\lang\en_us.json
+211b36c51bd82fc994516b5685fbae40320601e1 assets\carrierbees\lang\en_ud.json
+5c15e29602557ee5f0b1b4f0ef367566f63082b6 assets\carrierbees\lang\en_us.json
+640fb723df4adaf9b0e055a7e45afa7756e5acb4 assets\carrierbees\models\item\bomble_bee_spawn_egg.json
 640fb723df4adaf9b0e055a7e45afa7756e5acb4 assets\carrierbees\models\item\carrier_bee_spawn_egg.json
+f0266b86d509baafb030ddb9915394ea06d372cd data\carrierbees\loot_tables\entities\bomble_bee.json
+f0266b86d509baafb030ddb9915394ea06d372cd data\carrierbees\loot_tables\entities\carrier_bee.json

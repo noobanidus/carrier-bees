@@ -35,7 +35,8 @@ import noobanidus.mods.carrierbees.init.ModEntities;
 import noobanidus.mods.carrierbees.world.BeeExplosion;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.EnumSet;
+import java.util.UUID;
 
 public class BombleBeeEntity extends AnimalEntity implements IFlyingAnimal {
   private static final DataParameter<Boolean> nearTarget = EntityDataManager.createKey(BombleBeeEntity.class, DataSerializers.BOOLEAN);
@@ -44,7 +45,7 @@ public class BombleBeeEntity extends AnimalEntity implements IFlyingAnimal {
   private float currentPitch;
   private float lastPitch;
   private int ticksInsideWater;
-  private float attackDamage = -1;
+  private float explosionDamage;
   private float explosionSize;
 
   public BombleBeeEntity(EntityType<? extends BombleBeeEntity> type, World world) {
@@ -83,19 +84,18 @@ public class BombleBeeEntity extends AnimalEntity implements IFlyingAnimal {
   @Override
   public void writeAdditional(CompoundNBT tag) {
     super.writeAdditional(tag);
-    tag.putInt("Anger", this.getAnger());
     if (this.targetPlayer != null) {
       tag.putString("HurtBy", this.targetPlayer.toString());
     } else {
       tag.putString("HurtBy", "");
     }
     tag.putFloat("explosionSize", explosionSize);
+    tag.putFloat("explosionDamage", explosionDamage);
   }
 
   @Override
   public void readAdditional(CompoundNBT tag) {
     super.readAdditional(tag);
-    this.setAnger(tag.getInt("Anger"));
     String hurtBy = tag.getString("HurtBy");
     if (!hurtBy.isEmpty()) {
       this.targetPlayer = UUID.fromString(hurtBy);
@@ -112,6 +112,13 @@ public class BombleBeeEntity extends AnimalEntity implements IFlyingAnimal {
       explosionSize = tag.getFloat("explosionSize");
     } else {
       explosionSize = 1.5f;
+    }
+    if (tag.contains("explosionDamage", Constants.NBT.TAG_INT)) {
+      explosionDamage = (float) tag.getInt("explosionDamage");
+    } else if (tag.contains("explosionDamage", Constants.NBT.TAG_FLOAT)) {
+      explosionDamage = tag.getFloat("explosionDamage");
+    } else {
+      explosionDamage = 3.5f;
     }
   }
 
@@ -162,33 +169,17 @@ public class BombleBeeEntity extends AnimalEntity implements IFlyingAnimal {
       this.attackEntityFrom(DamageSource.DROWN, 1.0F);
     }
 
-    if (this.isAngry()) {
-      int angerLevel = this.getAnger();
-      this.setAnger(angerLevel - 1);
-      LivingEntity target = this.getAttackTarget();
-      if (angerLevel == 0 && target != null) {
-        this.setBeeAttacker(target);
-      }
+    LivingEntity target = this.getAttackTarget();
+    if (target != null) {
+      this.setBeeAttacker(target);
     }
-  }
-
-  public boolean isAngry() {
-    return this.getAnger() > 0;
-  }
-
-  private int getAnger() {
-    return this.dataManager.get(anger);
-  }
-
-  private void setAnger(int anger) {
-    this.dataManager.set(BombleBeeEntity.anger, anger);
   }
 
   @Override
   public void livingTick() {
     super.livingTick();
     if (!this.world.isRemote) {
-      boolean nearby = this.isAngry() && this.getAttackTarget() != null && this.getAttackTarget().getDistanceSq(this) < 4.0D;
+      boolean nearby = this.getAttackTarget() != null && this.getAttackTarget().getDistanceSq(this) < 4.0D;
       this.setNearTarget(nearby);
     }
   }
@@ -204,7 +195,7 @@ public class BombleBeeEntity extends AnimalEntity implements IFlyingAnimal {
   @Override
   public void onDeath(DamageSource death) {
     super.onDeath(death);
-    BeeExplosion.createExplosion(this.world, this, this.getX(), this.getBodyY(0.0625D), this.getZ(), explosionSize, true);
+    BeeExplosion.createExplosion(this.world, this, this.getX(), this.getBodyY(0.0625D), this.getZ(), explosionSize, explosionDamage);
   }
 
   @Override
@@ -286,7 +277,6 @@ public class BombleBeeEntity extends AnimalEntity implements IFlyingAnimal {
   }
 
   public boolean setBeeAttacker(Entity target) {
-    this.setAnger(400 + this.rand.nextInt(400));
     if (target instanceof LivingEntity) {
       this.setRevengeTarget((LivingEntity) target);
     }
@@ -321,13 +311,6 @@ public class BombleBeeEntity extends AnimalEntity implements IFlyingAnimal {
   class BeeLookController extends LookController {
     BeeLookController(MobEntity entity) {
       super(entity);
-    }
-
-    @Override
-    public void tick() {
-      if (!BombleBeeEntity.this.isAngry()) {
-        super.tick();
-      }
     }
 
     @Override
@@ -417,7 +400,7 @@ public class BombleBeeEntity extends AnimalEntity implements IFlyingAnimal {
           double d2 = livingentity.getX() - this.parentEntity.getX();
           double d3 = livingentity.getBodyY(0.5D) - (0.5D + this.parentEntity.getBodyY(0.5D));
           double d4 = livingentity.getZ() - this.parentEntity.getZ();
-          BombEntity bomb = new BombEntity(this.parentEntity, d2, d3, d4, parentEntity.explosionSize, world);
+          BombEntity bomb = new BombEntity(this.parentEntity, d2, d3, d4, parentEntity.explosionSize, parentEntity.explosionDamage, world);
           bomb.setPosition(this.parentEntity.getX(), this.parentEntity.getBodyY(0.5D) + 0.5D, bomb.getZ());
           world.addEntity(bomb);
           this.attackTimer = -40;
