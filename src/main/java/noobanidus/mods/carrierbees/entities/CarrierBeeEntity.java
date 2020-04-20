@@ -385,6 +385,9 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal, IAp
       return false;
     } else {
       Entity attacker = source.getTrueSource();
+      if (attacker instanceof IAppleBee) {
+        return false;
+      }
       if (!this.world.isRemote && attacker instanceof PlayerEntity && !((PlayerEntity) attacker).isCreative() && this.canEntityBeSeen(attacker) && !this.isAIDisabled()) {
         this.setBeeAttacker(attacker);
       }
