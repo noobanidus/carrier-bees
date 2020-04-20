@@ -38,7 +38,7 @@ import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.UUID;
 
-public class BombleBeeEntity extends AnimalEntity implements IFlyingAnimal {
+public class BombleBeeEntity extends AnimalEntity implements IFlyingAnimal, IAppleBee {
   private static final DataParameter<Boolean> nearTarget = EntityDataManager.createKey(BombleBeeEntity.class, DataSerializers.BOOLEAN);
   private static final DataParameter<Integer> anger = EntityDataManager.createKey(BombleBeeEntity.class, DataSerializers.VARINT);
   private UUID targetPlayer;

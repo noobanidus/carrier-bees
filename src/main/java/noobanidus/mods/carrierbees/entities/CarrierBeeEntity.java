@@ -46,7 +46,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal {
+public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal, IAppleBee {
   private static final DataParameter<Byte> multipleByteTracker = EntityDataManager.createKey(CarrierBeeEntity.class, DataSerializers.BYTE);
   private UUID targetPlayer;
   private float currentPitch;
