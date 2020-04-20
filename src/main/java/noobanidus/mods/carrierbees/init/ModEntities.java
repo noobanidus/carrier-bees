@@ -15,12 +15,12 @@ import static noobanidus.mods.carrierbees.CarrierBees.REGISTRATE;
 
 public class ModEntities {
   public static RegistryEntry<EntityType<CarrierBeeEntity>> CARRIER_BEE = REGISTRATE.entity("carrier_bee", CarrierBeeEntity::new, EntityClassification.CREATURE)
-      .properties(o -> o.size(1.2F, 1.1F))
+      .properties(o -> o.size(0.9F, 0.8F))
       .loot((p, e) -> p.registerLootTable(e, LootTable.builder()))
       .register();
 
   public static RegistryEntry<EntityType<BombleBeeEntity>> BOMBLE_BEE = REGISTRATE.entity("bomble_bee", BombleBeeEntity::new, EntityClassification.CREATURE)
-      .properties(o -> o.size(1.5F, 1.3F))
+      .properties(o -> o.size(1.0F, 0.9F))
       .loot((p, e) -> p.registerLootTable(e, LootTable.builder()))
       .register();
 
