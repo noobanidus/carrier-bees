@@ -4,5 +4,7 @@
   "entity.carrierbees.carrier_bee": "\u01DD\u01DD\u15FA \u0279\u01DD\u0131\u0279\u0279\u0250\u0186",
   "entity.carrierbees.honey_comb_projectile": "\u01DD\u05DF\u0131\u0287\u0254\u01DD\u0638o\u0279\u0500 q\u026Fo\u0186 \u028E\u01DDuoH",
   "item.carrierbees.bomble_bee_spawn_egg": "bb\u018E u\u028D\u0250dS \u01DD\u01DD\u15FA \u01DD\u05DFq\u026Fo\u15FA",
-  "item.carrierbees.carrier_bee_spawn_egg": "bb\u018E u\u028D\u0250dS \u01DD\u01DD\u15FA \u0279\u01DD\u0131\u0279\u0279\u0250\u0186"
+  "item.carrierbees.carrier_bee_spawn_egg": "bb\u018E u\u028D\u0250dS \u01DD\u01DD\u15FA \u0279\u01DD\u0131\u0279\u0279\u0250\u0186",
+  "itemGroup.carrierbees": "s\u01DD\u01DD\u15FA \u0279\u01DD\u0131\u0279\u0279\u0250\u0186",
+  "subtitles.carrierbees.sploosh": "\u00A1\u0265soo\u05DFdS"
 }

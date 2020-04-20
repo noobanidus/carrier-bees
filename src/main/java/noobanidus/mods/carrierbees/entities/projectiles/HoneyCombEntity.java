@@ -27,6 +27,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import noobanidus.mods.carrierbees.config.ConfigManager;
 import noobanidus.mods.carrierbees.entities.IAppleBee;
 import noobanidus.mods.carrierbees.init.ModEntities;
+import noobanidus.mods.carrierbees.init.ModSounds;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -81,7 +82,7 @@ public class HoneyCombEntity extends DamagingProjectileEntity implements IEntity
           double val = ConfigManager.getHoneycombSize();
           List<LivingEntity> list = this.world.getEntitiesWithinAABBExcludingEntity(living, this.getBoundingBox().grow(val, val, val)).stream().filter(o -> o instanceof LivingEntity).map(o -> (LivingEntity) o).collect(Collectors.toList());
           world.addParticle(ParticleTypes.field_229428_ah_, living.posX, living.posY, living.posZ, 0, 0, 0);
-          world.playSound(null, this.getPosition(), SoundEvents.field_226136_eQ_, SoundCategory.HOSTILE, 1f, 0.5f);
+          world.playSound(null, this.getPosition(), ModSounds.SPLOOSH.get(), SoundCategory.HOSTILE, 1f, 0.5f);
           for (LivingEntity l : list) {
             if (l == this.shootingEntity || l instanceof IAppleBee) {
               continue;

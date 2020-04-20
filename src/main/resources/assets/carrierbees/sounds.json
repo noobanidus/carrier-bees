@@ -1,5 +1,5 @@
 {
-  "block.honey_block.fall": {
+  "honey_projectile.sploosh": {
     "sounds": [
       "minecraft:block/honeyblock/step1",
       "minecraft:block/honeyblock/step2",

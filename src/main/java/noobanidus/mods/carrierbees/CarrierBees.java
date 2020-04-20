@@ -15,6 +15,8 @@ import net.minecraftforge.fml.loading.FMLPaths;
 import noobanidus.mods.carrierbees.config.ConfigManager;
 import noobanidus.mods.carrierbees.init.ModEntities;
 import noobanidus.mods.carrierbees.init.ModLang;
+import noobanidus.mods.carrierbees.init.ModSounds;
+import noobanidus.mods.carrierbees.registrate.CustomRegistrate;
 import noobanidus.mods.carrierbees.setup.ClientSetup;
 import noobanidus.mods.carrierbees.setup.CommonSetup;
 import org.apache.logging.log4j.LogManager;
@@ -24,7 +26,7 @@ import org.apache.logging.log4j.Logger;
 public class CarrierBees {
   public static final Logger LOG = LogManager.getLogger();
   public static final String MODID = "carrierbees";
-  public static Registrate REGISTRATE;
+  public static CustomRegistrate REGISTRATE;
 
   public static ItemGroup GROUP = new ItemGroup(MODID) {
     @Override
@@ -45,10 +47,11 @@ public class CarrierBees {
       modBus.addListener(ClientSetup::setup);
     });
 
-    REGISTRATE = Registrate.create(MODID);
+    REGISTRATE = CustomRegistrate.create(MODID);
     REGISTRATE.itemGroup(() -> GROUP);
 
     ModEntities.load();
     ModLang.load();
+    ModSounds.load();
   }
 }
