@@ -1,6 +1,5 @@
 package noobanidus.mods.carrierbees;
 
-import com.tterrag.registrate.Registrate;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -12,11 +11,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
+import noobanidus.libs.noobutil.registrate.CustomRegistrate;
 import noobanidus.mods.carrierbees.config.ConfigManager;
-import noobanidus.mods.carrierbees.init.ModEntities;
-import noobanidus.mods.carrierbees.init.ModLang;
-import noobanidus.mods.carrierbees.init.ModSounds;
-import noobanidus.mods.carrierbees.registrate.CustomRegistrate;
+import noobanidus.mods.carrierbees.init.*;
 import noobanidus.mods.carrierbees.setup.ClientSetup;
 import noobanidus.mods.carrierbees.setup.CommonSetup;
 import org.apache.logging.log4j.LogManager;
@@ -31,7 +28,7 @@ public class CarrierBees {
   public static ItemGroup GROUP = new ItemGroup(MODID) {
     @Override
     public ItemStack createIcon() {
-      return new ItemStack(Blocks.field_226906_mb_);
+      return new ItemStack(Blocks.HONEYCOMB_BLOCK);
     }
   };
 
@@ -53,5 +50,7 @@ public class CarrierBees {
     ModEntities.load();
     ModLang.load();
     ModSounds.load();
+    ModItems.load();
+    ModEffects.load();
   }
 }

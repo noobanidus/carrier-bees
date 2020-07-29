@@ -7,13 +7,16 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import noobanidus.mods.carrierbees.CarrierBees;
 import noobanidus.mods.carrierbees.client.layers.BeeHeldItemLayer;
 import noobanidus.mods.carrierbees.client.model.CarrierBeeModel;
 import noobanidus.mods.carrierbees.entities.CarrierBeeEntity;
+import noobanidus.mods.carrierbees.entities.FumbleCarrierBeeEntity;
 
 @OnlyIn(Dist.CLIENT)
 public class CarrierBeeRenderer extends MobRenderer<CarrierBeeEntity, CarrierBeeModel<CarrierBeeEntity>> {
   private static final ResourceLocation ANGRY_SKIN = new ResourceLocation("textures/entity/bee/bee_angry.png");
+  private static final ResourceLocation FUMBLE_SKIN = new ResourceLocation(CarrierBees.MODID, "textures/entity/fumblebee.png");
 
   public CarrierBeeRenderer(EntityRendererManager bee) {
     super(bee, new CarrierBeeModel<>(), 0.4F);
@@ -30,6 +33,9 @@ public class CarrierBeeRenderer extends MobRenderer<CarrierBeeEntity, CarrierBee
 
   @Override
   public ResourceLocation getEntityTexture(CarrierBeeEntity bee) {
+    if (bee instanceof FumbleCarrierBeeEntity) {
+      return FUMBLE_SKIN;
+    }
     return ANGRY_SKIN;
   }
 }

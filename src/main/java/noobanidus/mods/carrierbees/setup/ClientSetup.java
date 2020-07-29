@@ -20,9 +20,11 @@ public class ClientSetup {
     Minecraft mc = event.getMinecraftSupplier().get();
     EntityRendererManager manager = mc.getRenderManager();
     manager.register(ModEntities.CARRIER_BEE.get(), new CarrierBeeRenderer(manager));
+    manager.register(ModEntities.FUMBLE_BEE.get(), new CarrierBeeRenderer(manager));
     manager.register(ModEntities.BOMBLE_BEE.get(), new BombleBeeRenderer(manager));
     ItemRenderer renderer = mc.getItemRenderer();
     manager.register(ModEntities.HONEY_COMB_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 0.9F, true));
+    manager.register(ModEntities.FUMBLE_COMB_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 0.9F, true));
     manager.register(ModEntities.BOMB_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 1.75F, true));
     for (LazySpawnEggItem<?> item : Arrays.asList(ModEntities.CARRIER_BEE_EGG.get(), ModEntities.BOMBLE_BEE_EGG.get())) {
       mc.getItemColors().register((a, layer) -> item.getColor(layer), item);

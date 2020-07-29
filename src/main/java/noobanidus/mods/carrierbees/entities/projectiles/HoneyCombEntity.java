@@ -16,7 +16,6 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -39,12 +38,20 @@ import java.util.stream.Collectors;
 public class HoneyCombEntity extends DamagingProjectileEntity implements IEntityAdditionalSpawnData, IRendersAsItem {
   private static ItemStack HONEY_COMB = new ItemStack(Items.field_226635_pU_);
 
+  public EffectInstance getInstance () {
+    return new EffectInstance(Effects.SLOWNESS, 2, ConfigManager.getHoneycombSlow());
+  }
+
+  public HoneyCombEntity(EntityType<? extends DamagingProjectileEntity> type, LivingEntity parent, double aX, double aY, double aZ, World world) {
+    super(type, parent, aX, aY, aZ, world);
+  }
+
   public HoneyCombEntity(EntityType<? extends HoneyCombEntity> type, World world) {
     super(type, world);
   }
 
   public HoneyCombEntity(LivingEntity parent, double accelX, double accelY, double accelZ, World world) {
-    super(ModEntities.HONEY_COMB_PROJECTILE.get(), parent, accelX, accelY, accelZ, world);
+    this(ModEntities.HONEY_COMB_PROJECTILE.get(), parent, accelX, accelY, accelZ, world);
   }
 
   @Override
@@ -71,7 +78,7 @@ public class HoneyCombEntity extends DamagingProjectileEntity implements IEntity
         Entity entity = ray2.getEntity();
         if ((entity != this || entity != this.shootingEntity) && entity instanceof LivingEntity && !(entity instanceof IAppleBee)) {
           LivingEntity living = (LivingEntity) ray2.getEntity();
-          living.addPotionEffect(new EffectInstance(Effects.SLOWNESS, ConfigManager.getHoneycombSlow()));
+          living.addPotionEffect(getInstance());
           DamageSource source;
           if (shootingEntity != null) {
             source = DamageSource.causeMobDamage(shootingEntity).setMagicDamage();
@@ -87,7 +94,7 @@ public class HoneyCombEntity extends DamagingProjectileEntity implements IEntity
             if (l == this.shootingEntity || l instanceof IAppleBee) {
               continue;
             }
-            l.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 2, ConfigManager.getHoneycombSlow()));
+            l.addPotionEffect(getInstance());
             l.attackEntityFrom(source, ConfigManager.getHoneycombDamage());
             world.addParticle(ParticleTypes.field_229428_ah_, l.posX, l.posY, l.posZ, 0, 0, 0);
           }
