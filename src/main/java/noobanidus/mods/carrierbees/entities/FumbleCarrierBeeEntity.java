@@ -26,7 +26,7 @@ public class FumbleCarrierBeeEntity extends CarrierBeeEntity {
     this.goalSelector.addGoal(8, new FumbleCarrierBeeEntity.WanderGoal());
     this.goalSelector.addGoal(9, new SwimGoal(this));
     this.targetSelector.addGoal(1, (new FumbleCarrierBeeEntity.AngerGoal(this)).setCallsForHelp());
-    this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, (pos) -> Math.abs(pos.getY() - this.getY()) <= 4.0D));
+    this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, (pos) -> Math.abs(pos.posY - this.posY) <= 4.0D));
   }
 
   @Override
@@ -66,11 +66,11 @@ public class FumbleCarrierBeeEntity extends CarrierBeeEntity {
         World world = this.parentEntity.world;
         ++this.attackTimer;
         if (this.attackTimer == 20) {
-          double d2 = livingentity.getX() - this.parentEntity.getX();
-          double d3 = livingentity.getBodyY(0.5D) - (0.5D + this.parentEntity.getBodyY(0.5D));
-          double d4 = livingentity.getZ() - this.parentEntity.getZ();
+          double d2 = livingentity.posX - this.parentEntity.posX;
+          double d3 = livingentity.getPosYHeight(0.5D) - (0.5D + this.parentEntity.getPosYHeight(0.5D));
+          double d4 = livingentity.posZ - this.parentEntity.posZ;
           FumbleCombEntity honeycomb = new FumbleCombEntity(this.parentEntity, d2, d3, d4, world);
-          honeycomb.setPosition(this.parentEntity.getX(), this.parentEntity.getBodyY(0.5D) + 0.2D, honeycomb.getZ());
+          honeycomb.setPosition(this.parentEntity.posX, this.parentEntity.getPosYHeight(0.5D) + 0.2D, honeycomb.posZ);
           world.addEntity(honeycomb);
           this.attackTimer = -40;
         }

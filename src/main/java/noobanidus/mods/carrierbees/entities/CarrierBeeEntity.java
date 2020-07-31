@@ -21,7 +21,6 @@ import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -30,7 +29,6 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -88,7 +86,7 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal, IAp
     this.goalSelector.addGoal(8, new CarrierBeeEntity.WanderGoal());
     this.goalSelector.addGoal(9, new SwimGoal(this));
     this.targetSelector.addGoal(1, (new CarrierBeeEntity.AngerGoal(this)).setCallsForHelp());
-    this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, (pos) -> Math.abs(pos.getY() - this.getY()) <= 4.0D));
+    this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, (pos) -> Math.abs(pos.posY - this.posY) <= 4.0D));
   }
 
   @Override
@@ -151,9 +149,9 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal, IAp
 
   @Override
   public boolean attackEntityAsMob(Entity target) {
-    float damage = ((int) this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getValue());
+/*    float damage = ((int) this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getValue());
     if (!hasStung()) {
-      boolean attacked = target.attackEntityFrom(DamageSource.sting(this), damage);
+      boolean attacked = target.attackEntityFrom(DamageSource.causeBeeStingDamage(this), damage);
       if (attacked) {
         this.applyEnchantments(this, target);
         if (target instanceof LivingEntity) {
@@ -191,7 +189,8 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal, IAp
       }
     }
 
-    return target.attackEntityFrom(DamageSource.causeMobDamage(this), damage);
+    return target.attackEntityFrom(DamageSource.causeMobDamage(this), damage);*/
+    return false;
   }
 
   @Override
@@ -248,11 +247,6 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal, IAp
     if (target != null) {
       this.setBeeAttacker(target);
     }
-  }
-
-  @Override
-  protected void func_213387_K() {
-    super.func_213387_K();
   }
 
   @Override
@@ -334,12 +328,12 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal, IAp
 
   @Override
   protected SoundEvent getHurtSound(DamageSource p_184601_1_) {
-    return SoundEvents.field_226125_Z_;
+    return SoundEvents.ENTITY_BEE_HURT;
   }
 
   @Override
   protected SoundEvent getDeathSound() {
-    return SoundEvents.field_226124_Y_;
+    return SoundEvents.ENTITY_BEE_DEATH;
   }
 
   @Override
@@ -358,7 +352,7 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal, IAp
   }
 
   @Override
-  public boolean handleFallDamage(float val1, float val2) {
+  public boolean onLivingFall(float p_225503_1_, float p_225503_2_) {
     return false;
   }
 
@@ -514,11 +508,11 @@ public class CarrierBeeEntity extends AnimalEntity implements IFlyingAnimal, IAp
         World world = this.parentEntity.world;
         ++this.attackTimer;
         if (this.attackTimer == 20) {
-          double d2 = livingentity.getX() - this.parentEntity.getX();
-          double d3 = livingentity.getBodyY(0.5D) - (0.5D + this.parentEntity.getBodyY(0.5D));
-          double d4 = livingentity.getZ() - this.parentEntity.getZ();
+          double d2 = livingentity.posX - this.parentEntity.posX;
+          double d3 = livingentity.getPosYHeight(0.5D) - (0.5D + this.parentEntity.getPosYHeight(0.5D));
+          double d4 = livingentity.posZ - this.parentEntity.posZ;
           HoneyCombEntity honeycomb = new HoneyCombEntity(this.parentEntity, d2, d3, d4, world);
-          honeycomb.setPosition(this.parentEntity.getX(), this.parentEntity.getBodyY(0.5D) + 0.2D, honeycomb.getZ());
+          honeycomb.setPosition(this.parentEntity.posX, this.parentEntity.getPosYHeight(0.5D) + 0.2D, honeycomb.posZ);
           world.addEntity(honeycomb);
           this.attackTimer = -40;
         }

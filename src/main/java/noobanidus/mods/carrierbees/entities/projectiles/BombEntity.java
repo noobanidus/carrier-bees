@@ -68,7 +68,7 @@ public class BombEntity extends DamagingProjectileEntity implements IEntityAddit
         }
       }
     }
-    BeeExplosion.createExplosion(this.world, this, this.getX(), this.getBodyY(0.0625D), this.getZ());
+    BeeExplosion.createExplosion(this.world, this, this.posX, this.getPosYHeight(0.0625D), this.posZ);
     if (!world.isRemote) {
       this.remove();
     }
@@ -98,7 +98,7 @@ public class BombEntity extends DamagingProjectileEntity implements IEntityAddit
   public void handleStatusUpdate(byte id) {
     if (id == 3) {
       for (int i = 0; i < 8; ++i) {
-        this.world.addParticle(new ItemParticleData(ParticleTypes.ITEM, getItem()), false, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
+        this.world.addParticle(new ItemParticleData(ParticleTypes.ITEM, getItem()), false, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
       }
     } else {
       super.handleStatusUpdate(id);

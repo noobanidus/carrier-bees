@@ -78,7 +78,7 @@ public class BombleBeeEntity extends AnimalEntity implements IFlyingAnimal, IApp
     this.goalSelector.addGoal(8, new BombleBeeEntity.WanderGoal());
     this.goalSelector.addGoal(9, new SwimGoal(this));
     this.targetSelector.addGoal(1, (new BombleBeeEntity.AngerGoal(this)).setCallsForHelp());
-    this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 12, true, false, (pos) -> Math.abs(pos.getY() - this.getY()) <= 12.0D));
+    this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 12, true, false, (pos) -> Math.abs(pos.posY - this.posY) <= 12.0D));
   }
 
   @Override
@@ -194,7 +194,7 @@ public class BombleBeeEntity extends AnimalEntity implements IFlyingAnimal, IApp
   @Override
   public void onDeath(DamageSource death) {
     super.onDeath(death);
-    BeeExplosion.createExplosion(this.world, this, this.getX(), this.getBodyY(0.0625D), this.getZ());
+    BeeExplosion.createExplosion(this.world, this, this.posX, this.getPosYHeight(0.0625D), this.posZ);
   }
 
   @Override
@@ -238,12 +238,12 @@ public class BombleBeeEntity extends AnimalEntity implements IFlyingAnimal, IApp
 
   @Override
   protected SoundEvent getHurtSound(DamageSource p_184601_1_) {
-    return SoundEvents.field_226125_Z_;
+    return SoundEvents.ENTITY_BEE_HURT;
   }
 
   @Override
   protected SoundEvent getDeathSound() {
-    return SoundEvents.field_226124_Y_;
+    return SoundEvents.ENTITY_BEE_DEATH;
   }
 
   @Override
@@ -262,7 +262,7 @@ public class BombleBeeEntity extends AnimalEntity implements IFlyingAnimal, IApp
   }
 
   @Override
-  public boolean handleFallDamage(float val1, float val2) {
+  public boolean onLivingFall(float p_225503_1_, float p_225503_2_) {
     return false;
   }
 
@@ -399,11 +399,11 @@ public class BombleBeeEntity extends AnimalEntity implements IFlyingAnimal, IApp
         World world = this.parentEntity.world;
         ++this.attackTimer;
         if (this.attackTimer == 20) {
-          double d2 = livingentity.getX() - this.parentEntity.getX();
-          double d3 = livingentity.getBodyY(0.5D) - (0.5D + this.parentEntity.getBodyY(0.5D));
-          double d4 = livingentity.getZ() - this.parentEntity.getZ();
+          double d2 = livingentity.posX - this.parentEntity.posX;
+          double d3 = livingentity.getPosYHeight(0.5D) - (0.5D + this.parentEntity.getPosYHeight(0.5D));
+          double d4 = livingentity.posZ - this.parentEntity.posZ;
           BombEntity bomb = new BombEntity(this.parentEntity, d2, d3, d4, world);
-          bomb.setPosition(this.parentEntity.getX(), this.parentEntity.getBodyY(0.5D) + 0.5D, bomb.getZ());
+          bomb.setPosition(this.parentEntity.posX, this.parentEntity.getPosYHeight(0.5D) + 0.5D, bomb.posZ);
           world.addEntity(bomb);
           this.attackTimer = -40;
         }

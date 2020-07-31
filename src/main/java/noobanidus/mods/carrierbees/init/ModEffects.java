@@ -1,6 +1,6 @@
 package noobanidus.mods.carrierbees.init;
 
-import com.tterrag.registrate.util.RegistryEntry;
+import com.tterrag.registrate.util.entry.RegistryEntry;
 import noobanidus.mods.carrierbees.effects.ExplosiveEffect;
 import noobanidus.mods.carrierbees.effects.FumbleEffect;
 

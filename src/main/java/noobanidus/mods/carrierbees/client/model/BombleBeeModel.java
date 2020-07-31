@@ -4,12 +4,10 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.renderer.entity.model.AgeableModel;
 import net.minecraft.client.renderer.entity.model.ModelUtils;
 import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import noobanidus.mods.carrierbees.entities.BombleBeeEntity;
-import noobanidus.mods.carrierbees.entities.CarrierBeeEntity;
 
 @OnlyIn(Dist.CLIENT)
 public class BombleBeeModel<T extends BombleBeeEntity> extends AgeableModel<T> {
@@ -34,16 +32,16 @@ public class BombleBeeModel<T extends BombleBeeEntity> extends AgeableModel<T> {
     this.torso = new ModelRenderer(this, 0, 0);
     this.torso.setRotationPoint(0.0F, 0.0F, 0.0F);
     this.body.addChild(this.torso);
-    this.torso.addCuboid(-3.5F, -4.0F, -5.0F, 7.0F, 7.0F, 10.0F, 0.0F);
+    this.torso.addBox(-3.5F, -4.0F, -5.0F, 7.0F, 7.0F, 10.0F, 0.0F);
     this.stinger = new ModelRenderer(this, 26, 7);
-    this.stinger.addCuboid(0.0F, -1.0F, 5.0F, 0.0F, 1.0F, 2.0F, 0.0F);
+    this.stinger.addBox(0.0F, -1.0F, 5.0F, 0.0F, 1.0F, 2.0F, 0.0F);
     this.torso.addChild(this.stinger);
     this.leftAntenna = new ModelRenderer(this, 2, 0);
     this.leftAntenna.setRotationPoint(0.0F, -2.0F, -5.0F);
-    this.leftAntenna.addCuboid(1.5F, -2.0F, -3.0F, 1.0F, 2.0F, 3.0F, 0.0F);
+    this.leftAntenna.addBox(1.5F, -2.0F, -3.0F, 1.0F, 2.0F, 3.0F, 0.0F);
     this.rightAntenna = new ModelRenderer(this, 2, 3);
     this.rightAntenna.setRotationPoint(0.0F, -2.0F, -5.0F);
-    this.rightAntenna.addCuboid(-2.5F, -2.0F, -3.0F, 1.0F, 2.0F, 3.0F, 0.0F);
+    this.rightAntenna.addBox(-2.5F, -2.0F, -3.0F, 1.0F, 2.0F, 3.0F, 0.0F);
     this.torso.addChild(this.leftAntenna);
     this.torso.addChild(this.rightAntenna);
     this.rightWing = new ModelRenderer(this, 0, 18);
@@ -52,7 +50,7 @@ public class BombleBeeModel<T extends BombleBeeEntity> extends AgeableModel<T> {
     this.rightWing.rotateAngleY = -0.2618F;
     this.rightWing.rotateAngleZ = 0.0F;
     this.body.addChild(this.rightWing);
-    this.rightWing.addCuboid(-9.0F, 0.0F, 0.0F, 9.0F, 0.0F, 6.0F, 0.001F);
+    this.rightWing.addBox(-9.0F, 0.0F, 0.0F, 9.0F, 0.0F, 6.0F, 0.001F);
     this.leftWing = new ModelRenderer(this, 0, 18);
     this.leftWing.setRotationPoint(1.5F, -4.0F, -3.0F);
     this.leftWing.rotateAngleX = 0.0F;
@@ -60,19 +58,19 @@ public class BombleBeeModel<T extends BombleBeeEntity> extends AgeableModel<T> {
     this.leftWing.rotateAngleZ = 0.0F;
     this.leftWing.mirror = true;
     this.body.addChild(this.leftWing);
-    this.leftWing.addCuboid(0.0F, 0.0F, 0.0F, 9.0F, 0.0F, 6.0F, 0.001F);
+    this.leftWing.addBox(0.0F, 0.0F, 0.0F, 9.0F, 0.0F, 6.0F, 0.001F);
     this.frontLegs = new ModelRenderer(this);
     this.frontLegs.setRotationPoint(1.5F, 3.0F, -2.0F);
     this.body.addChild(this.frontLegs);
-    this.frontLegs.func_217178_a("frontLegBox", -5.0F, 0.0F, 0.0F, 7, 2, 0, 0.0F, 26, 1);
+    this.frontLegs.addBox("frontLegBox", -5.0F, 0.0F, 0.0F, 7, 2, 0, 0.0F, 26, 1);
     this.middleLegs = new ModelRenderer(this);
     this.middleLegs.setRotationPoint(1.5F, 3.0F, 0.0F);
     this.body.addChild(this.middleLegs);
-    this.middleLegs.func_217178_a("midLegBox", -5.0F, 0.0F, 0.0F, 7, 2, 0, 0.0F, 26, 3);
+    this.middleLegs.addBox("midLegBox", -5.0F, 0.0F, 0.0F, 7, 2, 0, 0.0F, 26, 3);
     this.backLegs = new ModelRenderer(this);
     this.backLegs.setRotationPoint(1.5F, 3.0F, 2.0F);
     this.body.addChild(this.backLegs);
-    this.backLegs.func_217178_a("backLegBox", -5.0F, 0.0F, 0.0F, 7, 2, 0, 0.0F, 26, 5);
+    this.backLegs.addBox("backLegBox", -5.0F, 0.0F, 0.0F, 7, 2, 0, 0.0F, 26, 5);
   }
 
   @Override
@@ -82,7 +80,7 @@ public class BombleBeeModel<T extends BombleBeeEntity> extends AgeableModel<T> {
   }
 
   @Override
-  public void setAngles(T entity, float limbSwing, float limbSwingAmount, float netHeadYaw, float headPitch, float scaleFactor) {
+  public void setRotationAngles(T entity, float limbSwing, float limbSwingAmount, float netHeadYaw, float headPitch, float scaleFactor) {
     this.rightWing.rotateAngleX = 0.0F;
     this.leftAntenna.rotateAngleX = 0.0F;
     this.rightAntenna.rotateAngleX = 0.0F;
@@ -130,7 +128,7 @@ public class BombleBeeModel<T extends BombleBeeEntity> extends AgeableModel<T> {
     }*/
 
     if (this.bodyPitch > 0.0F) {
-      this.body.rotateAngleX = ModelUtils.interpolateAngle(this.body.rotateAngleX, 3.0915928F, this.bodyPitch);
+      this.body.rotateAngleX = ModelUtils.func_228283_a_(this.body.rotateAngleX, 3.0915928F, this.bodyPitch);
     }
   }
 

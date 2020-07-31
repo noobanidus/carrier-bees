@@ -41,10 +41,10 @@ public class BeeHeldItemLayer<T extends CarrierBeeEntity, M extends CarrierBeeMo
       matrixStack.push();
       matrixStack.translate(0, block ? 1.57 : 1.5, block ? 0.15 : 0.05);
       matrixStack.translate(0, -m.body.rotateAngleX * 0.5f, 0);
-      matrixStack.multiply(Vector3f.NEGATIVE_X.getDegreesQuaternion(block ? 180f : 90f));
-      matrixStack.multiply(new Quaternion(m.body.rotateAngleX * 1f, m.body.rotateAngleY * 1f, m.body.rotateAngleZ * 1f, false));
+      matrixStack.rotate(Vector3f.XN.rotationDegrees(block ? 180f : 90f));
+      matrixStack.rotate(new Quaternion(m.body.rotateAngleX * 1f, m.body.rotateAngleY * 1f, m.body.rotateAngleZ * 1f, false));
       matrixStack.scale(0.5f, 0.5f, 0.5f);
-      Minecraft.getInstance().getFirstPersonRenderer().renderItem(entity, itemstack, ItemCameraTransforms.TransformType.FIXED, true, matrixStack, buffer, light);
+      Minecraft.getInstance().getFirstPersonRenderer().renderItemSide(entity, itemstack, ItemCameraTransforms.TransformType.FIXED, true, matrixStack, buffer, light);
       matrixStack.pop();
       matrixStack.pop();
     }
