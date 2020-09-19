@@ -13,7 +13,7 @@ import java.util.Random;
 
 public class ExplosiveEffect extends InstantEffect {
   public ExplosiveEffect() {
-    super(EffectType.HARMFUL, 0xffffff);
+    super(EffectType.HARMFUL, 0xeb4e10);
   }
 
   @Override

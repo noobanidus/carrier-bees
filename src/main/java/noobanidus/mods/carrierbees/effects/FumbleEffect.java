@@ -11,10 +11,10 @@ import java.util.Random;
 
 public class FumbleEffect extends Effect {
   private static final Random rand = new Random();
-  public static int OFF_HAND_SLOT = 40;
+  private static int OFF_HAND_SLOT = 40;
 
   public FumbleEffect() {
-    super(EffectType.HARMFUL, 0xffffff);
+    super(EffectType.HARMFUL, 0x10eb26);
   }
 
   @Override

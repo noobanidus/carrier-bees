@@ -20,13 +20,22 @@ public class ConfigManager {
   private static ForgeConfigSpec.DoubleValue EXPLOSION_DAMAGE;
   private static ForgeConfigSpec.DoubleValue EXPLOSION_SIZE;
   private static ForgeConfigSpec.IntValue HONEYCOMB_SLOW;
+  private static ForgeConfigSpec.BooleanValue ALWAYS_ANGRY;
   private static ForgeConfigSpec.DoubleValue HONEYCOMB_SIZE;
 
+  private static int always_angry = -1;
   private static float honeycomb_damage = -1;
   private static float explosion_damage = -1;
   private static float explosion_size = -1;
   private static int honeycomb_slow = -1;
   private static double honeycomb_size = -1;
+
+  public static boolean getAlwaysAngry() {
+    if (always_angry == -1) {
+      always_angry = ALWAYS_ANGRY.get() ? 1 : 0;
+    }
+    return always_angry == 1;
+  }
 
   public static float getHoneycombDamage() {
     if (honeycomb_damage == -1) {
@@ -76,6 +85,9 @@ public class ConfigManager {
     EXPLOSION_DAMAGE = COMMON_BUILDER.comment("the amount of damage that the bomblebee's explosive projectile does").defineInRange("explosion_damage", 3.5, 0, Double.MAX_VALUE);
     EXPLOSION_SIZE = COMMON_BUILDER.comment("the size of the bomblebee's explosive projectile's explosion").defineInRange("explosion_size", 4, 0, Double.MAX_VALUE);
     COMMON_BUILDER.pop();
+    COMMON_BUILDER.push("general");
+    ALWAYS_ANGRY = COMMON_BUILDER.comment("whether or not bees will always attack or only if angered").define("always_angry", true);
+    COMMON_BUILDER.pop();
     COMMON_CONFIG = COMMON_BUILDER.build();
   }
 
@@ -103,6 +115,7 @@ public class ConfigManager {
       explosion_size = -1;
       honeycomb_slow = -1;
       honeycomb_size = -1;
+      always_angry = -1;
       CarrierBees.LOG.info("CarrierBees config reloaded!");
     }
   }
