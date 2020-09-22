@@ -22,6 +22,7 @@ public class ConfigManager {
   private static ForgeConfigSpec.IntValue HONEYCOMB_SLOW;
   private static ForgeConfigSpec.BooleanValue ALWAYS_ANGRY;
   private static ForgeConfigSpec.DoubleValue HONEYCOMB_SIZE;
+  private static ForgeConfigSpec.BooleanValue STING_KILLS;
 
   private static int always_angry = -1;
   private static float honeycomb_damage = -1;
@@ -29,6 +30,14 @@ public class ConfigManager {
   private static float explosion_size = -1;
   private static int honeycomb_slow = -1;
   private static double honeycomb_size = -1;
+  private static int sting_kills = -1;
+
+  public static boolean getStingKills () {
+    if (sting_kills == -1) {
+      sting_kills = STING_KILLS.get() ? 1 : 0;
+    }
+    return sting_kills == 1;
+  }
 
   public static boolean getAlwaysAngry() {
     if (always_angry == -1) {
@@ -87,6 +96,7 @@ public class ConfigManager {
     COMMON_BUILDER.pop();
     COMMON_BUILDER.push("general");
     ALWAYS_ANGRY = COMMON_BUILDER.comment("whether or not bees will always attack or only if angered").define("always_angry", true);
+    STING_KILLS = COMMON_BUILDER.comment("whether or not bees will die after stinging").define("sting_kills", false);
     COMMON_BUILDER.pop();
     COMMON_CONFIG = COMMON_BUILDER.build();
   }

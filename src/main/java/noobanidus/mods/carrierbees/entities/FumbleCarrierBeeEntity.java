@@ -1,37 +1,22 @@
 package noobanidus.mods.carrierbees.entities;
 
-import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.world.World;
 import noobanidus.mods.carrierbees.config.ConfigManager;
 import noobanidus.mods.carrierbees.entities.projectiles.FumbleCombEntity;
-import noobanidus.mods.carrierbees.init.ModEntities;
 
-public class FumbleCarrierBeeEntity extends CarrierBeeEntity {
+public class FumbleCarrierBeeEntity extends AppleBeeEntity {
   public FumbleCarrierBeeEntity(EntityType<? extends FumbleCarrierBeeEntity> type, World world) {
     super(type, world);
   }
 
   @Override
   protected void registerGoals() {
-    this.goalSelector.addGoal(0, new FumbleCarrierBeeEntity.StingGoal(this, 1.4D, true));
     if (ConfigManager.getHoneycombDamage() > 0) {
       this.goalSelector.addGoal(1, new FumbleCarrierBeeEntity.HoneycombProjectileAttackGoal(this));
     }
-    this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.25D));
-    this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-    this.goalSelector.addGoal(8, new FumbleCarrierBeeEntity.WanderGoal());
-    this.goalSelector.addGoal(9, new SwimGoal(this));
-    this.targetSelector.addGoal(1, (new FumbleCarrierBeeEntity.AngerGoal(this)).setCallsForHelp());
-    this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, (pos) -> Math.abs(pos.posY - this.posY) <= 4.0D));
-  }
-
-  @Override
-  public FumbleCarrierBeeEntity createChild(AgeableEntity entity) {
-    return ModEntities.FUMBLE_BEE.get().create(entity.world);
   }
 
   static class HoneycombProjectileAttackGoal extends Goal {
@@ -44,7 +29,7 @@ public class FumbleCarrierBeeEntity extends CarrierBeeEntity {
 
     @Override
     public boolean shouldExecute() {
-      return this.parentEntity.getAttackTarget() != null;
+      return this.parentEntity.getAttackTarget() != null && this.parentEntity.isAngry();
     }
 
     @Override
@@ -53,7 +38,15 @@ public class FumbleCarrierBeeEntity extends CarrierBeeEntity {
     }
 
     @Override
+    public boolean shouldContinueExecuting() {
+      return this.parentEntity.isAngry();
+    }
+
+    @Override
     public void resetTask() {
+      this.parentEntity.setAttackTarget(null);
+      this.parentEntity.setAggroed(false);
+      this.parentEntity.getNavigator().clearPath();
     }
 
     @Override

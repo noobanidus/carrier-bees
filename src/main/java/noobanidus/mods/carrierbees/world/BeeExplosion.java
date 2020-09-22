@@ -16,6 +16,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 import noobanidus.mods.carrierbees.config.ConfigManager;
+import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
 import noobanidus.mods.carrierbees.entities.BombleBeeEntity;
 import noobanidus.mods.carrierbees.entities.IAppleBee;
 import noobanidus.mods.carrierbees.entities.projectiles.BombEntity;
@@ -66,7 +67,7 @@ public class BeeExplosion extends Explosion {
     ForgeEventFactory.onExplosionDetonate(this.world, this, list, f3);
 
     for (Entity entity : list) {
-      if (entity.isImmuneToExplosions() || entity instanceof BombEntity || entity instanceof IAppleBee) {
+      if (entity.isImmuneToExplosions() || entity instanceof BombEntity || entity instanceof AppleBeeEntity) {
         continue;
       }
       if (entity instanceof LivingEntity) {

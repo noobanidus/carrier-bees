@@ -4,13 +4,15 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.renderer.entity.model.AgeableModel;
 import net.minecraft.client.renderer.entity.model.ModelUtils;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
 import noobanidus.mods.carrierbees.entities.CarrierBeeEntity;
 
 @OnlyIn(Dist.CLIENT)
-public class CarrierBeeModel<T extends CarrierBeeEntity> extends AgeableModel<T> {
+public class CarrierBeeModel<T extends AppleBeeEntity> extends AgeableModel<T> {
   public final ModelRenderer body;
   private final ModelRenderer torso;
   private final ModelRenderer rightWing;

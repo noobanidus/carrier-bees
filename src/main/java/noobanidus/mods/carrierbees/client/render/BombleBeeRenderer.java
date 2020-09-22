@@ -14,6 +14,7 @@ import noobanidus.mods.carrierbees.entities.BombleBeeEntity;
 @OnlyIn(Dist.CLIENT)
 public class BombleBeeRenderer extends MobRenderer<BombleBeeEntity, BombleBeeModel<BombleBeeEntity>> {
   private static final ResourceLocation SKIN = new ResourceLocation(CarrierBees.MODID, "textures/entity/bomblebee.png");
+  private static final ResourceLocation SKIN_ANGRY = new ResourceLocation(CarrierBees.MODID, "textures/entity/bomblebee_angry.png");
 
   public BombleBeeRenderer(EntityRendererManager bee) {
     super(bee, new BombleBeeModel<>(), 0.4F);
@@ -29,6 +30,9 @@ public class BombleBeeRenderer extends MobRenderer<BombleBeeEntity, BombleBeeMod
 
   @Override
   public ResourceLocation getEntityTexture(BombleBeeEntity bee) {
+    if (bee.isAngry()) {
+      return SKIN_ANGRY;
+    }
     return SKIN;
   }
 }

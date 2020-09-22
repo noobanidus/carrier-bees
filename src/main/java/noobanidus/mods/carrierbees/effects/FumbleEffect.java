@@ -24,8 +24,8 @@ public class FumbleEffect extends Effect {
 
   @Override
   public void performEffect(LivingEntity entity, int amplifier) {
-    if (entity instanceof PlayerEntity) {
-      if (rand.nextInt(12) != 0) {
+    if (entity instanceof PlayerEntity && !entity.world.isRemote()) {
+      if (rand.nextInt(24) != 0) {
         // Don't drop an item every tick
         return;
       }
