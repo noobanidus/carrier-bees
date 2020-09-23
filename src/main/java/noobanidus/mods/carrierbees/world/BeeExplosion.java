@@ -17,8 +17,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 import noobanidus.mods.carrierbees.config.ConfigManager;
 import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
-import noobanidus.mods.carrierbees.entities.BombleBeeEntity;
-import noobanidus.mods.carrierbees.entities.IAppleBee;
 import noobanidus.mods.carrierbees.entities.projectiles.BombEntity;
 
 import javax.annotation.Nullable;

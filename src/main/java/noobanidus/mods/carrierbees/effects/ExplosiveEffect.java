@@ -2,14 +2,10 @@ package noobanidus.mods.carrierbees.effects;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectType;
 import net.minecraft.potion.InstantEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.Explosion;
-import net.minecraftforge.common.ForgeHooks;
-
-import java.util.Random;
 
 public class ExplosiveEffect extends InstantEffect {
   public ExplosiveEffect() {

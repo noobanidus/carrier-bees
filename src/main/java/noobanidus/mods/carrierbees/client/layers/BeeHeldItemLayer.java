@@ -8,15 +8,12 @@ import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import noobanidus.mods.carrierbees.client.model.CarrierBeeModel;
 import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
-import noobanidus.mods.carrierbees.entities.CarrierBeeEntity;
 
 @SuppressWarnings("deprecation")
 @OnlyIn(Dist.CLIENT)

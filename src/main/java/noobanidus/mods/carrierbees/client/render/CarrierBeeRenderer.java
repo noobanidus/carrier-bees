@@ -11,7 +11,6 @@ import noobanidus.mods.carrierbees.CarrierBees;
 import noobanidus.mods.carrierbees.client.layers.BeeHeldItemLayer;
 import noobanidus.mods.carrierbees.client.model.CarrierBeeModel;
 import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
-import noobanidus.mods.carrierbees.entities.CarrierBeeEntity;
 import noobanidus.mods.carrierbees.entities.FumbleCarrierBeeEntity;
 
 @OnlyIn(Dist.CLIENT)
