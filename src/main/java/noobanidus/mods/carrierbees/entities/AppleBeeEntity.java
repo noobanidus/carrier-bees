@@ -3,6 +3,8 @@ package noobanidus.mods.carrierbees.entities;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.RandomPositionGenerator;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.FlyingMovementController;
 import net.minecraft.entity.ai.controller.LookController;
 import net.minecraft.entity.ai.goal.*;
@@ -18,15 +20,16 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.FlyingPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.pathfinding.PathNodeType;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
@@ -64,7 +67,7 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
     this.goalSelector.addGoal(8, new AppleBeeEntity.WanderGoal());
     this.goalSelector.addGoal(9, new SwimGoal(this));
     this.targetSelector.addGoal(1, (new AppleBeeEntity.AngerGoal(this)).setCallsForHelp());
-    this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, (pos) -> Math.abs(pos.posY - this.posY) <= 4.0D));
+    this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, (pos) -> Math.abs(pos.getPosY() - this.getPosY()) <= 4.0D));
   }
 
   @Override
@@ -176,15 +179,9 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
     return (this.dataManager.get(multipleByteTracker) & value) != 0;
   }
 
-  @Override
-  protected void registerAttributes() {
-    super.registerAttributes();
-    this.getAttributes().registerAttribute(SharedMonsterAttributes.FLYING_SPEED);
-    this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(16.0D);
-    this.getAttribute(SharedMonsterAttributes.FLYING_SPEED).setBaseValue(0.12D);
-    this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.12D);
-    this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(4.0D);
-    this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(128.0D);
+  // TODO
+  public static AttributeModifierMap.MutableAttribute createAttributes() {
+    return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 16.0D).createMutableAttribute(Attributes.FLYING_SPEED, 0.12).createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.12).createMutableAttribute(Attributes.ATTACK_DAMAGE, 4.0D).createMutableAttribute(Attributes.FOLLOW_RANGE, 128.0D);
   }
 
   @Override
@@ -316,8 +313,9 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
     return CreatureAttribute.ARTHROPOD;
   }
 
+  // TODO
   @Override
-  protected void handleFluidJump(Tag<Fluid> fluid) {
+  protected void handleFluidJump(ITag<Fluid> fluid) {
     this.setMotion(this.getMotion().add(0.0D, 0.01D, 0.0D));
   }
 
@@ -340,7 +338,7 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
 
   @Nullable
   @Override
-  public AgeableEntity createChild(AgeableEntity ageableEntity) {
+  public AgeableEntity func_241840_a(ServerWorld serverWorld, AgeableEntity ageableEntity) {
     return null;
   }
 
@@ -356,7 +354,7 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
     }
 
     @Override
-    protected boolean func_220680_b() {
+    protected boolean shouldResetPitch() {
       return true;
     }
   }
@@ -373,12 +371,12 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
 
     @Override
     public boolean shouldContinueExecuting() {
-      return AppleBeeEntity.this.navigator.func_226337_n_();
+      return AppleBeeEntity.this.navigator.hasPath();
     }
 
     @Override
     public void startExecuting() {
-      Vec3d pos = this.getRandomLocation();
+      Vector3d pos = this.getRandomLocation();
       if (pos != null) {
         AppleBeeEntity.this.navigator.setPath(AppleBeeEntity.this.navigator.getPathToPos(new BlockPos(pos), 1), 1.0D);
       }
@@ -386,10 +384,10 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
     }
 
     @Nullable
-    private Vec3d getRandomLocation() {
-      Vec3d lookVec = AppleBeeEntity.this.getLook(0.0F);
+    private Vector3d getRandomLocation() {
+      Vector3d lookVec = AppleBeeEntity.this.getLook(0.0F);
 
-      Vec3d target = RandomPositionGenerator.findAirTarget(AppleBeeEntity.this, 8, 7, lookVec, (float) (Math.PI / 2), 2, 1);
+      Vector3d target = RandomPositionGenerator.findAirTarget(AppleBeeEntity.this, 8, 7, lookVec, (float) (Math.PI / 2), 2, 1);
       return target != null ? target : RandomPositionGenerator.findGroundTarget(AppleBeeEntity.this, 8, 4, -2, lookVec, Math.PI / 2);
     }
   }

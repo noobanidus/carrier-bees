@@ -18,7 +18,7 @@ import java.util.Arrays;
 @OnlyIn(Dist.CLIENT)
 public class ClientSetup {
   public static void setup(FMLClientSetupEvent event) {
-    DeferredWorkQueue.runLater(() -> {
+    event.enqueueWork(() -> {
       Minecraft mc = event.getMinecraftSupplier().get();
       EntityRendererManager manager = mc.getRenderManager();
       manager.register(ModEntities.CARRIER_BEE.get(), new CarrierBeeRenderer(manager));

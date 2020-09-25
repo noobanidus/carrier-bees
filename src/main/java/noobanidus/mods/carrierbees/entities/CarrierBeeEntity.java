@@ -108,11 +108,11 @@ public class CarrierBeeEntity extends AppleBeeEntity {
         World world = this.parentEntity.world;
         ++this.attackTimer;
         if (this.attackTimer == 20) {
-          double d2 = livingentity.posX - this.parentEntity.posX;
+          double d2 = livingentity.getPosX() - this.parentEntity.getPosX();
           double d3 = livingentity.getPosYHeight(0.5D) - (0.5D + this.parentEntity.getPosYHeight(0.5D));
-          double d4 = livingentity.posZ - this.parentEntity.posZ;
+          double d4 = livingentity.getPosZ() - this.parentEntity.getPosZ();
           HoneyCombEntity honeycomb = new HoneyCombEntity(this.parentEntity, d2, d3, d4, world);
-          honeycomb.setPosition(this.parentEntity.posX, this.parentEntity.getPosYHeight(0.5D) + 0.2D, honeycomb.posZ);
+          honeycomb.setPosition(this.parentEntity.getPosX(), this.parentEntity.getPosYHeight(0.5D) + 0.5D, honeycomb.getPosZ());
           world.addEntity(honeycomb);
           this.attackTimer = -40;
         }

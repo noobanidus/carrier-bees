@@ -11,7 +11,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -30,7 +30,7 @@ public class BeeExplosion extends Explosion {
   private final double z;
   private final Entity exploder;
   private DamageSource damageSource;
-  private final Vec3d position;
+  private final Vector3d position;
 
   public static BeeExplosion createExplosion(World world, Entity entity, double x, double y, double z) {
     final BeeExplosion explosion = new BeeExplosion(world, entity, x, y, z, Mode.BREAK);
@@ -49,7 +49,7 @@ public class BeeExplosion extends Explosion {
     this.y = y;
     this.z = z;
     this.damageSource = DamageSource.causeExplosionDamage(this);
-    this.position = new Vec3d(this.x, this.y, this.z);
+    this.position = new Vector3d(this.x, this.y, this.z);
   }
 
   @Override
@@ -94,11 +94,6 @@ public class BeeExplosion extends Explosion {
   }
 
   @Override
-  public void setDamageSource(DamageSource source) {
-    this.damageSource = source;
-  }
-
-  @Override
   @Nullable
   public LivingEntity getExplosivePlacedBy() {
     if (this.exploder == null) {
@@ -108,7 +103,11 @@ public class BeeExplosion extends Explosion {
     } else if (this.exploder instanceof LivingEntity) {
       return (LivingEntity) this.exploder;
     } else {
-      return this.exploder instanceof DamagingProjectileEntity ? ((DamagingProjectileEntity) this.exploder).shootingEntity : null;
+      Entity e = ((DamagingProjectileEntity) this.exploder).func_234616_v_();
+      if (e instanceof LivingEntity) {
+        return (LivingEntity) e;
+      }
+      return null;
     }
   }
 
@@ -122,7 +121,7 @@ public class BeeExplosion extends Explosion {
   }
 
   @Override
-  public Vec3d getPosition() {
+  public Vector3d getPosition() {
     return this.position;
   }
 }

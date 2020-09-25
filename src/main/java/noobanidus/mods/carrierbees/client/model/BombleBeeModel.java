@@ -86,7 +86,7 @@ public class BombleBeeModel<T extends BombleBeeEntity> extends AgeableModel<T> {
     this.rightAntenna.rotateAngleX = 0.0F;
     this.body.rotateAngleX = 0.0F;
     this.body.rotationPointY = 19.0F;
-    boolean onGround = entity.onGround && entity.getMotion().lengthSquared() < 1.0E-7D;
+    boolean onGround = entity.isOnGround() && entity.getMotion().lengthSquared() < 1.0E-7D;
     float v1;
     if (onGround) {
       this.rightWing.rotateAngleY = -0.2618F;

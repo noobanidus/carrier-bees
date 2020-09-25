@@ -16,7 +16,7 @@ public class ExplosiveEffect extends InstantEffect {
   public void performEffect(LivingEntity entity, int amplifier) {
     if (entity instanceof PlayerEntity) {
       PlayerEntity player = (PlayerEntity) entity;
-      player.world.createExplosion(player, DamageSource.causeExplosionDamage(player), player.posX, player.posY, player.posZ, 2.0F, false, Explosion.Mode.BREAK);
+      player.world.createExplosion(player, DamageSource.causeExplosionDamage(player), null, player.getPosX(), player.getPosY(), player.getPosZ(), 2.0F, false, Explosion.Mode.BREAK);
     }
   }
 }

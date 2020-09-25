@@ -76,27 +76,28 @@ public class HoneyCombEntity extends DamagingProjectileEntity implements IEntity
       if (ray.getType() == RayTraceResult.Type.ENTITY) {
         EntityRayTraceResult ray2 = (EntityRayTraceResult) ray;
         Entity entity = ray2.getEntity();
-        if ((entity != this || entity != this.shootingEntity) && entity instanceof LivingEntity && !(entity instanceof AppleBeeEntity)) {
+        Entity shootingEntity = this.func_234616_v_();
+        if ((entity != this || entity != shootingEntity) && entity instanceof LivingEntity && !(entity instanceof AppleBeeEntity)) {
           LivingEntity living = (LivingEntity) ray2.getEntity();
           living.addPotionEffect(getInstance());
           DamageSource source;
-          if (shootingEntity != null) {
-            source = DamageSource.causeMobDamage(shootingEntity).setMagicDamage();
+          if (shootingEntity instanceof LivingEntity) {
+            source = DamageSource.causeMobDamage((LivingEntity) shootingEntity).setMagicDamage();
           } else {
             source = DamageSource.MAGIC;
           }
           living.attackEntityFrom(source, ConfigManager.getHoneycombDamage());
           double val = ConfigManager.getHoneycombSize();
           List<LivingEntity> list = this.world.getEntitiesWithinAABBExcludingEntity(living, this.getBoundingBox().grow(val, val, val)).stream().filter(o -> o instanceof LivingEntity).map(o -> (LivingEntity) o).collect(Collectors.toList());
-          world.addParticle(ParticleTypes.FALLING_HONEY, living.posX, living.posY, living.posZ, 0, 0, 0);
+          world.addParticle(ParticleTypes.FALLING_HONEY, living.getPosX(), living.getPosY(), living.getPosZ(), 0, 0, 0);
           world.playSound(null, this.getPosition(), ModSounds.SPLOOSH.get(), SoundCategory.HOSTILE, 1f, 0.5f);
           for (LivingEntity l : list) {
-            if (l == this.shootingEntity || l instanceof AppleBeeEntity) {
+            if (l == shootingEntity || l instanceof AppleBeeEntity) {
               continue;
             }
             l.addPotionEffect(getInstance());
             l.attackEntityFrom(source, ConfigManager.getHoneycombDamage());
-            world.addParticle(ParticleTypes.FALLING_HONEY, l.posX, l.posY, l.posZ, 0, 0, 0);
+            world.addParticle(ParticleTypes.FALLING_HONEY, l.getPosX(), l.getPosY(), l.getPosZ(), 0, 0, 0);
           }
         }
       }
@@ -127,7 +128,7 @@ public class HoneyCombEntity extends DamagingProjectileEntity implements IEntity
   public void handleStatusUpdate(byte id) {
     if (id == 3) {
       for (int i = 0; i < 8; ++i) {
-        this.world.addParticle(new ItemParticleData(ParticleTypes.ITEM, getItem()), false, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
+        this.world.addParticle(new ItemParticleData(ParticleTypes.ITEM, getItem()), false, this.getPosX(), this.getPosY(), this.getPosZ(), 0.0D, 0.0D, 0.0D);
       }
     } else {
       super.handleStatusUpdate(id);

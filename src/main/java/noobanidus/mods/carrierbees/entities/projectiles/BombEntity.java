@@ -62,12 +62,12 @@ public class BombEntity extends DamagingProjectileEntity implements IEntityAddit
       if (ray instanceof EntityRayTraceResult) {
         EntityRayTraceResult eray = (EntityRayTraceResult) ray;
         Entity entity = eray.getEntity();
-        if (entity != this && entity != this.shootingEntity && !(entity instanceof AppleBeeEntity)) {
+        if (entity != this && entity != this.func_234616_v_() && !(entity instanceof AppleBeeEntity)) {
           entity.attackEntityFrom(DamageSource.GENERIC, ConfigManager.getExplosionDamage());
         }
       }
     }
-    BeeExplosion.createExplosion(this.world, this, this.posX, this.getPosYHeight(0.0625D), this.posZ);
+    BeeExplosion.createExplosion(this.world, this, this.getPosX(), this.getPosYHeight(0.0625D), this.getPosZ());
     if (!world.isRemote) {
       this.remove();
     }
@@ -97,7 +97,7 @@ public class BombEntity extends DamagingProjectileEntity implements IEntityAddit
   public void handleStatusUpdate(byte id) {
     if (id == 3) {
       for (int i = 0; i < 8; ++i) {
-        this.world.addParticle(new ItemParticleData(ParticleTypes.ITEM, getItem()), false, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
+        this.world.addParticle(new ItemParticleData(ParticleTypes.ITEM, getItem()), false, this.getPosX(), this.getPosY(), this.getPosZ(), 0.0D, 0.0D, 0.0D);
       }
     } else {
       super.handleStatusUpdate(id);

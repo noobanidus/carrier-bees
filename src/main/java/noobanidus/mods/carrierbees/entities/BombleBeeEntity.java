@@ -53,7 +53,7 @@ public class BombleBeeEntity extends AppleBeeEntity {
   @Override
   public void onDeath(DamageSource death) {
     super.onDeath(death);
-    BeeExplosion.createExplosion(this.world, this, this.posX, this.getPosYHeight(0.0625D), this.posZ);
+    BeeExplosion.createExplosion(this.world, this, this.getPosX(), this.getPosYHeight(0.0625D), this.getPosY());
   }
 
   static class BombProjectileAttackGoal extends Goal {
@@ -96,11 +96,11 @@ public class BombleBeeEntity extends AppleBeeEntity {
         World world = this.parentEntity.world;
         ++this.attackTimer;
         if (this.attackTimer == 20) {
-          double d2 = livingentity.posX - this.parentEntity.posX;
+          double d2 = livingentity.getPosX() - this.parentEntity.getPosX();
           double d3 = livingentity.getPosYHeight(0.5D) - (0.5D + this.parentEntity.getPosYHeight(0.5D));
-          double d4 = livingentity.posZ - this.parentEntity.posZ;
+          double d4 = livingentity.getPosZ() - this.parentEntity.getPosZ();
           BombEntity bomb = new BombEntity(this.parentEntity, d2, d3, d4, world);
-          bomb.setPosition(this.parentEntity.posX, this.parentEntity.getPosYHeight(0.5D) + 0.5D, bomb.posZ);
+          bomb.setPosition(this.parentEntity.getPosX(), this.parentEntity.getPosYHeight(0.5D) + 0.5D, bomb.getPosZ());
           world.addEntity(bomb);
           this.attackTimer = -40;
         }

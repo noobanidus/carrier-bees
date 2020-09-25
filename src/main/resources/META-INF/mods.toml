@@ -10,6 +10,7 @@ loaderVersion="[31,)" #mandatory (26 is current forge version)
 # A URL to refer people to when problems occur with this mod
 issueTrackerURL="https://github.com/noobanidus/carrierbees/issues" #optional
 # A list of mods - how many allowed here is determined by the individual mod loader
+license="https://github.com/noobanidus/carrier-bees/blob/master/LICENSE"
 [[mods]] #mandatory
 # The modid of the mod
 modId="carrierbees" #mandatory
