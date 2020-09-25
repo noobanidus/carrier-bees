@@ -14,6 +14,7 @@ public class FumbleCarrierBeeEntity extends AppleBeeEntity {
 
   @Override
   protected void registerGoals() {
+    super.registerGoals();
     if (ConfigManager.getHoneycombDamage() > 0) {
       this.goalSelector.addGoal(1, new FumbleCarrierBeeEntity.HoneycombProjectileAttackGoal(this));
     }
