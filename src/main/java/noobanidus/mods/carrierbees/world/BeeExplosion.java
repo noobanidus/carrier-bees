@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Explosion;
+import net.minecraft.world.ExplosionContext;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 import noobanidus.mods.carrierbees.config.ConfigManager;
@@ -33,7 +34,7 @@ public class BeeExplosion extends Explosion {
   private final Vector3d position;
 
   public static BeeExplosion createExplosion(World world, Entity entity, double x, double y, double z) {
-    final BeeExplosion explosion = new BeeExplosion(world, entity, x, y, z, Mode.BREAK);
+    final BeeExplosion explosion = new BeeExplosion(world, entity, null, null, x, y, z, 4f, false, Mode.BREAK);
     if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(world, explosion)) return explosion;
 
     explosion.doExplosionA();
@@ -41,10 +42,10 @@ public class BeeExplosion extends Explosion {
     return explosion;
   }
 
-  private BeeExplosion(World world, @Nullable Entity entity, double x, double y, double z, Explosion.Mode mode) {
-    super(world, entity, x, y, z, 4f, false, mode);
+  private BeeExplosion(World world, @Nullable Entity exploder, @Nullable DamageSource source, @Nullable ExplosionContext context, double x, double y, double z, float size, boolean causesFire, Explosion.Mode mode) {
+    super(world, exploder, source, context, x, y, z, size, causesFire, mode);
     this.world = world;
-    this.exploder = entity;
+    this.exploder = exploder;
     this.x = x;
     this.y = y;
     this.z = z;
