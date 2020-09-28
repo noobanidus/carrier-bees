@@ -102,6 +102,9 @@ public class HoneyCombEntity extends DamagingProjectileEntity implements IEntity
         }
       }
     }
+    if (!world.isRemote) {
+      this.remove();
+    }
   }
 
   @Override
