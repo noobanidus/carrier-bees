@@ -181,7 +181,7 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
 
   // TODO
   public static AttributeModifierMap.MutableAttribute createAttributes() {
-    return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 16.0D).createMutableAttribute(Attributes.FLYING_SPEED, 0.12).createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.12).createMutableAttribute(Attributes.ATTACK_DAMAGE, 4.0D).createMutableAttribute(Attributes.FOLLOW_RANGE, 128.0D);
+    return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 16.0D).createMutableAttribute(Attributes.FLYING_SPEED, 0.6).createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.3).createMutableAttribute(Attributes.ATTACK_DAMAGE, 4.0D).createMutableAttribute(Attributes.FOLLOW_RANGE, 128.0D);
   }
 
   @Override
