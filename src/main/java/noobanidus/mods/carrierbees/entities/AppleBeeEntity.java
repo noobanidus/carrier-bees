@@ -66,7 +66,7 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
     this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
     this.goalSelector.addGoal(8, new AppleBeeEntity.WanderGoal());
     this.goalSelector.addGoal(9, new SwimGoal(this));
-    this.targetSelector.addGoal(1, (new AppleBeeEntity.AngerGoal(this)).setCallsForHelp());
+    this.targetSelector.addGoal(1, (new AppleBeeEntity.AngerGoal(this)).setCallsForHelp(BombleBeeEntity.class, CarrierBeeEntity.class, FumbleCarrierBeeEntity.class));
     this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, (pos) -> Math.abs(pos.getPosY() - this.getPosY()) <= 4.0D));
   }
 
@@ -356,6 +356,13 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
     @Override
     protected boolean shouldResetPitch() {
       return true;
+    }
+
+    @Override
+    public void setLookPositionWithEntity(Entity p_75651_1_, float p_75651_2_, float p_75651_3_) {
+      if (p_75651_1_ != null) {
+        super.setLookPositionWithEntity(p_75651_1_, p_75651_2_, p_75651_3_);
+      }
     }
   }
 
