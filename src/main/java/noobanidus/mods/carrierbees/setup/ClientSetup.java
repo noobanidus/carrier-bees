@@ -23,7 +23,7 @@ public class ClientSetup {
       EntityRendererManager manager = mc.getRenderManager();
       manager.register(ModEntities.CARRIER_BEE.get(), new CarrierBeeRenderer(manager));
       manager.register(ModEntities.FUMBLE_BEE.get(), new CarrierBeeRenderer(manager));
-      manager.register(ModEntities.BOMBLE_BEE.get(), new BombleBeeRenderer(manager));
+      manager.register(ModEntities.BOMBLE_BEE.get(), new CarrierBeeRenderer(manager));
       ItemRenderer renderer = mc.getItemRenderer();
       manager.register(ModEntities.HONEY_COMB_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 0.9F, true));
       manager.register(ModEntities.FUMBLE_COMB_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 0.9F, true));

@@ -11,6 +11,7 @@ import noobanidus.mods.carrierbees.CarrierBees;
 import noobanidus.mods.carrierbees.client.layers.BeeHeldItemLayer;
 import noobanidus.mods.carrierbees.client.model.CarrierBeeModel;
 import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
+import noobanidus.mods.carrierbees.entities.BombleBeeEntity;
 import noobanidus.mods.carrierbees.entities.FumbleCarrierBeeEntity;
 
 @OnlyIn(Dist.CLIENT)
@@ -19,6 +20,8 @@ public class CarrierBeeRenderer extends MobRenderer<AppleBeeEntity, CarrierBeeMo
   private static final ResourceLocation ANGRY_SKIN = new ResourceLocation(CarrierBees.MODID, "textures/entity/carrier_bee_angry.png");
   private static final ResourceLocation FUMBLE_SKIN = new ResourceLocation(CarrierBees.MODID, "textures/entity/fumblebee.png");
   private static final ResourceLocation FUMBLE_ANGRY_SKIN = new ResourceLocation(CarrierBees.MODID, "textures/entity/fumblebee_angry.png");
+  private static final ResourceLocation BOMBLE_SKIN = new ResourceLocation(CarrierBees.MODID, "textures/entity/bomblebee.png");
+  private static final ResourceLocation BOMBLE_SKIN_ANGRY = new ResourceLocation(CarrierBees.MODID, "textures/entity/bomblebee_angry.png");
 
   public CarrierBeeRenderer(EntityRendererManager bee) {
     super(bee, new CarrierBeeModel<>(), 0.4F);
@@ -28,7 +31,11 @@ public class CarrierBeeRenderer extends MobRenderer<AppleBeeEntity, CarrierBeeMo
   @Override
   public void render(AppleBeeEntity p_225623_1_, float p_225623_2_, float p_225623_3_, MatrixStack stack, IRenderTypeBuffer p_225623_5_, int p_225623_6_) {
     stack.push();
-    stack.scale(1.5f, 1.5f, 1.5f);
+    float scale = 1.5f;
+    if (p_225623_1_ instanceof BombleBeeEntity) {
+      scale = 1.9f;
+    }
+    stack.scale(scale, scale, scale);
     super.render(p_225623_1_, p_225623_2_, p_225623_3_, stack, p_225623_5_, p_225623_6_);
     stack.pop();
   }
@@ -40,6 +47,12 @@ public class CarrierBeeRenderer extends MobRenderer<AppleBeeEntity, CarrierBeeMo
         return FUMBLE_ANGRY_SKIN;
       }
       return FUMBLE_SKIN;
+    }
+    if (bee instanceof BombleBeeEntity) {
+      if (bee.isAngry()) {
+        return BOMBLE_SKIN_ANGRY;
+      }
+      return BOMBLE_SKIN;
     }
     if (bee.isAngry()) {
       return ANGRY_SKIN;
