@@ -52,5 +52,7 @@ public class CarrierBees {
     ModSounds.load();
     ModItems.load();
     ModEffects.load();
+    ModBlocks.load();
+    ModTiles.load();
   }
 }

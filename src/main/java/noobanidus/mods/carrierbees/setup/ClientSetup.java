@@ -22,10 +22,12 @@ public class ClientSetup {
       manager.register(ModEntities.CARRIER_BEE.get(), new CarrierBeeRenderer(manager));
       manager.register(ModEntities.FUMBLE_BEE.get(), new CarrierBeeRenderer(manager));
       manager.register(ModEntities.BOMBLE_BEE.get(), new CarrierBeeRenderer(manager));
+      manager.register(ModEntities.STUMBLE_BEE.get(), new CarrierBeeRenderer(manager));
       ItemRenderer renderer = mc.getItemRenderer();
       manager.register(ModEntities.HONEY_COMB_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 0.9F, true));
       manager.register(ModEntities.FUMBLE_COMB_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 0.9F, true));
       manager.register(ModEntities.BOMB_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 1.75F, true));
+      manager.register(ModEntities.STUMBLE_COMB_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 0.9f, true));
       for (LazySpawnEggItem<?> item : Arrays.asList(ModEntities.CARRIER_BEE_EGG.get(), ModEntities.BOMBLE_BEE_EGG.get(), ModEntities.FUMBLE_BEE_EGG.get())) {
         mc.getItemColors().register((a, layer) -> item.getColor(layer), item);
       }

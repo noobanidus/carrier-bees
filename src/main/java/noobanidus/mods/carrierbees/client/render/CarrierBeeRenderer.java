@@ -13,6 +13,7 @@ import noobanidus.mods.carrierbees.client.model.CarrierBeeModel;
 import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
 import noobanidus.mods.carrierbees.entities.BombleBeeEntity;
 import noobanidus.mods.carrierbees.entities.FumbleCarrierBeeEntity;
+import noobanidus.mods.carrierbees.entities.StumbleCarrierBeeEntity;
 
 @OnlyIn(Dist.CLIENT)
 public class CarrierBeeRenderer extends MobRenderer<AppleBeeEntity, CarrierBeeModel<AppleBeeEntity>> {
@@ -22,6 +23,8 @@ public class CarrierBeeRenderer extends MobRenderer<AppleBeeEntity, CarrierBeeMo
   private static final ResourceLocation FUMBLE_ANGRY_SKIN = new ResourceLocation(CarrierBees.MODID, "textures/entity/fumblebee_angry.png");
   private static final ResourceLocation BOMBLE_SKIN = new ResourceLocation(CarrierBees.MODID, "textures/entity/bomblebee.png");
   private static final ResourceLocation BOMBLE_SKIN_ANGRY = new ResourceLocation(CarrierBees.MODID, "textures/entity/bomblebee_angry.png");
+  private static final ResourceLocation STUMBLE_SKIN = new ResourceLocation(CarrierBees.MODID, "textures/entity/stumblebee.png");
+  private static final ResourceLocation STUMBLE_SKIN_ANGRY = new ResourceLocation(CarrierBees.MODID, "textures/entity/stumblebee_angry.png");
 
   public CarrierBeeRenderer(EntityRendererManager bee) {
     super(bee, new CarrierBeeModel<>(), 0.4F);
@@ -53,6 +56,12 @@ public class CarrierBeeRenderer extends MobRenderer<AppleBeeEntity, CarrierBeeMo
         return BOMBLE_SKIN_ANGRY;
       }
       return BOMBLE_SKIN;
+    }
+    if (bee instanceof StumbleCarrierBeeEntity) {
+      if (bee.isAngry()) {
+        return STUMBLE_SKIN_ANGRY;
+      }
+      return STUMBLE_SKIN;
     }
     if (bee.isAngry()) {
       return ANGRY_SKIN;

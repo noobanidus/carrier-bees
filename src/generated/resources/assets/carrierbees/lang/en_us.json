@@ -1,17 +1,23 @@
 {
+  "block.carrierbees.crawl": "Crawl",
   "effect.carrierbees.explosive": "Explosive",
   "effect.carrierbees.fumble": "Fumble",
+  "effect.carrierbees.stumble": "Stumble",
   "entity.carrierbees.bomb_projectile": "Bomb Projectile",
   "entity.carrierbees.bomble_bee": "Bomble Bee",
   "entity.carrierbees.carrier_bee": "Carrier Bee",
   "entity.carrierbees.fumble_bee": "Fumble Bee",
   "entity.carrierbees.fumble_comb_entity": "Fumble Comb Entity",
   "entity.carrierbees.honey_comb_projectile": "Honey Comb Projectile",
+  "entity.carrierbees.stumble_bee": "Stumble Bee",
+  "entity.carrierbees.stumble_comb_entity": "Stumble Comb Entity",
   "item.carrierbees.bomble_bee_spawn_egg": "Bomble Bee Spawn Egg",
   "item.carrierbees.bombycomb": "Bombycomb",
   "item.carrierbees.carrier_bee_spawn_egg": "Carrier Bee Spawn Egg",
   "item.carrierbees.fumble_bee_spawn_egg": "Fumble Bee Spawn Egg",
   "item.carrierbees.fumblecomb": "Fumblecomb",
+  "item.carrierbees.stumble_bee_spawn_egg": "Stumble Bee Spawn Egg",
+  "item.carrierbees.stumblecomb": "Stumblecomb",
   "itemGroup.carrierbees": "Carrier Bees",
   "subtitles.carrierbees.sploosh": "Sploosh!"
 }

@@ -1,5 +1,5 @@
 modLoader="javafml" #mandatory
-loaderVersion="[35,)" #mandatory (26 is current forge version)
+loaderVersion="[34,)" #mandatory (26 is current forge version)
 issueTrackerURL="https://github.com/noobanidus/carrierbees/issues" #optional
 license="https://github.com/noobanidus/carrier-bees/blob/master/LICENSE"
 [[mods]] #mandatory
@@ -15,7 +15,7 @@ Bees that carry things.
 [[dependencies.CarrierBees]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[35,)" #mandatory
+    versionRange="[34,)" #mandatory
     ordering="NONE"
     side="BOTH"
 # Here's another dependency

@@ -17,6 +17,7 @@ public class CommonSetup {
       GlobalEntityTypeAttributes.put(ModEntities.BOMBLE_BEE.get(), attr.create());
       GlobalEntityTypeAttributes.put(ModEntities.FUMBLE_BEE.get(), attr.create());
       GlobalEntityTypeAttributes.put(ModEntities.CARRIER_BEE.get(), attr.create());
+      GlobalEntityTypeAttributes.put(ModEntities.STUMBLE_BEE.get(), attr.create());
 
       SpawnEggItem.EGGS.remove(null);
       SpawnEggItem.EGGS.put(ModEntities.BOMBLE_BEE.get(), ModEntities.BOMBLE_BEE_EGG.get());
