@@ -8,5 +8,15 @@
       "minecraft:block/honeyblock/step5"
     ],
     "subtitle": "subtitles.carrierbees.sploosh"
+  },
+  "crumbled_item": {
+      "sounds": [
+          {
+              "name": "minecraft:random/break",
+              "pitch": 2.0,
+              "volume": 1.0
+          }
+      ],
+      "subtitle": "subtitles.carrierbees.crumbled"
   }
 }

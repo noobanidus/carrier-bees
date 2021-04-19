@@ -18,11 +18,14 @@ public class CommonSetup {
       GlobalEntityTypeAttributes.put(ModEntities.FUMBLE_BEE.get(), attr.create());
       GlobalEntityTypeAttributes.put(ModEntities.CARRIER_BEE.get(), attr.create());
       GlobalEntityTypeAttributes.put(ModEntities.STUMBLE_BEE.get(), attr.create());
+      GlobalEntityTypeAttributes.put(ModEntities.CRUMBLE_BEE.get(), attr.create());
 
       SpawnEggItem.EGGS.remove(null);
       SpawnEggItem.EGGS.put(ModEntities.BOMBLE_BEE.get(), ModEntities.BOMBLE_BEE_EGG.get());
       SpawnEggItem.EGGS.put(ModEntities.FUMBLE_BEE.get(), ModEntities.FUMBLE_BEE_EGG.get());
       SpawnEggItem.EGGS.put(ModEntities.CARRIER_BEE.get(), ModEntities.CARRIER_BEE_EGG.get());
+      SpawnEggItem.EGGS.put(ModEntities.STUMBLE_BEE.get(), ModEntities.STUMBLE_BEE_EGG.get());
+      SpawnEggItem.EGGS.put(ModEntities.CRUMBLE_BEE.get(), ModEntities.CRUMBLE_BEE_EGG.get());
     });
   }
 }

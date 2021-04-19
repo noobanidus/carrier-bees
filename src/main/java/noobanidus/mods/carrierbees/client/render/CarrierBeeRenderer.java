@@ -10,10 +10,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import noobanidus.mods.carrierbees.CarrierBees;
 import noobanidus.mods.carrierbees.client.layers.BeeHeldItemLayer;
 import noobanidus.mods.carrierbees.client.model.CarrierBeeModel;
-import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
-import noobanidus.mods.carrierbees.entities.BombleBeeEntity;
-import noobanidus.mods.carrierbees.entities.FumbleCarrierBeeEntity;
-import noobanidus.mods.carrierbees.entities.StumbleCarrierBeeEntity;
+import noobanidus.mods.carrierbees.entities.*;
 
 @OnlyIn(Dist.CLIENT)
 public class CarrierBeeRenderer extends MobRenderer<AppleBeeEntity, CarrierBeeModel<AppleBeeEntity>> {
@@ -25,6 +22,8 @@ public class CarrierBeeRenderer extends MobRenderer<AppleBeeEntity, CarrierBeeMo
   private static final ResourceLocation BOMBLE_SKIN_ANGRY = new ResourceLocation(CarrierBees.MODID, "textures/entity/bomblebee_angry.png");
   private static final ResourceLocation STUMBLE_SKIN = new ResourceLocation(CarrierBees.MODID, "textures/entity/stumblebee.png");
   private static final ResourceLocation STUMBLE_SKIN_ANGRY = new ResourceLocation(CarrierBees.MODID, "textures/entity/stumblebee_angry.png");
+  private static final ResourceLocation CRUMBLE_SKIN = new ResourceLocation(CarrierBees.MODID, "textures/entity/crumblebee.png");
+  private static final ResourceLocation CRUMBLE_SKIN_ANGRY = new ResourceLocation(CarrierBees.MODID, "textures/entity/crumblebee_angry.png");
 
   public CarrierBeeRenderer(EntityRendererManager bee) {
     super(bee, new CarrierBeeModel<>(), 0.4F);
@@ -37,6 +36,8 @@ public class CarrierBeeRenderer extends MobRenderer<AppleBeeEntity, CarrierBeeMo
     float scale = 1.5f;
     if (p_225623_1_ instanceof BombleBeeEntity) {
       scale = 1.9f;
+    } else if (p_225623_1_ instanceof CrumbleCarrierBeeEntity) {
+      scale = 2.1f;
     }
     stack.scale(scale, scale, scale);
     super.render(p_225623_1_, p_225623_2_, p_225623_3_, stack, p_225623_5_, p_225623_6_);
@@ -62,6 +63,12 @@ public class CarrierBeeRenderer extends MobRenderer<AppleBeeEntity, CarrierBeeMo
         return STUMBLE_SKIN_ANGRY;
       }
       return STUMBLE_SKIN;
+    }
+    if (bee instanceof CrumbleCarrierBeeEntity) {
+      if (bee.isAngry()) {
+        return CRUMBLE_SKIN_ANGRY;
+      }
+      return CRUMBLE_SKIN;
     }
     if (bee.isAngry()) {
       return ANGRY_SKIN;
