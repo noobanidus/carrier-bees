@@ -2,6 +2,7 @@ package noobanidus.mods.carrierbees.effects;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.potion.Effect;
@@ -32,10 +33,10 @@ public class CrumbleEffect extends Effect {
     if (entity instanceof PlayerEntity) {
       if (rand.nextDouble() <= ConfigManager.getDamageChance()) {
         List<ItemStack> tools = new ArrayList<>();
-        entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(cap -> {
+        entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(cap -> {
           for (int i = 0; i < cap.getSlots(); i++) {
             ItemStack inSlot = cap.getStackInSlot(i);
-            if (!inSlot.getToolTypes().isEmpty() || inSlot.getItem() instanceof SwordItem && inSlot.isDamageable()) {
+            if ((!inSlot.getToolTypes().isEmpty() || inSlot.getItem() instanceof SwordItem || inSlot.getItem() instanceof ArmorItem) && inSlot.isDamageable()) {
               tools.add(inSlot);
             }
           }
