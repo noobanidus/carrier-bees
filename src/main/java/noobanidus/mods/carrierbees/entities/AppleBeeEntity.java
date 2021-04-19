@@ -149,6 +149,9 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
       boolean nearby = this.isAngry() && !this.hasStung() && this.getAttackTarget() != null && this.getAttackTarget().getDistanceSq(this) < 4.0D;
       this.setNearTarget(nearby);
     }
+    if (this.getPosY() < 1) {
+      this.attackEntityFrom(DamageSource.OUT_OF_WORLD, Float.MAX_VALUE);
+    }
   }
 
   public boolean hasStung() {
