@@ -1,6 +1,7 @@
 {
   "block.carrierbees.crawl": "\u05DF\u028D\u0250\u0279\u0186",
   "effect.carrierbees.crumble": "\u01DD\u05DFq\u026Fn\u0279\u0186",
+  "effect.carrierbees.drumble": "\u01DD\u05DFq\u026Fn\u0279\u15E1",
   "effect.carrierbees.explosive": "\u01DD\u028C\u0131so\u05DFdx\u018E",
   "effect.carrierbees.fumble": "\u01DD\u05DFq\u026Fn\u2132",
   "effect.carrierbees.stumble": "\u01DD\u05DFq\u026Fn\u0287S",
@@ -9,6 +10,8 @@
   "entity.carrierbees.carrier_bee": "\u01DD\u01DD\u15FA \u0279\u01DD\u0131\u0279\u0279\u0250\u0186",
   "entity.carrierbees.crumble_bee": "\u01DD\u01DD\u15FA \u01DD\u05DFq\u026Fn\u0279\u0186",
   "entity.carrierbees.crumble_comb_entity": "\u028E\u0287\u0131\u0287u\u018E q\u026Fo\u0186 \u01DD\u05DFq\u026Fn\u0279\u0186",
+  "entity.carrierbees.drumble_bee": "\u01DD\u01DD\u15FA \u01DD\u05DFq\u026Fn\u0279\u15E1",
+  "entity.carrierbees.drumble_comb_entity": "\u028E\u0287\u0131\u0287u\u018E q\u026Fo\u0186 \u01DD\u05DFq\u026Fn\u0279\u15E1",
   "entity.carrierbees.fumble_bee": "\u01DD\u01DD\u15FA \u01DD\u05DFq\u026Fn\u2132",
   "entity.carrierbees.fumble_comb_entity": "\u028E\u0287\u0131\u0287u\u018E q\u026Fo\u0186 \u01DD\u05DFq\u026Fn\u2132",
   "entity.carrierbees.honey_comb_projectile": "\u01DD\u05DF\u0131\u0287\u0254\u01DD\u0638o\u0279\u0500 q\u026Fo\u0186 \u028E\u01DDuoH",
@@ -19,10 +22,13 @@
   "item.carrierbees.carrier_bee_spawn_egg": "bb\u018E u\u028D\u0250dS \u01DD\u01DD\u15FA \u0279\u01DD\u0131\u0279\u0279\u0250\u0186",
   "item.carrierbees.crumble_bee_spawn_egg": "bb\u018E u\u028D\u0250dS \u01DD\u01DD\u15FA \u01DD\u05DFq\u026Fn\u0279\u0186",
   "item.carrierbees.crumblecomb": "q\u026Fo\u0254\u01DD\u05DFq\u026Fn\u0279\u0186",
+  "item.carrierbees.drumble_bee_spawn_egg": "bb\u018E u\u028D\u0250dS \u01DD\u01DD\u15FA \u01DD\u05DFq\u026Fn\u0279\u15E1",
+  "item.carrierbees.drumblecomb": "q\u026Fo\u0254\u01DD\u05DFq\u026Fn\u0279\u15E1",
   "item.carrierbees.fumble_bee_spawn_egg": "bb\u018E u\u028D\u0250dS \u01DD\u01DD\u15FA \u01DD\u05DFq\u026Fn\u2132",
   "item.carrierbees.fumblecomb": "q\u026Fo\u0254\u01DD\u05DFq\u026Fn\u2132",
   "item.carrierbees.stumble_bee_spawn_egg": "bb\u018E u\u028D\u0250dS \u01DD\u01DD\u15FA \u01DD\u05DFq\u026Fn\u0287S",
   "item.carrierbees.stumblecomb": "q\u026Fo\u0254\u01DD\u05DFq\u026Fn\u0287S",
   "itemGroup.carrierbees": "s\u01DD\u01DD\u15FA \u0279\u01DD\u0131\u0279\u0279\u0250\u0186",
+  "subtitles.carrierbees.crumbled": "bu\u0131\u05DFq\u026Fn\u0279\u0254 s\u0287\u0279\u0250\u0287s \u026F\u01DD\u0287I",
   "subtitles.carrierbees.sploosh": "\u00A1\u0265soo\u05DFdS"
 }

@@ -193,7 +193,7 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
         return !this.world.getBlockState(pos.down()).isAir();
       }
     };
-    navigator.setCanOpenDoors(true);
+    navigator.setCanOpenDoors(false);
     navigator.setCanSwim(false);
     navigator.setCanEnterDoors(true);
     return navigator;

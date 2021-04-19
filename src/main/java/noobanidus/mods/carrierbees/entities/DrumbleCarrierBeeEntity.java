@@ -7,11 +7,10 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.world.World;
 import noobanidus.mods.carrierbees.config.ConfigManager;
 import noobanidus.mods.carrierbees.entities.projectiles.CrumbleCombEntity;
+import noobanidus.mods.carrierbees.entities.projectiles.DrumbleCombEntity;
 
-import javax.management.remote.SubjectDelegationPermission;
-
-public class CrumbleCarrierBeeEntity extends AppleBeeEntity {
-  public CrumbleCarrierBeeEntity(EntityType<? extends CrumbleCarrierBeeEntity> type, World world) {
+public class DrumbleCarrierBeeEntity extends AppleBeeEntity {
+  public DrumbleCarrierBeeEntity(EntityType<? extends DrumbleCarrierBeeEntity> type, World world) {
     super(type, world);
   }
 
@@ -19,25 +18,15 @@ public class CrumbleCarrierBeeEntity extends AppleBeeEntity {
   protected void registerGoals() {
     super.registerGoals();
     if (ConfigManager.getHoneycombDamage() > 0) {
-      this.goalSelector.addGoal(1, new CrumbleCarrierBeeEntity.HoneycombProjectileAttackGoal(this));
+      this.goalSelector.addGoal(1, new DrumbleCarrierBeeEntity.HoneycombProjectileAttackGoal(this));
     }
-  }
-
-  @Override
-  public void livingTick() {
-    if (this.world.isRemote && rand.nextInt(2) == 0) {
-      for (int i = 0; i < 4; ++i) {
-        this.world.addParticle(ParticleTypes.ASH, this.getPosXRandom(0.5D), this.getPosYRandom() - 0.25D, this.getPosZRandom(0.5D), (this.rand.nextDouble() - 0.5D) * 2.0D, -this.rand.nextDouble(), (this.rand.nextDouble() - 0.5D) * 2.0D);
-      }
-    }
-    super.livingTick();
   }
 
   static class HoneycombProjectileAttackGoal extends Goal {
-    private final CrumbleCarrierBeeEntity parentEntity;
+    private final DrumbleCarrierBeeEntity parentEntity;
     public int attackTimer;
 
-    public HoneycombProjectileAttackGoal(CrumbleCarrierBeeEntity bee) {
+    public HoneycombProjectileAttackGoal(DrumbleCarrierBeeEntity bee) {
       this.parentEntity = bee;
     }
 
@@ -76,7 +65,7 @@ public class CrumbleCarrierBeeEntity extends AppleBeeEntity {
           double d2 = livingentity.getPosX() - this.parentEntity.getPosX();
           double d3 = livingentity.getPosYHeight(0.5D) - (0.5D + this.parentEntity.getPosYHeight(0.5D));
           double d4 = livingentity.getPosZ() - this.parentEntity.getPosZ();
-          CrumbleCombEntity honeycomb = new CrumbleCombEntity(this.parentEntity, d2, d3, d4, world);
+          DrumbleCombEntity honeycomb = new DrumbleCombEntity(this.parentEntity, d2, d3, d4, world);
           honeycomb.setPosition(this.parentEntity.getPosX(), this.parentEntity.getPosYHeight(0.5D) + 0.2D, honeycomb.getPosZ());
           world.addEntity(honeycomb);
           this.attackTimer = -40;

@@ -1,6 +1,7 @@
 {
   "block.carrierbees.crawl": "Crawl",
   "effect.carrierbees.crumble": "Crumble",
+  "effect.carrierbees.drumble": "Drumble",
   "effect.carrierbees.explosive": "Explosive",
   "effect.carrierbees.fumble": "Fumble",
   "effect.carrierbees.stumble": "Stumble",
@@ -9,6 +10,8 @@
   "entity.carrierbees.carrier_bee": "Carrier Bee",
   "entity.carrierbees.crumble_bee": "Crumble Bee",
   "entity.carrierbees.crumble_comb_entity": "Crumble Comb Entity",
+  "entity.carrierbees.drumble_bee": "Drumble Bee",
+  "entity.carrierbees.drumble_comb_entity": "Drumble Comb Entity",
   "entity.carrierbees.fumble_bee": "Fumble Bee",
   "entity.carrierbees.fumble_comb_entity": "Fumble Comb Entity",
   "entity.carrierbees.honey_comb_projectile": "Honey Comb Projectile",
@@ -19,10 +22,13 @@
   "item.carrierbees.carrier_bee_spawn_egg": "Carrier Bee Spawn Egg",
   "item.carrierbees.crumble_bee_spawn_egg": "Crumble Bee Spawn Egg",
   "item.carrierbees.crumblecomb": "Crumblecomb",
+  "item.carrierbees.drumble_bee_spawn_egg": "Drumble Bee Spawn Egg",
+  "item.carrierbees.drumblecomb": "Drumblecomb",
   "item.carrierbees.fumble_bee_spawn_egg": "Fumble Bee Spawn Egg",
   "item.carrierbees.fumblecomb": "Fumblecomb",
   "item.carrierbees.stumble_bee_spawn_egg": "Stumble Bee Spawn Egg",
   "item.carrierbees.stumblecomb": "Stumblecomb",
   "itemGroup.carrierbees": "Carrier Bees",
+  "subtitles.carrierbees.crumbled": "Item starts crumbling",
   "subtitles.carrierbees.sploosh": "Sploosh!"
 }
