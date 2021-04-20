@@ -4,6 +4,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ShieldItem;
 import net.minecraft.item.SwordItem;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectType;
@@ -37,10 +38,19 @@ public class CrumbleEffect extends Effect {
           for (int i = 0; i < cap.getSlots(); i++) {
             ItemStack inSlot = cap.getStackInSlot(i);
             if ((!inSlot.getToolTypes().isEmpty() || inSlot.getItem() instanceof SwordItem || inSlot.getItem() instanceof ArmorItem) && inSlot.isDamageable()) {
+              if (ConfigManager.getNiceMode() && inSlot.getDamage() >= inSlot.getMaxDamage() + 10) {
+                continue;
+              }
               tools.add(inSlot);
             }
           }
         });
+        if (entity.getHeldItemOffhand().getItem() instanceof ShieldItem) {
+          ItemStack inSlot = entity.getHeldItemOffhand();
+          if (!ConfigManager.getNiceMode() || inSlot.getDamage() < inSlot.getMaxDamage() + 10) {
+            tools.add(inSlot);
+          }
+        }
         if (!tools.isEmpty()) {
           ItemStack tool = tools.get(rand.nextInt(tools.size()));
           tool.damageItem(rand.nextInt(Math.max(1, ConfigManager.getDamageAmount())) + 1, entity, (playerEntity) -> {

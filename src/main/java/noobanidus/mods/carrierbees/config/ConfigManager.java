@@ -25,6 +25,7 @@ public class ConfigManager {
   private static ForgeConfigSpec.BooleanValue STING_KILLS;
   private static ForgeConfigSpec.IntValue DAMAGE_AMOUNT;
   private static ForgeConfigSpec.DoubleValue DAMAGE_CHANCE;
+  private static ForgeConfigSpec.BooleanValue NICE_MODE;
 
   private static int always_angry = -1;
   private static float honeycomb_damage = -1;
@@ -35,8 +36,16 @@ public class ConfigManager {
   private static int sting_kills = -1;
   private static int damage_amount = -1;
   private static double damage_chance = -1;
+  private static int nice_mode = -1;
 
-  public static int getDamageAmount () {
+  public static boolean getNiceMode() {
+    if (nice_mode == -1) {
+      nice_mode = NICE_MODE.get() ? 1 : 0;
+    }
+    return nice_mode == 1;
+  }
+
+  public static int getDamageAmount() {
     if (damage_amount == -1) {
       damage_amount = DAMAGE_AMOUNT.get();
     }
@@ -50,7 +59,7 @@ public class ConfigManager {
     return damage_chance;
   }
 
-  public static boolean getStingKills () {
+  public static boolean getStingKills() {
     if (sting_kills == -1) {
       sting_kills = STING_KILLS.get() ? 1 : 0;
     }
@@ -115,6 +124,7 @@ public class ConfigManager {
     COMMON_BUILDER.push("crumblebees");
     DAMAGE_AMOUNT = COMMON_BUILDER.comment("the maximum amount of durability damage applied (randomly from 1 to X)").defineInRange("durability_damage", 3, 0, Integer.MAX_VALUE);
     DAMAGE_CHANCE = COMMON_BUILDER.comment("the chance as a percent per tick of the potion effect that a tool or sword will take durability damage").defineInRange("durability_chance", 0.015, 0, Double.MAX_VALUE);
+    NICE_MODE = COMMON_BUILDER.comment("whether or not crumble will damage items at or below 10 durability").define("nice_mode", true);
     COMMON_BUILDER.push("general");
     ALWAYS_ANGRY = COMMON_BUILDER.comment("whether or not bees will always attack or only if angered").define("always_angry", true);
     STING_KILLS = COMMON_BUILDER.comment("whether or not bees will die after stinging").define("sting_kills", false);
@@ -147,6 +157,9 @@ public class ConfigManager {
       honeycomb_slow = -1;
       honeycomb_size = -1;
       always_angry = -1;
+      damage_amount = -1;
+      damage_chance = -1;
+      nice_mode = -1;
       CarrierBees.LOG.info("CarrierBees config reloaded!");
     }
   }
