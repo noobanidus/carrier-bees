@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectType;
 import net.minecraftforge.common.ForgeHooks;
+import noobanidus.mods.carrierbees.config.ConfigManager;
 
 import java.util.Random;
 
@@ -25,7 +26,7 @@ public class FumbleEffect extends Effect {
   @Override
   public void performEffect(LivingEntity entity, int amplifier) {
     if (entity instanceof PlayerEntity && !entity.world.isRemote()) {
-      if (rand.nextInt(24) != 0) {
+      if (rand.nextInt(ConfigManager.getFumbleChance()) != 0) {
         // Don't drop an item every tick
         return;
       }

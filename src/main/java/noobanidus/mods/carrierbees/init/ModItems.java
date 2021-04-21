@@ -29,6 +29,10 @@ public class ModItems {
       .properties(o -> o.food(new Food.Builder().effect(() -> new EffectInstance(ModEffects.DRUMBLE.get(), 20*10), 1.0f).fastToEat().hunger(3).saturation(1.5f).build()).rarity(Rarity.UNCOMMON))
       .register();
 
+  public static RegistryEntry<Item> TUMBLECOMB = REGISTRATE.item("tumblecomb", Item::new)
+      .properties(o -> o.food(new Food.Builder().effect(() -> new EffectInstance(ModEffects.TUMBLE.get(), 20*10), 1.0f).fastToEat().hunger(3).saturation(1.5f).build()).rarity(Rarity.UNCOMMON))
+      .register();
+
   public static void load() {
   }
 }

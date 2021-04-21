@@ -26,6 +26,8 @@ public class ConfigManager {
   private static ForgeConfigSpec.IntValue DAMAGE_AMOUNT;
   private static ForgeConfigSpec.DoubleValue DAMAGE_CHANCE;
   private static ForgeConfigSpec.BooleanValue NICE_MODE;
+  private static ForgeConfigSpec.IntValue FUMBLE_CHANCE;
+  private static ForgeConfigSpec.IntValue DRUMBLE_CHANCE;
 
   private static int always_angry = -1;
   private static float honeycomb_damage = -1;
@@ -37,6 +39,22 @@ public class ConfigManager {
   private static int damage_amount = -1;
   private static double damage_chance = -1;
   private static int nice_mode = -1;
+  private static int fumble_chance = -1;
+  private static int drumble_chance = -1;
+
+  public static int getDrumbleChance () {
+    if (drumble_chance == -1) {
+      drumble_chance = DRUMBLE_CHANCE.get();
+    }
+    return drumble_chance;
+  }
+
+  public static int getFumbleChance () {
+    if (fumble_chance == -1) {
+      fumble_chance = FUMBLE_CHANCE.get();
+    }
+    return fumble_chance;
+  }
 
   public static boolean getNiceMode() {
     if (nice_mode == -1) {
@@ -121,10 +139,17 @@ public class ConfigManager {
     EXPLOSION_DAMAGE = COMMON_BUILDER.comment("the amount of damage that the bomblebee's explosive projectile does").defineInRange("explosion_damage", 3.5, 0, Double.MAX_VALUE);
     EXPLOSION_SIZE = COMMON_BUILDER.comment("the size of the bomblebee's explosive projectile's explosion").defineInRange("explosion_size", 4, 0, Double.MAX_VALUE);
     COMMON_BUILDER.pop();
+    COMMON_BUILDER.push("fumblebee");
+    FUMBLE_CHANCE = COMMON_BUILDER.comment("the chance of dropping an item per tick, expressed as 1 in X").defineInRange("fumble_chance", 24, 0, Integer.MAX_VALUE);
+    COMMON_BUILDER.pop();
+    COMMON_BUILDER.push("drumblebee");
+    DRUMBLE_CHANCE = COMMON_BUILDER.comment("the chance of being granted slowness x while under the effects of the drumble debuff, expressed as 1 in X").defineInRange("fumble_chance", 30, 0, Integer.MAX_VALUE);
+    COMMON_BUILDER.pop();
     COMMON_BUILDER.push("crumblebees");
     DAMAGE_AMOUNT = COMMON_BUILDER.comment("the maximum amount of durability damage applied (randomly from 1 to X)").defineInRange("durability_damage", 3, 0, Integer.MAX_VALUE);
     DAMAGE_CHANCE = COMMON_BUILDER.comment("the chance as a percent per tick of the potion effect that a tool or sword will take durability damage").defineInRange("durability_chance", 0.015, 0, Double.MAX_VALUE);
     NICE_MODE = COMMON_BUILDER.comment("whether or not crumble will damage items at or below 10 durability").define("nice_mode", true);
+    COMMON_BUILDER.pop();
     COMMON_BUILDER.push("general");
     ALWAYS_ANGRY = COMMON_BUILDER.comment("whether or not bees will always attack or only if angered").define("always_angry", true);
     STING_KILLS = COMMON_BUILDER.comment("whether or not bees will die after stinging").define("sting_kills", false);
