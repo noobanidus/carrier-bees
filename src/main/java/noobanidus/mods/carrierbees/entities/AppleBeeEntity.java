@@ -349,6 +349,19 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
     StingGoal(CreatureEntity entity, double speed, boolean longMemory) {
       super(entity, speed, longMemory);
     }
+
+    @Override
+    public boolean shouldExecute() {
+      return super.shouldExecute() && AppleBeeEntity.this.isAngry() && !AppleBeeEntity.this.hasStung();
+    }
+
+    @Override
+    public void tick() {
+      LivingEntity livingentity = this.attacker.getAttackTarget();
+      if (livingentity != null) {
+        super.tick();
+      }
+    }
   }
 
   class BeeLookController extends LookController {
@@ -390,7 +403,6 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
       if (pos != null) {
         AppleBeeEntity.this.navigator.setPath(AppleBeeEntity.this.navigator.getPathToPos(new BlockPos(pos), 1), 1.0D);
       }
-
     }
 
     @Nullable
@@ -408,9 +420,18 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
     }
 
     @Override
+    protected boolean isSuitableTarget(@Nullable LivingEntity potentialTarget, EntityPredicate targetPredicate) {
+      if (!super.isSuitableTarget(potentialTarget, targetPredicate)) {
+        return false;
+      }
+
+      return potentialTarget != null && !(potentialTarget instanceof AppleBeeEntity) && this.goalOwner instanceof AppleBeeEntity && this.goalOwner.canEntityBeSeen(potentialTarget);
+    }
+
+    @Override
     protected void setAttackTarget(MobEntity bee, LivingEntity target) {
-      if (bee instanceof AppleBeeEntity && this.goalOwner.canEntityBeSeen(target) && ((AppleBeeEntity) bee).setBeeAttacker(target)) {
-        bee.setAttackTarget(target);
+      if (bee instanceof AppleBeeEntity) {
+        ((AppleBeeEntity) bee).setBeeAttacker(target);
       }
     }
   }
