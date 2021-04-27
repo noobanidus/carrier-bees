@@ -57,6 +57,7 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
     this.setPathPriority(PathNodeType.WATER, -1.0F);
     this.setPathPriority(PathNodeType.COCOA, -1.0F);
     this.setPathPriority(PathNodeType.FENCE, -1.0F);
+
   }
 
   @Override

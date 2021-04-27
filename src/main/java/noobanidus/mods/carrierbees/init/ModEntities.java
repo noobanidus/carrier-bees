@@ -11,6 +11,7 @@ import net.minecraft.loot.functions.SetCount;
 import net.minecraft.util.ResourceLocation;
 import noobanidus.mods.carrierbees.entities.*;
 import noobanidus.mods.carrierbees.entities.projectiles.*;
+import noobanidus.mods.carrierbees.loot.HasSaddle;
 
 import static noobanidus.mods.carrierbees.CarrierBees.REGISTRATE;
 
@@ -113,6 +114,16 @@ public class ModEntities {
       )
       .register();
 
+  public static RegistryEntry<EntityType<BeehemothEntity>> BEEHEMOTH = REGISTRATE.entity("beehemoth", BeehemothEntity::new, EntityClassification.CREATURE)
+      .properties(o -> o.size(1.9f, 1.7f)/*.disableSummoning()*/)
+      .loot((p, e) -> p.registerLootTable(e, LootTable.builder()
+          .addLootPool(LootPool.builder()
+              .addEntry(ItemLootEntry.builder(Items.SADDLE)
+                  .acceptFunction(SetCount.builder(ConstantRange.of(1)))
+                      .acceptCondition(HasSaddle.builder()))
+              .rolls(ConstantRange.of(1)))))
+      .register();
+
   public static RegistryEntry<LazySpawnEggItem<CarrierBeeEntity>> CARRIER_BEE_EGG = REGISTRATE.item("carrier_bee_spawn_egg", (b) -> new LazySpawnEggItem<>(CARRIER_BEE, 0xedc343, 0x43241b, b)).model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("item/template_spawn_egg"))).register();
 
   public static RegistryEntry<LazySpawnEggItem<BombleBeeEntity>> BOMBLE_BEE_EGG = REGISTRATE.item("bomble_bee_spawn_egg", (b) -> new LazySpawnEggItem<>(BOMBLE_BEE, 0xedc343, 0xf94d38, b)).model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("item/template_spawn_egg"))).register();
@@ -127,32 +138,34 @@ public class ModEntities {
 
   public static RegistryEntry<LazySpawnEggItem<TumbleCarrierBeeEntity>> TUMBLE_BEE_EGG = REGISTRATE.item("tumble_bee_spawn_egg", (b) -> new LazySpawnEggItem<>(TUMBLE_BEE, 0xd8d2c0, 0x640000, b)).model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("item/template_spawn_egg"))).register();
 
+/*  public static RegistryEntry<LazySpawnEggItem<BeehemothEntity>> BEEHEMOTH_EGG = REGISTRATE.item("beehemoth_spawn_egg", (b) -> new LazySpawnEggItem<>(BEEHEMOTH, 0xed8a82, 0xe336a7, b)).model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("item/template_spawn_egg"))).register();*/
+
   public static RegistryEntry<EntityType<HoneyCombEntity>> HONEY_COMB_PROJECTILE = REGISTRATE.<HoneyCombEntity>entity("honey_comb_projectile", HoneyCombEntity::new, EntityClassification.MISC)
-      .properties(o -> o.size(1.0f, 1.0f))
+      .properties(o -> o.size(1.0f, 1.0f).disableSummoning())
       .register();
 
   public static RegistryEntry<EntityType<BombEntity>> BOMB_PROJECTILE = REGISTRATE.<BombEntity>entity("bomb_projectile", BombEntity::new, EntityClassification.MISC)
-      .properties(o -> o.size(1.0f, 1.0f))
+      .properties(o -> o.size(1.0f, 1.0f).disableSummoning())
       .register();
 
   public static RegistryEntry<EntityType<FumbleCombEntity>> FUMBLE_COMB_PROJECTILE = REGISTRATE.<FumbleCombEntity>entity("fumble_comb_entity", FumbleCombEntity::new, EntityClassification.MISC)
-      .properties(o -> o.size(1.0f, 1.0f))
+      .properties(o -> o.size(1.0f, 1.0f).disableSummoning())
       .register();
 
   public static RegistryEntry<EntityType<StumbleCombEntity>> STUMBLE_COMB_PROJECTILE = REGISTRATE.<StumbleCombEntity>entity("stumble_comb_entity", StumbleCombEntity::new, EntityClassification.MISC)
-      .properties(o -> o.size(1.0f, 1.0f))
+      .properties(o -> o.size(1.0f, 1.0f).disableSummoning())
       .register();
 
   public static RegistryEntry<EntityType<CrumbleCombEntity>> CRUMBLE_COMB_PROJECTILE = REGISTRATE.<CrumbleCombEntity>entity("crumble_comb_entity", CrumbleCombEntity::new, EntityClassification.MISC)
-      .properties(o -> o.size(1.0f, 1.0f))
+      .properties(o -> o.size(1.0f, 1.0f).disableSummoning())
       .register();
 
   public static RegistryEntry<EntityType<DrumbleCombEntity>> DRUMBLE_COMB_PROJECTILE = REGISTRATE.<DrumbleCombEntity>entity("drumble_comb_entity", DrumbleCombEntity::new, EntityClassification.MISC)
-      .properties(o -> o.size(1.0f, 1.0f))
+      .properties(o -> o.size(1.0f, 1.0f).disableSummoning())
       .register();
 
   public static RegistryEntry<EntityType<TumbleCombEntity>> TUMBLE_COMB_PROJECTILE = REGISTRATE.<TumbleCombEntity>entity("tumble_comb_entity", TumbleCombEntity::new, EntityClassification.MISC)
-      .properties(o -> o.size(1.0f, 1.0f))
+      .properties(o -> o.size(1.0f, 1.0f).disableSummoning())
       .register();
 
   public static void load() {

@@ -10,10 +10,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import noobanidus.mods.carrierbees.CarrierBees;
 import noobanidus.mods.carrierbees.client.layers.BeeHeldItemLayer;
 import noobanidus.mods.carrierbees.client.model.CarrierBeeModel;
+import noobanidus.mods.carrierbees.client.model.ModelHolder;
 import noobanidus.mods.carrierbees.entities.*;
 
 @OnlyIn(Dist.CLIENT)
-public class CarrierBeeRenderer extends MobRenderer<AppleBeeEntity, CarrierBeeModel<AppleBeeEntity>> {
+public class CarrierBeeRenderer<E extends AppleBeeEntity, T extends CarrierBeeModel<E>> extends MobRenderer<E, T> {
   private static final ResourceLocation SKIN = new ResourceLocation(CarrierBees.MODID, "textures/entity/carrier_bee.png");
   private static final ResourceLocation ANGRY_SKIN = new ResourceLocation(CarrierBees.MODID, "textures/entity/carrier_bee_angry.png");
   private static final ResourceLocation FUMBLE_SKIN = new ResourceLocation(CarrierBees.MODID, "textures/entity/fumblebee.png");
@@ -29,13 +30,16 @@ public class CarrierBeeRenderer extends MobRenderer<AppleBeeEntity, CarrierBeeMo
   private static final ResourceLocation TUMBLE_SKIN = new ResourceLocation(CarrierBees.MODID, "textures/entity/tumblebee.png");
   private static final ResourceLocation TUMBLE_SKIN_ANGRY = new ResourceLocation(CarrierBees.MODID, "textures/entity/tumblebee_angry.png");
 
-  public CarrierBeeRenderer(EntityRendererManager bee) {
-    super(bee, new CarrierBeeModel<>(), 0.4F);
+  private final ModelHolder<E, T> builder;
+
+  public CarrierBeeRenderer(EntityRendererManager bee, ModelHolder<E, T> builder) {
+    super(bee, builder.get(), 0.4F);
     this.addLayer(new BeeHeldItemLayer<>(this));
+    this.builder = builder;
   }
 
   @Override
-  public void render(AppleBeeEntity p_225623_1_, float p_225623_2_, float p_225623_3_, MatrixStack stack, IRenderTypeBuffer p_225623_5_, int p_225623_6_) {
+  public void render(E p_225623_1_, float p_225623_2_, float p_225623_3_, MatrixStack stack, IRenderTypeBuffer p_225623_5_, int p_225623_6_) {
     stack.push();
     float scale = 1.5f;
     if (p_225623_1_ instanceof BombleBeeEntity) {
