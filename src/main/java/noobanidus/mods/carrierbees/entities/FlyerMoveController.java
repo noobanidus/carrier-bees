@@ -14,7 +14,7 @@ public class FlyerMoveController extends MovementController {
 
   @Override
   public void tick() {
-    if (entity.canPassengerSteer()) {
+    if (entity.getRidingEntity() != null) {
       action = Action.WAIT;
       return;
     }

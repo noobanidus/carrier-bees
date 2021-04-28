@@ -23,13 +23,7 @@ public class HasSaddle implements ILootCondition {
 
   @Override
   public boolean test(LootContext lootContext) {
-    Entity looted = lootContext.get(LootParameters.THIS_ENTITY);
-    if (looted instanceof BeehemothEntity) {
-      BeehemothEntity bee = (BeehemothEntity) looted;
-      return bee.getDataManager().get(BeehemothEntity.isSaddled);
-    } else {
-      return false;
-    }
+    return true;
   }
 
   private static final HasSaddle INSTANCE = new HasSaddle();
