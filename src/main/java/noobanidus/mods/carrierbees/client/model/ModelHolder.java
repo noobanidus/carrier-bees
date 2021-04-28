@@ -2,6 +2,8 @@ package noobanidus.mods.carrierbees.client.model;
 
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.resources.IResourceManager;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -16,7 +18,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public class ModelHolder<E extends AppleBeeEntity, T extends EntityModel<E>> implements Supplier<T> {
+public class ModelHolder<E extends AnimalEntity & IFlyingAnimal, T extends EntityModel<E>> implements Supplier<T> {
   public static ModelHolder<BombleBeeEntity, CarrierBeeModel<BombleBeeEntity>> BOMBLE = new ModelHolder<>(CarrierBeeModel::new);
   public static ModelHolder<CarrierBeeEntity, CarrierBeeModel<CarrierBeeEntity>> CARRIER = new ModelHolder<>(CarrierBeeModel::new);
   public static ModelHolder<CrumbleCarrierBeeEntity, CarrierBeeModel<CrumbleCarrierBeeEntity>> CRUMBLE = new ModelHolder<>(CarrierBeeModel::new);

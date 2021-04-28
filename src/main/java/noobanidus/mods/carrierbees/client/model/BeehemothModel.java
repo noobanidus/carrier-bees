@@ -203,7 +203,6 @@ public class BeehemothModel extends EntityModel<BeehemothEntity> {
   @Override
   public void setLivingAnimations(BeehemothEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
     super.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTick);
-    this.bodyPitch = entityIn.getBodyPitch(partialTick);
   }
 
   @Override
