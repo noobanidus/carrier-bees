@@ -19,6 +19,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeMod;
+import noobanidus.mods.carrierbees.network.FlightHandler;
 
 import javax.annotation.Nullable;
 
@@ -98,7 +99,7 @@ public class BeehemothEntity extends AnimalEntity implements IFlyingAnimal {
           f1 *= 0.25F;
         }
 
-        if (this.isJumping) {
+        if (FlightHandler.isGoingUp((PlayerEntity) livingentity)) {
           Vector3d vector3d = this.getMotion();
           this.setMotion(vector3d.x, jumpMovementFactor, vector3d.z);
           this.isAirBorne = true;
