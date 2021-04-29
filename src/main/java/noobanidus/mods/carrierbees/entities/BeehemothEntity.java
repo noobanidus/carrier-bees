@@ -1,33 +1,45 @@
 package noobanidus.mods.carrierbees.entities;
 
-import net.minecraft.entity.*;
+import net.minecraft.entity.AgeableEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.ai.goal.FollowParentGoal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
+import net.minecraft.entity.ai.controller.MovementController;
+import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.pathfinding.GroundPathNavigator;
+import net.minecraft.pathfinding.PathNavigator;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceContext;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.ForgeMod;
-import noobanidus.mods.carrierbees.network.FlightHandler;
 
 import javax.annotation.Nullable;
+import java.util.EnumSet;
 
 public class BeehemothEntity extends AnimalEntity implements IFlyingAnimal {
+  public float tartigradePitch = 0;
+  public float prevTartigradePitch = 0;
+  public float biteProgress = 0;
+  public float prevBiteProgress = 0;
+  public boolean stopWandering = false;
+  public boolean hasItemTarget = false;
+
   public BeehemothEntity(EntityType<? extends BeehemothEntity> type, World world) {
     super(type, world);
-    this.moveController = new FlyerMoveController(this);
+    this.moveController = new MoveHelperController(this);
   }
+
 
   @Override
   public boolean attackEntityFrom(DamageSource source, float amount) {
@@ -38,34 +50,78 @@ public class BeehemothEntity extends AnimalEntity implements IFlyingAnimal {
     return false;
   }
 
-  @Override
-  public void tick() {
-    super.tick();
-  }
-
   public static AttributeModifierMap.MutableAttribute createAttributes() {
     return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 42.0D).createMutableAttribute(Attributes.FLYING_SPEED, 0.6).createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.3).createMutableAttribute(Attributes.ATTACK_DAMAGE, 4.0D).createMutableAttribute(Attributes.FOLLOW_RANGE, 128.0D);
   }
 
   @Override
   protected void registerGoals() {
-    this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.25D));
-    this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
+    this.goalSelector.addGoal(0, new BeehemothAIRide(this, 3.2D));
+    this.goalSelector.addGoal(4, new RandomFlyGoal(this));
+    this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 10));
+    this.goalSelector.addGoal(5, new LookRandomlyGoal(this));
     this.goalSelector.addGoal(9, new SwimGoal(this));
   }
 
-  public ActionResultType func_230254_b_(PlayerEntity player, Hand p_230254_2_) {
-    if (!this.isBeingRidden() && !player.isSecondaryUseActive()) {
+  @Override
+  protected PathNavigator createNavigator(World p_175447_1_) {
+    return new DirectPathNavigator(this, p_175447_1_);
+  }
+
+  @Nullable
+  @Override
+  public Entity getControllingPassenger() {
+    for (Entity p : this.getPassengers()) {
+      return p;
+    }
+    return null;
+  }
+
+  public ActionResultType func_230254_b_(PlayerEntity p_230254_1_, Hand p_230254_2_) {
+    if (!this.isBeingRidden() && !p_230254_1_.isSecondaryUseActive()) {
       if (!this.world.isRemote) {
-        player.rotationYaw = this.rotationYaw;
-        player.rotationPitch = this.rotationPitch;
-        player.startRiding(this);
+        p_230254_1_.startRiding(this);
       }
 
       return ActionResultType.func_233537_a_(this.world.isRemote);
     } else {
-      return super.func_230254_b_(player, p_230254_2_);
+      return super.func_230254_b_(p_230254_1_, p_230254_2_);
     }
+  }
+
+  public void updatePassenger(Entity passenger) {
+    if (this.isPassenger(passenger)) {
+      float radius = -0.25F;
+      float angle = (0.01745329251F * this.renderYawOffset);
+      double extraX = radius * MathHelper.sin((float) (Math.PI + angle));
+      double extraZ = radius * MathHelper.cos(angle);
+      passenger.setPosition(this.getPosX() + extraX, this.getPosY() + this.getMountedYOffset() + passenger.getYOffset(), this.getPosZ() + extraZ);
+    }
+  }
+
+  public double getMountedYOffset() {
+    float f = Math.min(0.25F, this.limbSwingAmount);
+    float f1 = this.limbSwing;
+    return (double) this.getHeight() - 0.2D + (double) (0.12F * MathHelper.cos(f1 * 0.7F) * 0.7F * f);
+  }
+
+  public boolean hasNoGravity() {
+    return true;
+  }
+
+  public void tick() {
+    super.tick();
+    prevTartigradePitch = this.tartigradePitch;
+  }
+
+  private BlockPos getGroundPosition(BlockPos radialPos) {
+    while (radialPos.getY() > 1 && world.isAirBlock(radialPos)) {
+      radialPos = radialPos.down();
+    }
+    if (radialPos.getY() <= 1) {
+      return new BlockPos(radialPos.getX(), world.getSeaLevel(), radialPos.getZ());
+    }
+    return radialPos;
   }
 
   @Nullable
@@ -74,179 +130,158 @@ public class BeehemothEntity extends AnimalEntity implements IFlyingAnimal {
     return null;
   }
 
-  @Override
-  public boolean onLivingFall(float p_225503_1_, float p_225503_2_) {
-    return false;
-  }
+  static class MoveHelperController extends MovementController {
+    private final BeehemothEntity parentEntity;
 
-  public void travel(Vector3d travelVector) {
-    if (!this.isBeingRidden()) {
-      super.travel(travelVector);
+    public MoveHelperController(BeehemothEntity sunbird) {
+      super(sunbird);
+      this.parentEntity = sunbird;
     }
-    if (this.isAlive()) {
-      if (this.canBeSteered()) {
-        setNoGravity(true);
-        LivingEntity livingentity = (LivingEntity) this.getControllingPassenger();
-        this.rotationYaw = livingentity.rotationYaw;
-        this.prevRotationYaw = this.rotationYaw;
-        this.rotationPitch = livingentity.rotationPitch * 0.5F;
-        this.setRotation(this.rotationYaw, this.rotationPitch);
-        this.renderYawOffset = this.rotationYaw;
-        this.rotationYawHead = this.renderYawOffset;
-        float f = livingentity.moveStrafing * 0.5F;
-        float f1 = livingentity.moveForward;
-        if (f1 <= 0.0F) {
-          f1 *= 0.25F;
+
+    public void tick() {
+      if (this.action == Action.STRAFE) {
+        Vector3d vector3d = new Vector3d(this.posX - parentEntity.getPosX(), this.posY - parentEntity.getPosY(), this.posZ - parentEntity.getPosZ());
+        double d0 = vector3d.length();
+        parentEntity.setMotion(parentEntity.getMotion().add(0, vector3d.scale(this.speed * 0.05D / d0).getY(), 0));
+        float f = (float) this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED);
+        float f1 = (float) this.speed * f;
+        float f2 = this.moveForward;
+        float f3 = this.moveStrafe;
+        float f4 = MathHelper.sqrt(f2 * f2 + f3 * f3);
+        if (f4 < 1.0F) {
+          f4 = 1.0F;
         }
 
-        if (FlightHandler.isGoingUp((PlayerEntity) livingentity)) {
-          Vector3d vector3d = this.getMotion();
-          this.setMotion(vector3d.x, jumpMovementFactor, vector3d.z);
-          this.isAirBorne = true;
-          net.minecraftforge.common.ForgeHooks.onLivingJump(this);
-          if (f1 > 0.0F) {
-            float f2 = MathHelper.sin(this.rotationYaw * ((float) Math.PI / 180F));
-            float f3 = MathHelper.cos(this.rotationYaw * ((float) Math.PI / 180F));
-            this.setMotion(this.getMotion().add((double) (-0.4F * f2 * this.jumpMovementFactor), 0.0D, (double) (0.4F * f3 * this.jumpMovementFactor)));
+        f4 = f1 / f4;
+        f2 = f2 * f4;
+        f3 = f3 * f4;
+        float f5 = MathHelper.sin(this.mob.rotationYaw * ((float) Math.PI / 180F));
+        float f6 = MathHelper.cos(this.mob.rotationYaw * ((float) Math.PI / 180F));
+        float f7 = f2 * f6 - f3 * f5;
+        float f8 = f3 * f6 + f2 * f5;
+        this.moveForward = 1.0F;
+        this.moveStrafe = 0.0F;
+
+        this.mob.setAIMoveSpeed(f1);
+        this.mob.setMoveForward(this.moveForward);
+        this.mob.setMoveStrafing(this.moveStrafe);
+        this.action = MovementController.Action.WAIT;
+      } else if (this.action == MovementController.Action.MOVE_TO) {
+        Vector3d vector3d = new Vector3d(this.posX - parentEntity.getPosX(), this.posY - parentEntity.getPosY(), this.posZ - parentEntity.getPosZ());
+        double d0 = vector3d.length();
+        if (d0 < parentEntity.getBoundingBox().getAverageEdgeLength()) {
+          this.action = MovementController.Action.WAIT;
+          parentEntity.setMotion(parentEntity.getMotion().scale(0.5D));
+        } else {
+          double localSpeed = this.speed;
+          if (parentEntity.isBeingRidden()) {
+            localSpeed *= 1.5D;
           }
-        }
-
-        this.jumpMovementFactor = this.getAIMoveSpeed() * 0.1F;
-        if (this.canPassengerSteer()) {
-          this.setAIMoveSpeed((float) this.getAttributeValue(Attributes.MOVEMENT_SPEED));
-          super.travel(new Vector3d((double) f, travelVector.y, (double) f1));
-        } else if (livingentity instanceof PlayerEntity) {
-          this.setMotion(Vector3d.ZERO);
-        }
-
-        this.func_233629_a_(this, true);
-      } else {
-        this.jumpMovementFactor = 0.02F;
-        super.travel(travelVector);
-      }
-    }
-  }
-
-  protected double getFlyingYModifier(final double motionY) {
-    if (motionY == 0) {
-      return 0;
-    }
-    double yModifier = 0.07;
-    if (this.onGround) {
-      yModifier += 0.4;
-    } else {
-      yModifier += 0.07;
-    }
-    return yModifier;
-  }
-
-  protected float getRelevantMoveFactor(final float p_213335_1_) {
-    return this.onGround ? (this.getAIMoveSpeed() * (0.21600002f / (p_213335_1_ * p_213335_1_ * p_213335_1_))) : this.jumpMovementFactor;
-  }
-
-  private void travelSpecial(final Vector3d travelInputVec) {
-    if (isBeingRidden() && (this.isServerWorld() || this.canPassengerSteer())) {
-      double gravForce;
-      final ModifiableAttributeInstance gravity = this.getAttribute(ForgeMod.ENTITY_GRAVITY.get());
-      final boolean flag = this.getMotion().y <= 0.0;
-      if (flag && this.isPotionActive(Effects.SLOW_FALLING)) {
-        this.fallDistance = 0.0F;
-      }
-      gravForce = gravity.getValue();
-      if (!this.isInWater()) {
-        final BlockPos blockpos = this.getPositionUnderneath();
-        final float slipFactor = this.world.getBlockState(blockpos).getSlipperiness(this.world, blockpos, this);
-        final float motionSlowFactor = this.onGround ? (slipFactor * 0.91f) : 0.91f;
-        this.moveRelative(this.getRelevantMoveFactor(slipFactor), travelInputVec);
-        this.setMotion(this.getMotion());
-        this.move(MoverType.SELF, this.getMotion());
-        Vector3d vec3d7 = this.getMotion();
-        if ((this.collidedHorizontally || this.isJumping) && this.isOnLadder()) {
-          vec3d7 = new Vector3d(vec3d7.x, 0.2, vec3d7.z);
-        }
-        double yMotion = vec3d7.y;
-        if (this.isPotionActive(Effects.LEVITATION)) {
-          yMotion += (0.05 * (this.getActivePotionEffect(Effects.LEVITATION).getAmplifier() + 1) - vec3d7.y) * 0.2;
-          this.fallDistance = 0.0f;
-        } else if (this.world.isRemote && !this.world.isBlockLoaded(blockpos)) {
-          if (this.getPosY() > 0.0) {
-            yMotion = -0.1;
+          parentEntity.setMotion(parentEntity.getMotion().add(vector3d.scale(localSpeed * 0.005D / d0)));
+          if (parentEntity.getAttackTarget() == null) {
+            Vector3d vector3d1 = parentEntity.getMotion();
+            parentEntity.rotationYaw = -((float) MathHelper.atan2(vector3d1.x, vector3d1.z)) * (180F / (float) Math.PI);
+            parentEntity.renderYawOffset = parentEntity.rotationYaw;
           } else {
-            yMotion = 0.0;
-          }
-        } else if (!this.hasNoGravity()) {
-          yMotion -= gravForce;
-        }
-        yMotion += this.getFlyingYModifier(yMotion);
-        this.setMotion(vec3d7.x * motionSlowFactor, yMotion * 0.9800000190734863, vec3d7.z * motionSlowFactor);
-      }
-    } else {
-      super.travel(travelInputVec);
-    }
-  }
-
-  public boolean canBeSteered() {
-    return this.getControllingPassenger() instanceof LivingEntity;
-  }
-
-  public void updatePassenger(Entity passenger) {
-    super.updatePassenger(passenger);
-    if (passenger instanceof MobEntity) {
-      MobEntity mobentity = (MobEntity) passenger;
-      this.renderYawOffset = mobentity.renderYawOffset;
-    }
-  }
-
-  @Nullable
-  public Entity getControllingPassenger() {
-    return this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
-  }
-
-  @Nullable
-  private Vector3d func_234236_a_(Vector3d p_234236_1_, LivingEntity p_234236_2_) {
-    double d0 = this.getPosX() + p_234236_1_.x;
-    double d1 = this.getBoundingBox().minY;
-    double d2 = this.getPosZ() + p_234236_1_.z;
-    BlockPos.Mutable blockpos$mutable = new BlockPos.Mutable();
-
-    for (Pose pose : p_234236_2_.getAvailablePoses()) {
-      blockpos$mutable.setPos(d0, d1, d2);
-      double d3 = this.getBoundingBox().maxY + 0.75D;
-
-      while (true) {
-        double d4 = this.world.func_242403_h(blockpos$mutable);
-        if ((double) blockpos$mutable.getY() + d4 > d3) {
-          break;
-        }
-
-        if (TransportationHelper.func_234630_a_(d4)) {
-          AxisAlignedBB axisalignedbb = p_234236_2_.getPoseAABB(pose);
-          Vector3d vector3d = new Vector3d(d0, (double) blockpos$mutable.getY() + d4, d2);
-          if (TransportationHelper.func_234631_a_(this.world, p_234236_2_, axisalignedbb.offset(vector3d))) {
-            p_234236_2_.setPose(pose);
-            return vector3d;
+            double d2 = parentEntity.getAttackTarget().getPosX() - parentEntity.getPosX();
+            double d1 = parentEntity.getAttackTarget().getPosZ() - parentEntity.getPosZ();
+            parentEntity.rotationYaw = -((float) MathHelper.atan2(d2, d1)) * (180F / (float) Math.PI);
+            parentEntity.renderYawOffset = parentEntity.rotationYaw;
           }
         }
 
-        blockpos$mutable.move(Direction.UP);
-        if (!((double) blockpos$mutable.getY() < d3)) {
-          break;
+      }
+    }
+  }
+
+  public boolean isTargetBlocked(Vector3d target) {
+    Vector3d Vector3d = new Vector3d(this.getPosX(), this.getPosYEye(), this.getPosZ());
+    return this.world.rayTraceBlocks(new RayTraceContext(Vector3d, target, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this)).getType() != RayTraceResult.Type.MISS;
+  }
+
+  public class DirectPathNavigator extends GroundPathNavigator {
+
+    private MobEntity mob;
+
+    public DirectPathNavigator(MobEntity mob, World world) {
+      super(mob, world);
+      this.mob = mob;
+    }
+
+    public void tick() {
+      ++this.totalTicks;
+    }
+
+    public boolean tryMoveToXYZ(double x, double y, double z, double speedIn) {
+      mob.getMoveHelper().setMoveTo(x, y, z, speedIn);
+      return true;
+    }
+
+    public boolean tryMoveToEntityLiving(Entity entityIn, double speedIn) {
+      mob.getMoveHelper().setMoveTo(entityIn.getPosX(), entityIn.getPosY(), entityIn.getPosZ(), speedIn);
+      return true;
+    }
+  }
+
+
+  static class RandomFlyGoal extends Goal {
+    private final BeehemothEntity parentEntity;
+    private BlockPos target = null;
+
+    public RandomFlyGoal(BeehemothEntity mosquito) {
+      this.parentEntity = mosquito;
+      this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE));
+    }
+
+    public boolean shouldExecute() {
+      MovementController movementcontroller = this.parentEntity.getMoveHelper();
+      if (parentEntity.stopWandering || parentEntity.hasItemTarget) {
+        return false;
+      }
+      if (!movementcontroller.isUpdating() || target == null) {
+        target = getBlockInViewEndergrade();
+        if (target != null) {
+          this.parentEntity.getMoveHelper().setMoveTo(target.getX() + 0.5D, target.getY() + 0.5D, target.getZ() + 0.5D, 1.0D);
+        }
+        return true;
+      }
+      return false;
+    }
+
+    public boolean shouldContinueExecuting() {
+      return target != null && !parentEntity.stopWandering && !parentEntity.hasItemTarget && parentEntity.getDistanceSq(Vector3d.copyCentered(target)) > 2.4D && parentEntity.getMoveHelper().isUpdating() && !parentEntity.collidedHorizontally;
+    }
+
+    public void resetTask() {
+      target = null;
+    }
+
+    public void tick() {
+      if (target == null) {
+        target = getBlockInViewEndergrade();
+      }
+      if (target != null) {
+        this.parentEntity.getMoveHelper().setMoveTo(target.getX() + 0.5D, target.getY() + 0.5D, target.getZ() + 0.5D, 1.0D);
+        if (parentEntity.getDistanceSq(Vector3d.copyCentered(target)) < 2.5F) {
+          target = null;
         }
       }
     }
 
-    return null;
-  }
-
-  public Vector3d func_230268_c_(LivingEntity livingEntity) {
-    Vector3d vector3d = func_233559_a_((double) this.getWidth(), (double) livingEntity.getWidth(), this.rotationYaw + (livingEntity.getPrimaryHand() == HandSide.RIGHT ? 90.0F : -90.0F));
-    Vector3d vector3d1 = this.func_234236_a_(vector3d, livingEntity);
-    if (vector3d1 != null) {
-      return vector3d1;
-    } else {
-      Vector3d vector3d2 = func_233559_a_((double) this.getWidth(), (double) livingEntity.getWidth(), this.rotationYaw + (livingEntity.getPrimaryHand() == HandSide.LEFT ? 90.0F : -90.0F));
-      Vector3d vector3d3 = this.func_234236_a_(vector3d2, livingEntity);
-      return vector3d3 != null ? vector3d3 : this.getPositionVec();
+    public BlockPos getBlockInViewEndergrade() {
+      float radius = 1 + parentEntity.getRNG().nextInt(5);
+      float neg = parentEntity.getRNG().nextBoolean() ? 1 : -1;
+      float renderYawOffset = parentEntity.renderYawOffset;
+      float angle = (0.01745329251F * renderYawOffset) + 3.15F + (parentEntity.getRNG().nextFloat() * neg);
+      double extraX = radius * MathHelper.sin((float) (Math.PI + angle));
+      double extraZ = radius * MathHelper.cos(angle);
+      BlockPos radialPos = new BlockPos(parentEntity.getPosX() + extraX, parentEntity.getPosY() + 2, parentEntity.getPosZ() + extraZ);
+      BlockPos ground = parentEntity.getGroundPosition(radialPos);
+      BlockPos newPos = ground.up(1 + parentEntity.getRNG().nextInt(6));
+      if (!parentEntity.isTargetBlocked(Vector3d.copyCentered(newPos)) && parentEntity.getDistanceSq(Vector3d.copyCentered(newPos)) > 6) {
+        return newPos;
+      }
+      return null;
     }
   }
 }

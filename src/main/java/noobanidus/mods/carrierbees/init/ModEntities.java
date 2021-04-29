@@ -115,7 +115,7 @@ public class ModEntities {
       .register();
 
   public static RegistryEntry<EntityType<BeehemothEntity>> BEEHEMOTH = REGISTRATE.entity("beehemoth", BeehemothEntity::new, EntityClassification.CREATURE)
-      .properties(o -> o.size(1.9f, 1.7f)/*.disableSummoning()*/)
+      .properties(o -> o.size(1.6f, 1.5f)/*.disableSummoning()*/)
       .loot((p, e) -> p.registerLootTable(e, LootTable.builder()
           .addLootPool(LootPool.builder()
               .addEntry(ItemLootEntry.builder(Items.SADDLE)

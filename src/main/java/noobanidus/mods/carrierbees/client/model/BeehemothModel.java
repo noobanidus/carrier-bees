@@ -1,13 +1,13 @@
 package noobanidus.mods.carrierbees.client.model;
 
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.entity.model.AgeableModel;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.ModelUtils;
+import net.minecraft.client.renderer.entity.model.PigModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import noobanidus.mods.carrierbees.entities.BeehemothEntity;
 
@@ -169,7 +169,6 @@ public class BeehemothModel extends EntityModel<BeehemothEntity> {
     WING_LEFT.setRotationPoint(3.5F, -9.0F, -5.0F);
     THORAX.addChild(WING_LEFT);
 
-
     WingLeftPlane_r1 = new ModelRenderer(this);
     WingLeftPlane_r1.setRotationPoint(0.0F, 0.0F, 1.0F);
     WING_LEFT.addChild(WingLeftPlane_r1);
@@ -207,8 +206,13 @@ public class BeehemothModel extends EntityModel<BeehemothEntity> {
 
   @Override
   public void setRotationAngles(BeehemothEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    float l1 = ageInTicks - (float)entity.ticksExisted;
+    float l2 = 1f;
+    l2 *= l2;
+    float l3 = 1.0f - l2;
+
     //if (entity.isSaddled()) {
-      SADDLE.showModel = true;
+    SADDLE.showModel = true;
     /*} else {
       SADDLE.showModel = false;
     }*/
@@ -251,6 +255,8 @@ public class BeehemothModel extends EntityModel<BeehemothEntity> {
       // Change pitch to affect abdomen and head
       ROOT.rotateAngleX = ModelUtils.func_228283_a_(ROOT.rotateAngleX, 3.0915928F, this.bodyPitch);
     }
+
+    FACE.rotateAngleX = (headPitch * 0.017453292F) + 6f;
   }
 
   @Override

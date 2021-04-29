@@ -28,7 +28,7 @@ public class BeehemothRenderer extends MobRenderer<BeehemothEntity, BeehemothMod
   @Override
   public void render(BeehemothEntity p_225623_1_, float p_225623_2_, float p_225623_3_, MatrixStack stack, IRenderTypeBuffer p_225623_5_, int p_225623_6_) {
     stack.push();
-    float scale = 2.5f;
+    float scale = 1.65f;
     stack.scale(scale, scale, scale);
     super.render(p_225623_1_, p_225623_2_, p_225623_3_, stack, p_225623_5_, p_225623_6_);
     stack.pop();
