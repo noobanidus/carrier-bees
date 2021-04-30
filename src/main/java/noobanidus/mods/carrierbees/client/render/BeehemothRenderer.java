@@ -18,17 +18,14 @@ import noobanidus.mods.carrierbees.entities.*;
 public class BeehemothRenderer extends MobRenderer<BeehemothEntity, BeehemothModel> {
   private static final ResourceLocation SKIN = new ResourceLocation(CarrierBees.MODID, "textures/entity/beehemoth.png");
 
-  private final ModelHolder<BeehemothEntity, BeehemothModel> builder;
-
-  public BeehemothRenderer(EntityRendererManager bee, ModelHolder<BeehemothEntity, BeehemothModel> builder) {
+  public BeehemothRenderer(EntityRendererManager bee) {
     super(bee, new BeehemothModel(), 0.4F);
-    this.builder = builder;
   }
 
   @Override
   public void render(BeehemothEntity p_225623_1_, float p_225623_2_, float p_225623_3_, MatrixStack stack, IRenderTypeBuffer p_225623_5_, int p_225623_6_) {
     stack.push();
-    float scale = 1.65f;
+    float scale = 1.6f;
     stack.scale(scale, scale, scale);
     super.render(p_225623_1_, p_225623_2_, p_225623_3_, stack, p_225623_5_, p_225623_6_);
     stack.pop();

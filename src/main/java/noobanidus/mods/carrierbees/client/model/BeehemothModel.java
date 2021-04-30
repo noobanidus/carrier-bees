@@ -256,7 +256,8 @@ public class BeehemothModel extends EntityModel<BeehemothEntity> {
       ROOT.rotateAngleX = ModelUtils.func_228283_a_(ROOT.rotateAngleX, 3.0915928F, this.bodyPitch);
     }
 
-    FACE.rotateAngleX = (headPitch * 0.017453292F) + 6f;
+    FACE.rotateAngleX = (float) (netHeadYaw / Math.PI / 180) - 0.1f;
+
   }
 
   @Override

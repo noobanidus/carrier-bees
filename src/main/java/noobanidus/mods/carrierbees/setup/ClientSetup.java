@@ -21,14 +21,14 @@ public class ClientSetup {
     event.enqueueWork(() -> {
       Minecraft mc = event.getMinecraftSupplier().get();
       EntityRendererManager manager = mc.getRenderManager();
-      manager.register(ModEntities.CARRIER_BEE.get(), ModelHolder.CARRIER.setRenderer(new CarrierBeeRenderer<>(manager, ModelHolder.CARRIER)));
-      manager.register(ModEntities.FUMBLE_BEE.get(), ModelHolder.FUMBLE.setRenderer(new CarrierBeeRenderer<>(manager, ModelHolder.FUMBLE)));
-      manager.register(ModEntities.BOMBLE_BEE.get(), ModelHolder.BOMBLE.setRenderer(new CarrierBeeRenderer<>(manager, ModelHolder.BOMBLE)));
-      manager.register(ModEntities.STUMBLE_BEE.get(), ModelHolder.STUMBLE.setRenderer(new CarrierBeeRenderer<>(manager, ModelHolder.STUMBLE)));
-      manager.register(ModEntities.CRUMBLE_BEE.get(), ModelHolder.CRUMBLE.setRenderer(new CarrierBeeRenderer<>(manager, ModelHolder.CRUMBLE)));
-      manager.register(ModEntities.DRUMBLE_BEE.get(), ModelHolder.DRUMBLE.setRenderer(new CarrierBeeRenderer<>(manager, ModelHolder.DRUMBLE)));
-      manager.register(ModEntities.TUMBLE_BEE.get(), ModelHolder.TUMBLE.setRenderer(new CarrierBeeRenderer<>(manager, ModelHolder.TUMBLE)));
-      manager.register(ModEntities.BEEHEMOTH.get(), ModelHolder.BEEHEMOTH.setRenderer(new BeehemothRenderer(manager, ModelHolder.BEEHEMOTH)));
+      manager.register(ModEntities.CARRIER_BEE.get(), new CarrierBeeRenderer(manager));
+      manager.register(ModEntities.FUMBLE_BEE.get(), new CarrierBeeRenderer(manager));
+      manager.register(ModEntities.BOMBLE_BEE.get(), new CarrierBeeRenderer(manager));
+      manager.register(ModEntities.STUMBLE_BEE.get(), new CarrierBeeRenderer(manager));
+      manager.register(ModEntities.CRUMBLE_BEE.get(), new CarrierBeeRenderer(manager));
+      manager.register(ModEntities.DRUMBLE_BEE.get(), new CarrierBeeRenderer(manager));
+      manager.register(ModEntities.TUMBLE_BEE.get(), new CarrierBeeRenderer(manager));
+      manager.register(ModEntities.BEEHEMOTH.get(), new BeehemothRenderer(manager));
       ItemRenderer renderer = mc.getItemRenderer();
       manager.register(ModEntities.HONEY_COMB_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 0.9F, true));
       manager.register(ModEntities.FUMBLE_COMB_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 0.9F, true));
