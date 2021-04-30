@@ -203,7 +203,7 @@ public class BeehemothModel extends EntityModel<BeehemothEntity> {
   }
 
   private float getSine (float time, float max, float min) {
-    float so = MathHelper.sin(time * 0.02f);
+    float so = MathHelper.sin(time * 0.25f);
     float range = max - min;
     float out = (so * range) + min;
     return out;
@@ -256,13 +256,13 @@ public class BeehemothModel extends EntityModel<BeehemothEntity> {
       // fr 20, 47.5
       // mr 37.5, 52.5
       // br 45, 62.5
-/*      KneeFrontRightCube_r1.rotateAngleY = MathHelper.cos(ageInTicks * 0.15f) * 1.4f * limbSwingAmount / 1.0f;
-      KneeMidRightCube_r1.rotateAngleY = MathHelper.cos(ageInTicks * 0.15f) * 1.4f * limbSwingAmount / 1.0f;
-      KneeRearRightCube_r1.rotateAngleY = MathHelper.cos(ageInTicks * 0.15f) * 1.4f * limbSwingAmount / 1.0f;
-      KneeFrontLeftCube_r1.rotateAngleY = MathHelper.cos((float) (ageInTicks * 0.15f + Math.PI)) * 1.4f * limbSwingAmount / 1.0f;
-      KneeMidLeftCube_r1.rotateAngleY = MathHelper.cos((float) (ageInTicks * 0.15f + Math.PI)) * 1.4f * limbSwingAmount / 1.0f;
-      KneeRearLeftCube_r1.rotateAngleY = MathHelper.cos((float) (ageInTicks * 0.15f + Math.PI)) * 1.4f * limbSwingAmount / 1.0f;*/
 
+      KneeFrontRightCube_r1.rotateAngleY = getSine(ageInTicks + entity.offset1, 0.2f, 0.475f);
+      KneeMidRightCube_r1.rotateAngleY = getSine(ageInTicks + entity.offset2, 0.375f, 0.525f);
+      KneeRearRightCube_r1.rotateAngleY = getSine(ageInTicks + entity.offset3, 0.45f, 0.625f);
+      KneeFrontLeftCube_r1.rotateAngleY = getSine(ageInTicks + entity.offset4, -0.20f, -0.475f);
+      KneeMidLeftCube_r1.rotateAngleY = getSine(ageInTicks + entity.offset5, -0.375f, -0.525f);
+      KneeRearLeftCube_r1.rotateAngleY = getSine(ageInTicks + entity.offset6, -0.45f, -0.625f);
     }
 
     if (this.bodyPitch > 0.0F) {
