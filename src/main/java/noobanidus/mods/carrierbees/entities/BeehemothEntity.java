@@ -1,5 +1,6 @@
 package noobanidus.mods.carrierbees.entities;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -16,6 +17,7 @@ import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceContext;
@@ -30,16 +32,26 @@ import java.util.EnumSet;
 public class BeehemothEntity extends AnimalEntity implements IFlyingAnimal {
   public float tartigradePitch = 0;
   public float prevTartigradePitch = 0;
-  public float biteProgress = 0;
-  public float prevBiteProgress = 0;
   public boolean stopWandering = false;
   public boolean hasItemTarget = false;
+
+  public float offset1, offset2, offset3, offset4, offset5, offset6;
 
   public BeehemothEntity(EntityType<? extends BeehemothEntity> type, World world) {
     super(type, world);
     this.moveController = new MoveHelperController(this);
+    this.offset1 = (this.rand.nextFloat() - 0.5f);
+    this.offset2 = (this.rand.nextFloat() - 0.5f);
+    this.offset3 = (this.rand.nextFloat() - 0.5f);
+    this.offset4 = (this.rand.nextFloat() - 0.5f);
+    this.offset5 = (this.rand.nextFloat() - 0.5f);
+    this.offset6 = (this.rand.nextFloat() - 0.5f);
   }
 
+  @Override
+  protected boolean canTriggerWalking() {
+    return false;
+  }
 
   @Override
   public boolean attackEntityFrom(DamageSource source, float amount) {
@@ -107,6 +119,19 @@ public class BeehemothEntity extends AnimalEntity implements IFlyingAnimal {
 
   public boolean hasNoGravity() {
     return true;
+  }
+
+  @Override
+  protected void updateFallState(double p_184231_1_, boolean p_184231_3_, BlockState p_184231_4_, BlockPos p_184231_5_) {
+  }
+
+  @Override
+  public boolean onLivingFall(float p_225503_1_, float p_225503_2_) {
+    return false;
+  }
+
+  @Override
+  protected void playFallSound() {
   }
 
   public void tick() {

@@ -115,7 +115,7 @@ public class ModEntities {
       .register();
 
   public static RegistryEntry<EntityType<BeehemothEntity>> BEEHEMOTH = REGISTRATE.entity("beehemoth", BeehemothEntity::new, EntityClassification.CREATURE)
-      .properties(o -> o.size(1.6f, 1.5f)/*.disableSummoning()*/)
+      .properties(o -> o.size(1.6f, 1.5f).disableSummoning())
       .loot((p, e) -> p.registerLootTable(e, LootTable.builder()
           .addLootPool(LootPool.builder()
               .addEntry(ItemLootEntry.builder(Items.SADDLE)
@@ -136,7 +136,7 @@ public class ModEntities {
 
   public static RegistryEntry<LazySpawnEggItem<DrumbleCarrierBeeEntity>> DRUMBLE_BEE_EGG = REGISTRATE.item("drumble_bee_spawn_egg", (b) -> new LazySpawnEggItem<>(DRUMBLE_BEE, 0xd8d2c0, 0x640000, b)).model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("item/template_spawn_egg"))).register();
 
-  public static RegistryEntry<LazySpawnEggItem<TumbleCarrierBeeEntity>> TUMBLE_BEE_EGG = REGISTRATE.item("tumble_bee_spawn_egg", (b) -> new LazySpawnEggItem<>(TUMBLE_BEE, 0xd8d2c0, 0x640000, b)).model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("item/template_spawn_egg"))).register();
+  public static RegistryEntry<LazySpawnEggItem<TumbleCarrierBeeEntity>> TUMBLE_BEE_EGG = REGISTRATE.item("tumble_bee_spawn_egg", (b) -> new LazySpawnEggItem<>(TUMBLE_BEE, 0xb974c2, 0x212373, b)).model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("item/template_spawn_egg"))).register();
 
 /*  public static RegistryEntry<LazySpawnEggItem<BeehemothEntity>> BEEHEMOTH_EGG = REGISTRATE.item("beehemoth_spawn_egg", (b) -> new LazySpawnEggItem<>(BEEHEMOTH, 0xed8a82, 0xe336a7, b)).model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("item/template_spawn_egg"))).register();*/
 

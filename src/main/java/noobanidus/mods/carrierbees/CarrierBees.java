@@ -4,6 +4,8 @@ import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -12,6 +14,7 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import noobanidus.libs.noobutil.registrate.CustomRegistrate;
+import noobanidus.mods.carrierbees.commands.CommandCarrier;
 import noobanidus.mods.carrierbees.config.ConfigManager;
 import noobanidus.mods.carrierbees.init.*;
 import noobanidus.mods.carrierbees.setup.ClientSetup;
@@ -39,6 +42,7 @@ public class CarrierBees {
     IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
     modBus.addListener(CommonSetup::setup);
     modBus.addListener(ConfigManager::configReloaded);
+    MinecraftForge.EVENT_BUS.addListener(this::onCommands);
 
     DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
       modBus.addListener(ClientSetup::setup);
@@ -54,5 +58,10 @@ public class CarrierBees {
     ModEffects.load();
     ModBlocks.load();
     ModTiles.load();
+  }
+
+  public void onCommands (RegisterCommandsEvent event) {
+    CommandCarrier carrier = new CommandCarrier(event.getDispatcher());
+    carrier.register();
   }
 }

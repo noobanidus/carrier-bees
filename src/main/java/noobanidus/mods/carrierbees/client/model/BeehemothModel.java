@@ -5,9 +5,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.ModelUtils;
-import net.minecraft.client.renderer.entity.model.PigModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import noobanidus.mods.carrierbees.entities.BeehemothEntity;
 
@@ -204,12 +202,18 @@ public class BeehemothModel extends EntityModel<BeehemothEntity> {
     super.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTick);
   }
 
+  private float getSine (float time, float max, float min) {
+    float so = MathHelper.sin(time * 0.02f);
+    float range = max - min;
+    float out = (so * range) + min;
+    return out;
+  }
+
   @Override
   public void setRotationAngles(BeehemothEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-    float l1 = ageInTicks - (float)entity.ticksExisted;
+    float l1 = ageInTicks - (float) entity.ticksExisted;
     float l2 = 1f;
     l2 *= l2;
-    float l3 = 1.0f - l2;
 
     //if (entity.isSaddled()) {
     SADDLE.showModel = true;
@@ -220,7 +224,6 @@ public class BeehemothModel extends EntityModel<BeehemothEntity> {
     ROOT.rotateAngleX = 0.0f;
     ROOT.rotationPointY = 19.0f;
     boolean onGround = entity.isOnGround() && entity.getMotion().lengthSquared() < 1.0E-7D;
-    float v1;
     if (onGround) {
       WING_RIGHT.rotateAngleY = -0.2618f;
       WING_RIGHT.rotateAngleZ = 0.0f;
@@ -234,9 +237,9 @@ public class BeehemothModel extends EntityModel<BeehemothEntity> {
       LEG_REARLEFT.rotateAngleX = 0.0f;
       LEG_REARRIGHT.rotateAngleX = 0.0f;
     } else {
-      v1 = netHeadYaw * 2.f;
+      limbSwing = limbSwing * 2.f;
       WING_RIGHT.rotateAngleY = 0.0f;
-      WING_LEFT.rotateAngleZ = ((float) (MathHelper.cos(v1) * Math.PI * 0.15f));
+      WING_LEFT.rotateAngleZ = ((float) (MathHelper.cos(limbSwing) * Math.PI * 0.15f));
       WING_LEFT.rotateAngleX = WING_RIGHT.rotateAngleX;
       WING_LEFT.rotateAngleY = WING_RIGHT.rotateAngleY;
       WING_RIGHT.rotateAngleZ = -WING_LEFT.rotateAngleZ;
@@ -249,6 +252,17 @@ public class BeehemothModel extends EntityModel<BeehemothEntity> {
       ROOT.rotateAngleX = 0.0f;
       ROOT.rotateAngleY = 0.0f;
       ROOT.rotateAngleZ = 0.0f;
+
+      // fr 20, 47.5
+      // mr 37.5, 52.5
+      // br 45, 62.5
+/*      KneeFrontRightCube_r1.rotateAngleY = MathHelper.cos(ageInTicks * 0.15f) * 1.4f * limbSwingAmount / 1.0f;
+      KneeMidRightCube_r1.rotateAngleY = MathHelper.cos(ageInTicks * 0.15f) * 1.4f * limbSwingAmount / 1.0f;
+      KneeRearRightCube_r1.rotateAngleY = MathHelper.cos(ageInTicks * 0.15f) * 1.4f * limbSwingAmount / 1.0f;
+      KneeFrontLeftCube_r1.rotateAngleY = MathHelper.cos((float) (ageInTicks * 0.15f + Math.PI)) * 1.4f * limbSwingAmount / 1.0f;
+      KneeMidLeftCube_r1.rotateAngleY = MathHelper.cos((float) (ageInTicks * 0.15f + Math.PI)) * 1.4f * limbSwingAmount / 1.0f;
+      KneeRearLeftCube_r1.rotateAngleY = MathHelper.cos((float) (ageInTicks * 0.15f + Math.PI)) * 1.4f * limbSwingAmount / 1.0f;*/
+
     }
 
     if (this.bodyPitch > 0.0F) {
@@ -256,8 +270,9 @@ public class BeehemothModel extends EntityModel<BeehemothEntity> {
       ROOT.rotateAngleX = ModelUtils.func_228283_a_(ROOT.rotateAngleX, 3.0915928F, this.bodyPitch);
     }
 
-    FACE.rotateAngleX = (float) (netHeadYaw / Math.PI / 180) - 0.1f;
-
+    THORAX.rotateAngleX = 0;
+    FACE.rotateAngleX = (float) (netHeadYaw / Math.PI / 180) + 0.3f;
+    ABDOMEN.rotateAngleX = (float) (netHeadYaw / Math.PI / 180) - 0.3f;
   }
 
   @Override
