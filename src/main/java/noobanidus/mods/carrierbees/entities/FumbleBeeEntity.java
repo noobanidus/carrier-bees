@@ -3,14 +3,12 @@ package noobanidus.mods.carrierbees.entities;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.world.World;
 import noobanidus.mods.carrierbees.config.ConfigManager;
-import noobanidus.mods.carrierbees.entities.projectiles.CrumbleCombEntity;
-import noobanidus.mods.carrierbees.entities.projectiles.DrumbleCombEntity;
+import noobanidus.mods.carrierbees.entities.projectiles.FumbleCombEntity;
 
-public class DrumbleCarrierBeeEntity extends AppleBeeEntity {
-  public DrumbleCarrierBeeEntity(EntityType<? extends DrumbleCarrierBeeEntity> type, World world) {
+public class FumbleBeeEntity extends AppleBeeEntity {
+  public FumbleBeeEntity(EntityType<? extends FumbleBeeEntity> type, World world) {
     super(type, world);
   }
 
@@ -18,15 +16,15 @@ public class DrumbleCarrierBeeEntity extends AppleBeeEntity {
   protected void registerGoals() {
     super.registerGoals();
     if (ConfigManager.getHoneycombDamage() > 0) {
-      this.goalSelector.addGoal(1, new DrumbleCarrierBeeEntity.HoneycombProjectileAttackGoal(this));
+      this.goalSelector.addGoal(1, new FumbleBeeEntity.HoneycombProjectileAttackGoal(this));
     }
   }
 
   static class HoneycombProjectileAttackGoal extends Goal {
-    private final DrumbleCarrierBeeEntity parentEntity;
+    private final FumbleBeeEntity parentEntity;
     public int attackTimer;
 
-    public HoneycombProjectileAttackGoal(DrumbleCarrierBeeEntity bee) {
+    public HoneycombProjectileAttackGoal(FumbleBeeEntity bee) {
       this.parentEntity = bee;
     }
 
@@ -65,7 +63,7 @@ public class DrumbleCarrierBeeEntity extends AppleBeeEntity {
           double d2 = livingentity.getPosX() - this.parentEntity.getPosX();
           double d3 = livingentity.getPosYHeight(0.5D) - (0.5D + this.parentEntity.getPosYHeight(0.5D));
           double d4 = livingentity.getPosZ() - this.parentEntity.getPosZ();
-          DrumbleCombEntity honeycomb = new DrumbleCombEntity(this.parentEntity, d2, d3, d4, world);
+          FumbleCombEntity honeycomb = new FumbleCombEntity(this.parentEntity, d2, d3, d4, world);
           honeycomb.setPosition(this.parentEntity.getPosX(), this.parentEntity.getPosYHeight(0.5D) + 0.2D, honeycomb.getPosZ());
           world.addEntity(honeycomb);
           this.attackTimer = -40;

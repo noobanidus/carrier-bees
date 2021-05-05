@@ -1,4 +1,4 @@
-package noobanidus.mods.carrierbees.entities;
+package noobanidus.mods.carrierbees.util;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.Effect;

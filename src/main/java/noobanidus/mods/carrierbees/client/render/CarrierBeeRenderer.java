@@ -10,7 +10,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import noobanidus.mods.carrierbees.CarrierBees;
 import noobanidus.mods.carrierbees.client.layers.BeeHeldItemLayer;
 import noobanidus.mods.carrierbees.client.model.CarrierBeeModel;
-import noobanidus.mods.carrierbees.client.model.ModelHolder;
 import noobanidus.mods.carrierbees.entities.*;
 
 @OnlyIn(Dist.CLIENT)
@@ -46,11 +45,11 @@ public class CarrierBeeRenderer extends MobRenderer<AppleBeeEntity, CarrierBeeMo
     float scale = 1.5f;
     if (p_225623_1_ instanceof BombleBeeEntity) {
       scale = 1.9f;
-    } else if (p_225623_1_ instanceof CrumbleCarrierBeeEntity) {
+    } else if (p_225623_1_ instanceof CrumbleBeeEntity) {
       scale = 2.1f;
-    } else if (p_225623_1_ instanceof DrumbleCarrierBeeEntity) {
+    } else if (p_225623_1_ instanceof DrumbleBeeEntity) {
       scale = 3.5f;
-    } else if (p_225623_1_ instanceof TumbleCarrierBeeEntity) {
+    } else if (p_225623_1_ instanceof TumbleBeeEntity) {
       scale = 1.1f;
     }
     stack.scale(scale, scale, scale);
@@ -60,7 +59,7 @@ public class CarrierBeeRenderer extends MobRenderer<AppleBeeEntity, CarrierBeeMo
 
   @Override
   public ResourceLocation getEntityTexture(AppleBeeEntity bee) {
-    if (bee instanceof FumbleCarrierBeeEntity) {
+    if (bee instanceof FumbleBeeEntity) {
       if (bee.isAngry()) {
         return FUMBLE_ANGRY_SKIN;
       }
@@ -72,25 +71,25 @@ public class CarrierBeeRenderer extends MobRenderer<AppleBeeEntity, CarrierBeeMo
       }
       return BOMBLE_SKIN;
     }
-    if (bee instanceof StumbleCarrierBeeEntity) {
+    if (bee instanceof StumbleBeeEntity) {
       if (bee.isAngry()) {
         return STUMBLE_SKIN_ANGRY;
       }
       return STUMBLE_SKIN;
     }
-    if (bee instanceof CrumbleCarrierBeeEntity) {
+    if (bee instanceof CrumbleBeeEntity) {
       if (bee.isAngry()) {
         return CRUMBLE_SKIN_ANGRY;
       }
       return CRUMBLE_SKIN;
     }
-    if (bee instanceof DrumbleCarrierBeeEntity) {
+    if (bee instanceof DrumbleBeeEntity) {
       if (bee.isAngry()) {
         return DRUMBLE_SKIN_ANGRY;
       }
       return DRUMBLE_SKIN;
     }
-    if (bee instanceof TumbleCarrierBeeEntity) {
+    if (bee instanceof TumbleBeeEntity) {
       if (bee.isAngry()) {
         return TUMBLE_SKIN_ANGRY;
       }

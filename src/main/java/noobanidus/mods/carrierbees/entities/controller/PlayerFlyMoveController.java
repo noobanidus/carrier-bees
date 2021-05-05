@@ -1,4 +1,4 @@
-package noobanidus.mods.carrierbees.entities;
+package noobanidus.mods.carrierbees.entities.controller;
 
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.controller.MovementController;

@@ -5,10 +5,10 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.world.World;
 import noobanidus.mods.carrierbees.config.ConfigManager;
-import noobanidus.mods.carrierbees.entities.projectiles.FumbleCombEntity;
+import noobanidus.mods.carrierbees.entities.projectiles.TumbleCombEntity;
 
-public class FumbleCarrierBeeEntity extends AppleBeeEntity {
-  public FumbleCarrierBeeEntity(EntityType<? extends FumbleCarrierBeeEntity> type, World world) {
+public class TumbleBeeEntity extends AppleBeeEntity {
+  public TumbleBeeEntity(EntityType<? extends TumbleBeeEntity> type, World world) {
     super(type, world);
   }
 
@@ -16,15 +16,15 @@ public class FumbleCarrierBeeEntity extends AppleBeeEntity {
   protected void registerGoals() {
     super.registerGoals();
     if (ConfigManager.getHoneycombDamage() > 0) {
-      this.goalSelector.addGoal(1, new FumbleCarrierBeeEntity.HoneycombProjectileAttackGoal(this));
+      this.goalSelector.addGoal(1, new TumbleBeeEntity.HoneycombProjectileAttackGoal(this));
     }
   }
 
   static class HoneycombProjectileAttackGoal extends Goal {
-    private final FumbleCarrierBeeEntity parentEntity;
+    private final TumbleBeeEntity parentEntity;
     public int attackTimer;
 
-    public HoneycombProjectileAttackGoal(FumbleCarrierBeeEntity bee) {
+    public HoneycombProjectileAttackGoal(TumbleBeeEntity bee) {
       this.parentEntity = bee;
     }
 
@@ -63,7 +63,7 @@ public class FumbleCarrierBeeEntity extends AppleBeeEntity {
           double d2 = livingentity.getPosX() - this.parentEntity.getPosX();
           double d3 = livingentity.getPosYHeight(0.5D) - (0.5D + this.parentEntity.getPosYHeight(0.5D));
           double d4 = livingentity.getPosZ() - this.parentEntity.getPosZ();
-          FumbleCombEntity honeycomb = new FumbleCombEntity(this.parentEntity, d2, d3, d4, world);
+          TumbleCombEntity honeycomb = new TumbleCombEntity(this.parentEntity, d2, d3, d4, world);
           honeycomb.setPosition(this.parentEntity.getPosX(), this.parentEntity.getPosYHeight(0.5D) + 0.2D, honeycomb.getPosZ());
           world.addEntity(honeycomb);
           this.attackTimer = -40;

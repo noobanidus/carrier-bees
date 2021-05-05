@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.entity.SpriteRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import noobanidus.mods.carrierbees.client.model.ModelHolder;
 import noobanidus.mods.carrierbees.client.render.BeehemothRenderer;
 import noobanidus.mods.carrierbees.client.render.CarrierBeeRenderer;
 import noobanidus.mods.carrierbees.init.ModEntities;

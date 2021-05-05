@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "noobanidus.mods.carrierbees.mixins",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "carrierbees.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

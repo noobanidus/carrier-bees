@@ -13,6 +13,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import noobanidus.mods.carrierbees.CarrierBees;
 import noobanidus.mods.carrierbees.config.ConfigManager;
 import noobanidus.mods.carrierbees.entities.projectiles.HoneyCombEntity;
+import noobanidus.mods.carrierbees.util.EffectBuilder;
 
 import java.util.ArrayList;
 import java.util.List;

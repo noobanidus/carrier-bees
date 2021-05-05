@@ -18,6 +18,6 @@ public class ModEffects {
 
   public static final RegistryEntry<TumbleEffect> TUMBLE = REGISTRATE.effect("tumble", TumbleEffect::new).register();
 
-  public static void load () {
+  public static void load() {
   }
 }

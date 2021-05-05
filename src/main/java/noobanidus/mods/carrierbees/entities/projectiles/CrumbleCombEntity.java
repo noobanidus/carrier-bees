@@ -37,6 +37,6 @@ public class CrumbleCombEntity extends HoneyCombEntity {
 
   @Override
   public EffectInstance getInstance() {
-    return new EffectInstance(ModEffects.CRUMBLE.get(), 20*10);
+    return new EffectInstance(ModEffects.CRUMBLE.get(), 20 * 10);
   }
 }

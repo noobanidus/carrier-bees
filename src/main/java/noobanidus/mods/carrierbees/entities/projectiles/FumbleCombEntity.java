@@ -37,6 +37,6 @@ public class FumbleCombEntity extends HoneyCombEntity {
 
   @Override
   public EffectInstance getInstance() {
-    return new EffectInstance(ModEffects.FUMBLE.get(), 20*10);
+    return new EffectInstance(ModEffects.FUMBLE.get(), 20 * 10);
   }
 }

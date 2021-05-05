@@ -37,6 +37,6 @@ public class StumbleCombEntity extends HoneyCombEntity {
 
   @Override
   public EffectInstance getInstance() {
-    return new EffectInstance(ModEffects.STUMBLE.get(), 20*10);
+    return new EffectInstance(ModEffects.STUMBLE.get(), 20 * 10);
   }
 }

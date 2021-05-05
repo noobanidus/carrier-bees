@@ -5,16 +5,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import noobanidus.mods.carrierbees.entities.BeehemothEntity;
 
 public class FlightHandler {
-  public static boolean isFlying (PlayerEntity player) {
+  public static boolean isFlying(PlayerEntity player) {
     Entity lowest = player.getLowestRidingEntity();
-    if (lowest instanceof BeehemothEntity && lowest.getControllingPassenger() == player) {
-      return true;
-    }
+    return lowest instanceof BeehemothEntity && lowest.getControllingPassenger() == player;
 
-    return false;
   }
 
-  public static boolean isGoingUp (PlayerEntity player) {
+  public static boolean isGoingUp(PlayerEntity player) {
     return SyncHandler.isHoldingUp(player) && isFlying(player);
   }
 }

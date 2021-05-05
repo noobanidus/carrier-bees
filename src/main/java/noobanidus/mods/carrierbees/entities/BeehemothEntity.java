@@ -1,6 +1,7 @@
 package noobanidus.mods.carrierbees.entities;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -9,9 +10,15 @@ import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.IFlyingAnimal;
+import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.util.ActionResultType;
@@ -25,15 +32,28 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import noobanidus.mods.carrierbees.entities.ai.BeehemothAIRide;
+import noobanidus.mods.carrierbees.init.ModSounds;
+import noobanidus.mods.carrierbees.sound.BeehemothBeeFlightSound;
+import noobanidus.mods.carrierbees.sound.BeehemothBeeSound;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
-public class BeehemothEntity extends AnimalEntity implements IFlyingAnimal {
+public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IEntitySound {
+  private static final DataParameter<Boolean> SADDLED = EntityDataManager.createKey(BeehemothEntity.class, DataSerializers.BOOLEAN);
+
   public float tartigradePitch = 0;
   public float prevTartigradePitch = 0;
   public boolean stopWandering = false;
   public boolean hasItemTarget = false;
+
+  private TemptGoal temptGoal;
+
+  @OnlyIn(Dist.CLIENT)
+  private BeehemothBeeSound sound;
 
   public float offset1, offset2, offset3, offset4, offset5, offset6;
 
@@ -46,6 +66,35 @@ public class BeehemothEntity extends AnimalEntity implements IFlyingAnimal {
     this.offset4 = (this.rand.nextFloat() - 0.5f);
     this.offset5 = (this.rand.nextFloat() - 0.5f);
     this.offset6 = (this.rand.nextFloat() - 0.5f);
+    if (world.isRemote) {
+      initSound();
+    }
+  }
+
+  @Override
+  protected void registerData() {
+    super.registerData();
+    this.dataManager.register(SADDLED, false);
+  }
+
+  public boolean isSaddled() {
+    return this.dataManager.get(SADDLED);
+  }
+
+  public void setSaddled(boolean saddled) {
+    this.dataManager.set(SADDLED, saddled);
+  }
+
+  @Override
+  public void writeAdditional(CompoundNBT tag) {
+    super.writeAdditional(tag);
+    tag.putBoolean("saddled", isSaddled());
+  }
+
+  @Override
+  public void readAdditional(CompoundNBT tag) {
+    super.readAdditional(tag);
+    setSaddled(tag.getBoolean("saddled"));
   }
 
   @Override
@@ -69,6 +118,7 @@ public class BeehemothEntity extends AnimalEntity implements IFlyingAnimal {
   @Override
   protected void registerGoals() {
     this.goalSelector.addGoal(0, new BeehemothAIRide(this, 3.2D));
+    this.goalSelector.addGoal(3, new TemptGoal(this, 3.2d, Ingredient.fromItems(Items.SUGAR), false));
     this.goalSelector.addGoal(4, new RandomFlyGoal(this));
     this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 10));
     this.goalSelector.addGoal(5, new LookRandomlyGoal(this));
@@ -134,6 +184,25 @@ public class BeehemothEntity extends AnimalEntity implements IFlyingAnimal {
   protected void playFallSound() {
   }
 
+  @Override
+  protected void playStepSound(BlockPos p_180429_1_, BlockState p_180429_2_) {
+  }
+
+  @Override
+  protected SoundEvent getAmbientSound() {
+    return null;
+  }
+
+  @Override
+  protected SoundEvent getHurtSound(DamageSource p_184601_1_) {
+    return ModSounds.BEEHEMOTH_HURT.get();
+  }
+
+  @Override
+  protected SoundEvent getDeathSound() {
+    return ModSounds.BEEHEMOTH_DEATH.get();
+  }
+
   public void tick() {
     super.tick();
     prevTartigradePitch = this.tartigradePitch;
@@ -155,6 +224,19 @@ public class BeehemothEntity extends AnimalEntity implements IFlyingAnimal {
     return null;
   }
 
+  @Override
+  @OnlyIn(Dist.CLIENT)
+  public boolean initSound() {
+    if (sound == null) {
+      sound = new BeehemothBeeFlightSound(this);
+      Minecraft.getInstance().getSoundHandler().playOnNextTick(sound);
+      return true;
+    } else {
+      //sound.tick();
+    }
+    return false;
+  }
+
   static class MoveHelperController extends MovementController {
     private final BeehemothEntity parentEntity;
 
@@ -170,20 +252,6 @@ public class BeehemothEntity extends AnimalEntity implements IFlyingAnimal {
         parentEntity.setMotion(parentEntity.getMotion().add(0, vector3d.scale(this.speed * 0.05D / d0).getY(), 0));
         float f = (float) this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED);
         float f1 = (float) this.speed * f;
-        float f2 = this.moveForward;
-        float f3 = this.moveStrafe;
-        float f4 = MathHelper.sqrt(f2 * f2 + f3 * f3);
-        if (f4 < 1.0F) {
-          f4 = 1.0F;
-        }
-
-        f4 = f1 / f4;
-        f2 = f2 * f4;
-        f3 = f3 * f4;
-        float f5 = MathHelper.sin(this.mob.rotationYaw * ((float) Math.PI / 180F));
-        float f6 = MathHelper.cos(this.mob.rotationYaw * ((float) Math.PI / 180F));
-        float f7 = f2 * f6 - f3 * f5;
-        float f8 = f3 * f6 + f2 * f5;
         this.moveForward = 1.0F;
         this.moveStrafe = 0.0F;
 
@@ -264,7 +332,7 @@ public class BeehemothEntity extends AnimalEntity implements IFlyingAnimal {
         return false;
       }
       if (!movementcontroller.isUpdating() || target == null) {
-        target = getBlockInViewEndergrade();
+        target = getBlockInViewBeehemoth();
         if (target != null) {
           this.parentEntity.getMoveHelper().setMoveTo(target.getX() + 0.5D, target.getY() + 0.5D, target.getZ() + 0.5D, 1.0D);
         }
@@ -283,7 +351,7 @@ public class BeehemothEntity extends AnimalEntity implements IFlyingAnimal {
 
     public void tick() {
       if (target == null) {
-        target = getBlockInViewEndergrade();
+        target = getBlockInViewBeehemoth();
       }
       if (target != null) {
         this.parentEntity.getMoveHelper().setMoveTo(target.getX() + 0.5D, target.getY() + 0.5D, target.getZ() + 0.5D, 1.0D);
@@ -293,7 +361,7 @@ public class BeehemothEntity extends AnimalEntity implements IFlyingAnimal {
       }
     }
 
-    public BlockPos getBlockInViewEndergrade() {
+    public BlockPos getBlockInViewBeehemoth() {
       float radius = 1 + parentEntity.getRNG().nextInt(5);
       float neg = parentEntity.getRNG().nextBoolean() ? 1 : -1;
       float renderYawOffset = parentEntity.renderYawOffset;

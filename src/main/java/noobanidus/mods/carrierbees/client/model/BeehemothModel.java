@@ -202,7 +202,7 @@ public class BeehemothModel extends EntityModel<BeehemothEntity> {
     super.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTick);
   }
 
-  private float getSine (float time, float max, float min) {
+  private float getSine(float time, float max, float min) {
     float so = MathHelper.sin(time * 0.25f);
     float range = max - min;
     float out = (so * range) + min;
@@ -211,15 +211,7 @@ public class BeehemothModel extends EntityModel<BeehemothEntity> {
 
   @Override
   public void setRotationAngles(BeehemothEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-    float l1 = ageInTicks - (float) entity.ticksExisted;
-    float l2 = 1f;
-    l2 *= l2;
-
-    //if (entity.isSaddled()) {
-    SADDLE.showModel = true;
-    /*} else {
-      SADDLE.showModel = false;
-    }*/
+    SADDLE.showModel = entity.isSaddled();
     WING_RIGHT.rotateAngleX = 0.0f;
     ROOT.rotateAngleX = 0.0f;
     ROOT.rotationPointY = 19.0f;

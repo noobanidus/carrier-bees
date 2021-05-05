@@ -9,6 +9,6 @@ public class ModLang {
     REGISTRATE.addRawLang("subtitles.carrierbees.crumbled", "Item starts crumbling");
   }
 
-  public static void load () {
+  public static void load() {
   }
 }

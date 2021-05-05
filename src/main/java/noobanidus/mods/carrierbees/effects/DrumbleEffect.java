@@ -1,23 +1,12 @@
 package noobanidus.mods.carrierbees.effects;
 
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.SwordItem;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.EffectType;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.SoundCategory;
-import net.minecraftforge.items.CapabilityItemHandler;
-import noobanidus.mods.carrierbees.config.ConfigManager;
-import noobanidus.mods.carrierbees.init.ModSounds;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class DrumbleEffect extends Effect {

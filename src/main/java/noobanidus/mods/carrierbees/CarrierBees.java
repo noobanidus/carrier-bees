@@ -14,7 +14,7 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import noobanidus.libs.noobutil.registrate.CustomRegistrate;
-import noobanidus.mods.carrierbees.commands.CommandCarrier;
+import noobanidus.mods.carrierbees.commands.BeeSummonCommand;
 import noobanidus.mods.carrierbees.config.ConfigManager;
 import noobanidus.mods.carrierbees.init.*;
 import noobanidus.mods.carrierbees.setup.ClientSetup;
@@ -60,8 +60,7 @@ public class CarrierBees {
     ModTiles.load();
   }
 
-  public void onCommands (RegisterCommandsEvent event) {
-    CommandCarrier carrier = new CommandCarrier(event.getDispatcher());
-    carrier.register();
+  public void onCommands(RegisterCommandsEvent event) {
+    BeeSummonCommand.register(event.getDispatcher());
   }
 }

@@ -8,10 +8,8 @@ import net.minecraft.world.World;
 import noobanidus.mods.carrierbees.config.ConfigManager;
 import noobanidus.mods.carrierbees.entities.projectiles.CrumbleCombEntity;
 
-import javax.management.remote.SubjectDelegationPermission;
-
-public class CrumbleCarrierBeeEntity extends AppleBeeEntity {
-  public CrumbleCarrierBeeEntity(EntityType<? extends CrumbleCarrierBeeEntity> type, World world) {
+public class CrumbleBeeEntity extends AppleBeeEntity {
+  public CrumbleBeeEntity(EntityType<? extends CrumbleBeeEntity> type, World world) {
     super(type, world);
   }
 
@@ -19,7 +17,7 @@ public class CrumbleCarrierBeeEntity extends AppleBeeEntity {
   protected void registerGoals() {
     super.registerGoals();
     if (ConfigManager.getHoneycombDamage() > 0) {
-      this.goalSelector.addGoal(1, new CrumbleCarrierBeeEntity.HoneycombProjectileAttackGoal(this));
+      this.goalSelector.addGoal(1, new CrumbleBeeEntity.HoneycombProjectileAttackGoal(this));
     }
   }
 
@@ -34,10 +32,10 @@ public class CrumbleCarrierBeeEntity extends AppleBeeEntity {
   }
 
   static class HoneycombProjectileAttackGoal extends Goal {
-    private final CrumbleCarrierBeeEntity parentEntity;
+    private final CrumbleBeeEntity parentEntity;
     public int attackTimer;
 
-    public HoneycombProjectileAttackGoal(CrumbleCarrierBeeEntity bee) {
+    public HoneycombProjectileAttackGoal(CrumbleBeeEntity bee) {
       this.parentEntity = bee;
     }
 

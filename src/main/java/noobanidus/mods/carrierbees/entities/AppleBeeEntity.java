@@ -1,6 +1,7 @@
 package noobanidus.mods.carrierbees.entities;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -34,13 +35,16 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
 import noobanidus.mods.carrierbees.config.ConfigManager;
+import noobanidus.mods.carrierbees.sound.CarrierBeeAngrySound;
+import noobanidus.mods.carrierbees.sound.CarrierBeeFlightSound;
+import noobanidus.mods.carrierbees.sound.CarrierBeeSound;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.UUID;
 
 @SuppressWarnings("NullableProblems")
-public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnimal {
+public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnimal, IEntitySound {
   private static final DataParameter<Integer> anger = EntityDataManager.createKey(AppleBeeEntity.class, DataSerializers.VARINT);
   private static final DataParameter<Byte> multipleByteTracker = EntityDataManager.createKey(AppleBeeEntity.class, DataSerializers.BYTE);
   private UUID targetPlayer;
@@ -50,6 +54,9 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
   private int underWaterTicks;
   private float attackDamage = -1;
 
+  @OnlyIn(Dist.CLIENT)
+  protected CarrierBeeSound sound;
+
   public AppleBeeEntity(EntityType<? extends AnimalEntity> type, World world) {
     super(type, world);
     this.lookController = new BeeLookController(this);
@@ -57,7 +64,26 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
     this.setPathPriority(PathNodeType.WATER, -1.0F);
     this.setPathPriority(PathNodeType.COCOA, -1.0F);
     this.setPathPriority(PathNodeType.FENCE, -1.0F);
+    if (this.world.isRemote) {
+      initSound();
+    }
+  }
 
+  @Override
+  @OnlyIn(Dist.CLIENT)
+  public boolean initSound() {
+    if (sound == null) {
+      if (isAngry()) {
+        sound = new CarrierBeeAngrySound(this);
+      } else {
+        sound = new CarrierBeeFlightSound(this);
+      }
+      Minecraft.getInstance().getSoundHandler().playOnNextTick(sound);
+      return true;
+    } else {
+      //sound.tick();
+    }
+    return false;
   }
 
   @Override
@@ -67,7 +93,7 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
     this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
     this.goalSelector.addGoal(8, new AppleBeeEntity.WanderGoal());
     this.goalSelector.addGoal(9, new SwimGoal(this));
-    this.targetSelector.addGoal(1, (new AppleBeeEntity.AngerGoal(this)).setCallsForHelp(BombleBeeEntity.class, CarrierBeeEntity.class, FumbleCarrierBeeEntity.class));
+    this.targetSelector.addGoal(1, (new AppleBeeEntity.AngerGoal(this)).setCallsForHelp(BombleBeeEntity.class, CarrierBeeEntity.class, FumbleBeeEntity.class));
     this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, (pos) -> Math.abs(pos.getPosY() - this.getPosY()) <= 4.0D));
   }
 

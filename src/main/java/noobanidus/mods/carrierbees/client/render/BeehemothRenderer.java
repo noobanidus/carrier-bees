@@ -8,11 +8,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import noobanidus.mods.carrierbees.CarrierBees;
-import noobanidus.mods.carrierbees.client.layers.BeeHeldItemLayer;
 import noobanidus.mods.carrierbees.client.model.BeehemothModel;
-import noobanidus.mods.carrierbees.client.model.CarrierBeeModel;
-import noobanidus.mods.carrierbees.client.model.ModelHolder;
-import noobanidus.mods.carrierbees.entities.*;
+import noobanidus.mods.carrierbees.entities.BeehemothEntity;
 
 @OnlyIn(Dist.CLIENT)
 public class BeehemothRenderer extends MobRenderer<BeehemothEntity, BeehemothModel> {

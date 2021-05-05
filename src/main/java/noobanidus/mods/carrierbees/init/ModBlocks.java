@@ -4,8 +4,6 @@ import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
 import noobanidus.mods.carrierbees.block.CrawlBlock;
-import noobanidus.mods.carrierbees.effects.ExplosiveEffect;
-import noobanidus.mods.carrierbees.effects.StumbleEffect;
 
 import static noobanidus.mods.carrierbees.CarrierBees.REGISTRATE;
 

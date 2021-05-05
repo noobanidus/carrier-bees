@@ -15,7 +15,7 @@ import noobanidus.mods.carrierbees.entities.BeehemothEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid= CarrierBees.MODID)
+@Mod.EventBusSubscriber(modid = CarrierBees.MODID)
 public class EntityTicker {
   private static final List<BeehemothEntity> entities = new ArrayList<>();
 

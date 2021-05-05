@@ -37,6 +37,6 @@ public class DrumbleCombEntity extends HoneyCombEntity {
 
   @Override
   public EffectInstance getInstance() {
-    return new EffectInstance(ModEffects.DRUMBLE.get(), 20*10);
+    return new EffectInstance(ModEffects.DRUMBLE.get(), 20 * 10);
   }
 }

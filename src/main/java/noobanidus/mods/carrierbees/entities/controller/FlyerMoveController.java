@@ -1,8 +1,9 @@
-package noobanidus.mods.carrierbees.entities;
+package noobanidus.mods.carrierbees.entities.controller;
 
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.util.math.MathHelper;
+import noobanidus.mods.carrierbees.entities.BeehemothEntity;
 
 public class FlyerMoveController extends MovementController {
   private final BeehemothEntity entity;

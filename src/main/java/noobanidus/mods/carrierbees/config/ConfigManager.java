@@ -42,14 +42,14 @@ public class ConfigManager {
   private static int fumble_chance = -1;
   private static int drumble_chance = -1;
 
-  public static int getDrumbleChance () {
+  public static int getDrumbleChance() {
     if (drumble_chance == -1) {
       drumble_chance = DRUMBLE_CHANCE.get();
     }
     return drumble_chance;
   }
 
-  public static int getFumbleChance () {
+  public static int getFumbleChance() {
     if (fumble_chance == -1) {
       fumble_chance = FUMBLE_CHANCE.get();
     }
