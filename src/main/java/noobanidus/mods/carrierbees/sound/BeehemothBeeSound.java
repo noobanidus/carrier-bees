@@ -10,7 +10,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import noobanidus.mods.carrierbees.entities.BeehemothEntity;
 
-@OnlyIn(Dist.CLIENT)
 public abstract class BeehemothBeeSound extends TickableSound {
   protected final BeehemothEntity beeInstance;
   private boolean hasSwitchedSound = false;
@@ -29,8 +28,9 @@ public abstract class BeehemothBeeSound extends TickableSound {
   @Override
   public void tick() {
     Minecraft mc = Minecraft.getInstance();
-    if (!this.shouldSwitchSound() && !isDonePlaying()) {
+    if (this.shouldSwitchSound() && !isDonePlaying()) {
       mc.getSoundHandler().playOnNextTick(this.getNextSound());
+      this.hasSwitchedSound = true;
     }
 
     if (this.beeInstance.isAlive() && !this.hasSwitchedSound) {

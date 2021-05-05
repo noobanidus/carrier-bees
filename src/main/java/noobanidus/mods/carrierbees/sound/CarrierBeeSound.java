@@ -6,11 +6,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
 
-@OnlyIn(Dist.CLIENT)
 public abstract class CarrierBeeSound extends TickableSound {
   protected final AppleBeeEntity beeInstance;
   private boolean hasSwitchedSound = false;
@@ -29,8 +26,9 @@ public abstract class CarrierBeeSound extends TickableSound {
   @Override
   public void tick() {
     Minecraft mc = Minecraft.getInstance();
-    if (!this.shouldSwitchSound() && !isDonePlaying()) {
+    if (this.shouldSwitchSound() && !isDonePlaying()) {
       mc.getSoundHandler().playOnNextTick(this.getNextSound());
+      this.hasSwitchedSound = true;
     }
 
     if (this.beeInstance.isAlive() && !this.hasSwitchedSound) {
@@ -45,7 +43,6 @@ public abstract class CarrierBeeSound extends TickableSound {
         this.pitch = 0.0F;
         this.volume = 0.0F;
       }
-
     } else {
       this.finishPlaying();
     }

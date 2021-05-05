@@ -2,6 +2,7 @@ package noobanidus.mods.carrierbees.entities;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.BeeSound;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -72,6 +73,7 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
   @Override
   @OnlyIn(Dist.CLIENT)
   public boolean initSound() {
+    BeeSound
     if (sound == null) {
       if (isAngry()) {
         sound = new CarrierBeeAngrySound(this);
