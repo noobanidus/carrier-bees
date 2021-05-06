@@ -1,10 +1,15 @@
 package noobanidus.mods.carrierbees.init;
 
+import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.RegistryEntry;
+import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.item.Rarity;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.util.ResourceLocation;
+import noobanidus.mods.carrierbees.CarrierBees;
 
 import static noobanidus.mods.carrierbees.CarrierBees.REGISTRATE;
 
@@ -39,6 +44,22 @@ public class ModItems {
 
   public static RegistryEntry<Item> ROYAL_JELLY = REGISTRATE.item("royal_jelly", Item::new)
       .properties(o -> o.food(new Food.Builder().fastToEat().hunger(20).saturation(20).setAlwaysEdible().build()).rarity(Rarity.EPIC))
+      .recipe((ctx, p) -> {
+        ShapedRecipeBuilder.shapedRecipe(ctx::getEntry, 1)
+            .patternLine("FBS")
+            .patternLine("C D")
+            .patternLine("THL")
+            .key('F', FUMBLECOMB.get())
+            .key('B', BOMBYCOMB.get())
+            .key('S', STUMBLECOMB.get())
+            .key('C', CRUMBLECOMB.get())
+            .key('D', DRUMBLECOMB.get())
+            .key('T', TUMBLECOMB.get())
+            .key('H', Items.HONEYCOMB)
+            .key('L', THIMBLECOMB.get())
+            .addCriterion("something", RegistrateRecipeProvider.hasItem(Items.HONEYCOMB))
+            .build(p, new ResourceLocation(CarrierBees.MODID, "royal_jelly"));
+      })
       .register();
 
   public static void load() {

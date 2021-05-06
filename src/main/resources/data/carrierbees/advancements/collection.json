@@ -1,0 +1,100 @@
+{
+  "parent": "carrierbees:root",
+  "display": {
+    "icon": {
+      "item": "carrierbees:crumblecomb"
+    },
+    "title": {
+      "translate": "carrierbees.advancements.collection.title"
+    },
+    "description": {
+      "translate": "carrierbees.advancements.collection.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "fumblecomb": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "carrierbees:fumblecomb"
+          }
+        ]
+      }
+    },
+    "bombycomb": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "carrierbees:bombycomb"
+          }
+        ]
+      }
+    },
+     "stumblecomb": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "carrierbees:stumblecomb"
+          }
+        ]
+      }
+    },
+    "crumblecomb": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "carrierbees:crumblecomb"
+          }
+        ]
+      }
+    },
+    "drumblecomb": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "carrierbees:drumblecomb"
+          }
+        ]
+      }
+    },
+    "tumblecomb": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "carrierbees:tumblecomb"
+          }
+        ]
+      }
+    },
+    "thimblecomb": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "carrierbees:thimblecomb"
+          }
+        ]
+      }
+    },
+    "honeycomb": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:honeycomb"
+          }
+        ]
+      }
+    }
+  }
+}

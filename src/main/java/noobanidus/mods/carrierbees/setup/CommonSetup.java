@@ -1,9 +1,13 @@
 package noobanidus.mods.carrierbees.setup;
 
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import noobanidus.libs.noobutil.advancement.GenericTrigger;
+import noobanidus.mods.carrierbees.CarrierBees;
+import noobanidus.mods.carrierbees.advancements.QueenPredicate;
 import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
 import noobanidus.mods.carrierbees.entities.BeehemothEntity;
 import noobanidus.mods.carrierbees.init.ModEntities;
@@ -32,6 +36,9 @@ public class CommonSetup {
       SpawnEggItem.EGGS.put(ModEntities.TUMBLE_BEE.get(), ModEntities.TUMBLE_BEE_EGG.get());
       SpawnEggItem.EGGS.put(ModEntities.THIMBLE_BEE.get(), ModEntities.THIMBLE_BEE_EGG.get());
       SpawnEggItem.EGGS.put(ModEntities.BEEHEMOTH.get(), ModEntities.BEEHEMOTH_EGG.get());
+
+      CarrierBees.QUEEN_PREDICATE = CriteriaTriggers.register(new GenericTrigger<>(CarrierBees.QUEEN_LOCATION, new QueenPredicate()));
+      CarrierBees.STEED_PREDICATE = CriteriaTriggers.register(new GenericTrigger<>(CarrierBees.STEED_LOCATION, new QueenPredicate()));
     });
   }
 }

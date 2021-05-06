@@ -3,6 +3,7 @@ package noobanidus.mods.carrierbees;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -13,6 +14,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
+import noobanidus.libs.noobutil.advancement.GenericTrigger;
 import noobanidus.libs.noobutil.registrate.CustomRegistrate;
 import noobanidus.mods.carrierbees.commands.BeeSummonCommand;
 import noobanidus.mods.carrierbees.config.ConfigManager;
@@ -28,6 +30,11 @@ public class CarrierBees {
   public static final Logger LOG = LogManager.getLogger();
   public static final String MODID = "carrierbees";
   public static CustomRegistrate REGISTRATE;
+
+  public static GenericTrigger<Void> QUEEN_PREDICATE = null;
+  public static GenericTrigger<Void> STEED_PREDICATE = null;
+  public static final ResourceLocation QUEEN_LOCATION = new ResourceLocation(MODID, "queen");
+  public static final ResourceLocation STEED_LOCATION = new ResourceLocation(MODID, "steed");
 
   public static ItemGroup GROUP = new ItemGroup(MODID) {
     @Override

@@ -1,11 +1,14 @@
 package noobanidus.mods.carrierbees.entities;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
@@ -17,8 +20,6 @@ import noobanidus.mods.carrierbees.init.ModEntities;
 import javax.annotation.Nullable;
 
 public class ThimbleBeeEntity extends AppleBeeEntity {
-  private boolean summoned = false;
-
   public ThimbleBeeEntity(EntityType<? extends ThimbleBeeEntity> type, World world) {
     super(type, world);
   }
@@ -32,13 +33,26 @@ public class ThimbleBeeEntity extends AppleBeeEntity {
   }
 
   @Override
+  public void setMotionMultiplier(BlockState state, Vector3d motionMultiplierIn) {
+    if (!state.isIn(Blocks.COBWEB)) {
+      super.setMotionMultiplier(state, motionMultiplierIn);
+    }
+  }
+
+  @Override
   public ILivingEntityData onInitialSpawn(IServerWorld world, DifficultyInstance difficulty, SpawnReason reason, @Nullable ILivingEntityData data, @Nullable CompoundNBT nbt) {
-    if (world instanceof ServerWorld && !summoned) {
-      int count = rand.nextInt(3);
-      for (int i = 0; i < count; i++) {
-        ThimbleBeeEntity entity = ModEntities.THIMBLE_BEE.get().create((ServerWorld) world, nbt, null, null, getPosition(), reason, true, true);
-        if (entity != null) {
-          entity.summoned = true;
+    if (nbt == null || !nbt.contains("summoned")) {
+      if (nbt == null) {
+        nbt = new CompoundNBT();
+      }
+      nbt.putBoolean("summoned", true);
+      if (world instanceof ServerWorld) {
+        int count = rand.nextInt(1) + 1;
+        for (int i = 0; i < count; i++) {
+          ThimbleBeeEntity entity = ModEntities.THIMBLE_BEE.get().create((ServerWorld) world, nbt, null, null, getPosition(), reason, true, true);
+          if (entity != null) {
+            world.addEntity(entity);
+          }
         }
       }
     }

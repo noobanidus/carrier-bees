@@ -1,0 +1,24 @@
+{
+  "parent": "carrierbees:steed",
+  "display": {
+    "icon": {
+      "item": "carrierbees:royal_jelly"
+    },
+    "title": {
+      "translate": "carrierbees.advancements.queen.title"
+    },
+    "description": {
+      "translate": "carrierbees.advancements.queen.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "queen": {
+      "trigger": "carrierbees:queen",
+      "conditions": {}
+    }
+  }
+}

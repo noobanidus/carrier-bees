@@ -1,6 +1,6 @@
 14f0b3a1a34001679f25cbb0e72e926f8d00e3d1 assets/carrierbees/blockstates/crawl.json
-53f76eac116b60185088acb1b1660e182a14c038 assets/carrierbees/lang/en_ud.json
-b1dfef33f9eaeb59ae967eb72ad2aa1efdb09227 assets/carrierbees/lang/en_us.json
+e3e95728f4cec2ff1a5ada44945dfc06fe0fad35 assets/carrierbees/lang/en_ud.json
+7173235c70959a6b5947664df248b58c5fed5616 assets/carrierbees/lang/en_us.json
 98167609bf3898587f7565736a6fc24a7966cacd assets/carrierbees/models/item/beehemoth_spawn_egg.json
 98167609bf3898587f7565736a6fc24a7966cacd assets/carrierbees/models/item/bomble_bee_spawn_egg.json
 c3d3ccede3f401045df030007a46634e2111311d assets/carrierbees/models/item/bombycomb.json
@@ -18,6 +18,7 @@ c6d4c2bcf4e2d17520a0b2f6908119df84da08df assets/carrierbees/models/item/stumblec
 cd5292be920cbeac42622a673d8ff43eef100e4a assets/carrierbees/models/item/thimblecomb.json
 98167609bf3898587f7565736a6fc24a7966cacd assets/carrierbees/models/item/tumble_bee_spawn_egg.json
 d2387868dddb1523f8a2779d36d979ed94803039 assets/carrierbees/models/item/tumblecomb.json
+366e504125ba900b52441a085e37800e45d37396 data/carrierbees/advancements/recipes/carrierbees/royal_jelly.json
 205f5899101262f31f5c1a88bb7d954918d08d04 data/carrierbees/loot_tables/blocks/crawl.json
 f0266b86d509baafb030ddb9915394ea06d372cd data/carrierbees/loot_tables/entities/beehemoth.json
 eeae1e6519e274a4f092b5438f7e93375e1a3a8c data/carrierbees/loot_tables/entities/bomble_bee.json
@@ -28,3 +29,4 @@ dcf778ad79f2ada33b9792da356731a20ef4b7dc data/carrierbees/loot_tables/entities/c
 fa0fbdfee4966c8cc90dd0e01dfc5d4871b7c39e data/carrierbees/loot_tables/entities/stumble_bee.json
 3f7d93d5a5002e809a2cf3256a6ea7f4bd880a67 data/carrierbees/loot_tables/entities/thimble_bee.json
 bded05b92cf7790bcd60db8e13310a5c0a8ccc45 data/carrierbees/loot_tables/entities/tumble_bee.json
+20a38ebe1128de29831dbccf1866e3903179ce45 data/carrierbees/recipes/royal_jelly.json

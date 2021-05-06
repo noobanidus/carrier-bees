@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "carrierbees:fumblecomb"
+    },
+    "title": {
+      "translate": "carrierbees.advancements.root.title"
+    },
+    "description": {
+      "translate": "carrierbees.advancements.root.title.desc"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false,
+    "background": "minecraft:textures/block/honeycomb_block.png"
+  },
+  "criteria": {
+    "always_true": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "requirements": [
+    [
+      "always_true"
+    ]
+  ]
+}

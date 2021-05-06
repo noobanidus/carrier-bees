@@ -15,6 +15,7 @@ public class BeehemothModel extends EntityModel<BeehemothEntity> {
   private final ModelRenderer ROOT;
   private final ModelRenderer FACE;
   private final ModelRenderer THORAX;
+  private final ModelRenderer CROWN;
   private final ModelRenderer LEG_FRONTLEFT;
   private final ModelRenderer KNEE_FRONTLEFT;
   private final ModelRenderer KneeFrontLeftCube_r1;
@@ -55,6 +56,11 @@ public class BeehemothModel extends EntityModel<BeehemothEntity> {
     FACE.setTextureOffset(0, 0).addBox(-3.5F, 0.0F, -6.0F, 7.0F, 7.0F, 7.0F, 0.0F, false);
     FACE.setTextureOffset(57, 1).addBox(-1.5F, 0.0F, -9.0F, 0.0F, 2.0F, 3.0F, 0.0F, false);
     FACE.setTextureOffset(57, 1).addBox(1.5F, 0.0F, -9.0F, 0.0F, 2.0F, 3.0F, 0.0F, false);
+
+    CROWN = new ModelRenderer(this);
+    CROWN.setRotationPoint(0.0F, 0.0F, 0.0F);
+    FACE.addChild(CROWN);
+    CROWN.setTextureOffset(40, 26).addBox(-2.5F, -3.0F, -5.0F, 5.0F, 3.0F, 5.0F, 0.0F, false);
 
     THORAX = new ModelRenderer(this);
     THORAX.setRotationPoint(0.0F, 0.0F, 0.0F);
@@ -212,6 +218,7 @@ public class BeehemothModel extends EntityModel<BeehemothEntity> {
   @Override
   public void setRotationAngles(BeehemothEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
     SADDLE.showModel = entity.isSaddled();
+    CROWN.showModel = entity.isQueen();
     WING_RIGHT.rotateAngleX = 0.0f;
     ROOT.rotateAngleX = 0.0f;
     ROOT.rotationPointY = 19.0f;

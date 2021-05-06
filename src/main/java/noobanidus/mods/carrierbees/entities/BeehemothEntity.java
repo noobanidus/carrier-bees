@@ -13,6 +13,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -32,10 +33,14 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import noobanidus.mods.carrierbees.CarrierBees;
 import noobanidus.mods.carrierbees.client.sound.SoundHolder;
 import noobanidus.mods.carrierbees.entities.ai.BeehemothAIRide;
+import noobanidus.mods.carrierbees.init.ModItems;
 import noobanidus.mods.carrierbees.init.ModSounds;
 
 import javax.annotation.Nullable;
@@ -43,6 +48,7 @@ import java.util.EnumSet;
 
 public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IAppleBee {
   private static final DataParameter<Boolean> SADDLED = EntityDataManager.createKey(BeehemothEntity.class, DataSerializers.BOOLEAN);
+  private static final DataParameter<Boolean> QUEEN = EntityDataManager.createKey(BeehemothEntity.class, DataSerializers.BOOLEAN);
 
   private boolean stopWandering = false;
   private boolean hasItemTarget = false;
@@ -64,10 +70,25 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IA
     soundHolder.init(this, world);
   }
 
+  private static TranslationTextComponent QUEEN_NAME = new TranslationTextComponent("entity.carrierbees.beehemoth_queen");
+
+  @Override
+  protected ITextComponent getProfessionName() {
+    if (isQueen()) {
+      return QUEEN_NAME;
+    }
+    return super.getProfessionName();
+  }
+
   @Override
   protected void registerData() {
     super.registerData();
     this.dataManager.register(SADDLED, false);
+    this.dataManager.register(QUEEN, false);
+  }
+
+  public boolean isQueen () {
+    return this.dataManager.get(QUEEN);
   }
 
   public boolean isSaddled() {
@@ -78,16 +99,22 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IA
     this.dataManager.set(SADDLED, saddled);
   }
 
+  public void setQueen (boolean queen) {
+    this.dataManager.set(QUEEN, queen);
+  }
+
   @Override
   public void writeAdditional(CompoundNBT tag) {
     super.writeAdditional(tag);
     tag.putBoolean("saddled", isSaddled());
+    tag.putBoolean("queen", isQueen());
   }
 
   @Override
   public void readAdditional(CompoundNBT tag) {
     super.readAdditional(tag);
     setSaddled(tag.getBoolean("saddled"));
+    setQueen(tag.contains("queen") && tag.getBoolean("queen"));
   }
 
   @Override
@@ -144,6 +171,13 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IA
     } else {
       if (this.isTamed()) {
         if (this.isOwner(player)) {
+          if (item == ModItems.ROYAL_JELLY.get() && !isQueen()) {
+            this.consumeItemFromStack(player, stack);
+            setQueen(true);
+            CarrierBees.QUEEN_PREDICATE.trigger((ServerPlayerEntity)player,null);
+            return ActionResultType.CONSUME;
+          }
+
           if (item == Items.SUGAR && this.getHealth() < this.getMaxHealth()) {
             this.consumeItemFromStack(player, stack);
             this.heal(10);
@@ -153,6 +187,7 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IA
           if (item == Items.SADDLE && !isSaddled()) {
             this.consumeItemFromStack(player, stack);
             this.setSaddled(true);
+            CarrierBees.STEED_PREDICATE.trigger((ServerPlayerEntity)player,null);
             return ActionResultType.CONSUME;
           }
 
