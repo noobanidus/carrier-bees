@@ -34,15 +34,14 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import noobanidus.mods.carrierbees.client.sound.SoundHolder;
 import noobanidus.mods.carrierbees.entities.ai.BeehemothAIRide;
 import noobanidus.mods.carrierbees.init.ModSounds;
-import noobanidus.mods.carrierbees.sound.BeehemothBeeFlightSound;
-import noobanidus.mods.carrierbees.sound.BeehemothBeeSound;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
-public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IEntitySound {
+public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IAppleBee {
   private static final DataParameter<Boolean> SADDLED = EntityDataManager.createKey(BeehemothEntity.class, DataSerializers.BOOLEAN);
 
   public float tartigradePitch = 0;
@@ -50,10 +49,7 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IE
   public boolean stopWandering = false;
   public boolean hasItemTarget = false;
 
-  private TemptGoal temptGoal;
-
-  @OnlyIn(Dist.CLIENT)
-  private BeehemothBeeSound sound;
+  private final SoundHolder<BeehemothEntity> soundHolder;
 
   public float offset1, offset2, offset3, offset4, offset5, offset6;
 
@@ -66,9 +62,8 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IE
     this.offset4 = (this.rand.nextFloat() - 0.5f);
     this.offset5 = (this.rand.nextFloat() - 0.5f);
     this.offset6 = (this.rand.nextFloat() - 0.5f);
-    if (world.isRemote) {
-      initSound();
-    }
+    soundHolder = new SoundHolder<>();
+    soundHolder.init(this, world);
   }
 
   @Override
@@ -225,16 +220,13 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IE
   }
 
   @Override
-  @OnlyIn(Dist.CLIENT)
-  public boolean initSound() {
-    if (sound == null) {
-      sound = new BeehemothBeeFlightSound(this);
-      Minecraft.getInstance().getSoundHandler().playOnNextTick(sound);
-      return true;
-    } else {
-      //sound.tick();
-    }
+  public boolean safeIsAngry() {
     return false;
+  }
+
+  @Override
+  public boolean isBeehemoth() {
+    return true;
   }
 
   static class MoveHelperController extends MovementController {

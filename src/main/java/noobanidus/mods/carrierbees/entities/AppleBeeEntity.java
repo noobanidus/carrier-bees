@@ -2,7 +2,6 @@ package noobanidus.mods.carrierbees.entities;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.BeeSound;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -35,17 +34,18 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
+import noobanidus.mods.carrierbees.client.sound.SoundHolder;
 import noobanidus.mods.carrierbees.config.ConfigManager;
-import noobanidus.mods.carrierbees.sound.CarrierBeeAngrySound;
-import noobanidus.mods.carrierbees.sound.CarrierBeeFlightSound;
-import noobanidus.mods.carrierbees.sound.CarrierBeeSound;
+import noobanidus.mods.carrierbees.client.sound.CarrierBeeAngrySound;
+import noobanidus.mods.carrierbees.client.sound.CarrierBeeFlightSound;
+import noobanidus.mods.carrierbees.client.sound.CarrierBeeSound;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.UUID;
 
 @SuppressWarnings("NullableProblems")
-public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnimal, IEntitySound {
+public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnimal, IAppleBee {
   private static final DataParameter<Integer> anger = EntityDataManager.createKey(AppleBeeEntity.class, DataSerializers.VARINT);
   private static final DataParameter<Byte> multipleByteTracker = EntityDataManager.createKey(AppleBeeEntity.class, DataSerializers.BYTE);
   private UUID targetPlayer;
@@ -55,8 +55,7 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
   private int underWaterTicks;
   private float attackDamage = -1;
 
-  @OnlyIn(Dist.CLIENT)
-  protected CarrierBeeSound sound;
+  private final SoundHolder<AppleBeeEntity> soundHolder;
 
   public AppleBeeEntity(EntityType<? extends AnimalEntity> type, World world) {
     super(type, world);
@@ -65,27 +64,8 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
     this.setPathPriority(PathNodeType.WATER, -1.0F);
     this.setPathPriority(PathNodeType.COCOA, -1.0F);
     this.setPathPriority(PathNodeType.FENCE, -1.0F);
-    if (this.world.isRemote) {
-      initSound();
-    }
-  }
-
-  @Override
-  @OnlyIn(Dist.CLIENT)
-  public boolean initSound() {
-    BeeSound
-    if (sound == null) {
-      if (isAngry()) {
-        sound = new CarrierBeeAngrySound(this);
-      } else {
-        sound = new CarrierBeeFlightSound(this);
-      }
-      Minecraft.getInstance().getSoundHandler().playOnNextTick(sound);
-      return true;
-    } else {
-      //sound.tick();
-    }
-    return false;
+    soundHolder = new SoundHolder<>();
+    soundHolder.init(this, world);
   }
 
   @Override
@@ -351,6 +331,11 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
     this.setMotion(this.getMotion().add(0.0D, 0.01D, 0.0D));
   }
 
+  @Override
+  public boolean safeIsAngry() {
+    return isAngry();
+  }
+
   public boolean isAngry() {
     return ConfigManager.getAlwaysAngry() || this.getAnger() > 0;
   }
@@ -463,5 +448,10 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
         ((AppleBeeEntity) bee).setBeeAttacker(target);
       }
     }
+  }
+
+  @Override
+  public boolean isBeehemoth() {
+    return false;
   }
 }

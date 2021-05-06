@@ -1,18 +1,19 @@
-package noobanidus.mods.carrierbees.sound;
+package noobanidus.mods.carrierbees.client.sound;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.TickableSound;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
-import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
+import noobanidus.mods.carrierbees.entities.IAppleBee;
 
-public abstract class CarrierBeeSound extends TickableSound {
-  protected final AppleBeeEntity beeInstance;
+public abstract class CarrierBeeSound<T extends AnimalEntity & IAppleBee> extends TickableSound {
+  protected final T beeInstance;
   private boolean hasSwitchedSound = false;
 
-  public CarrierBeeSound(AppleBeeEntity bee, SoundEvent p_i46532_1_, SoundCategory p_i46532_2_) {
+  public CarrierBeeSound(T bee, SoundEvent p_i46532_1_, SoundCategory p_i46532_2_) {
     super(p_i46532_1_, p_i46532_2_);
     this.beeInstance = bee;
     this.x = bee.getPosX();
@@ -36,6 +37,9 @@ public abstract class CarrierBeeSound extends TickableSound {
       this.y = (double) ((float) this.beeInstance.getPosY());
       this.z = (double) ((float) this.beeInstance.getPosZ());
       float lvt_2_1_ = MathHelper.sqrt(Entity.horizontalMag(this.beeInstance.getMotion()));
+      if (this.beeInstance.isBeehemoth()) {
+        lvt_2_1_ *= 10;
+      }
       if ((double) lvt_2_1_ >= 0.01D) {
         this.pitch = MathHelper.lerp(MathHelper.clamp(lvt_2_1_, this.getMinPitch(), this.getMaxPitch()), this.getMinPitch(), this.getMaxPitch());
         this.volume = MathHelper.lerp(MathHelper.clamp(lvt_2_1_, 0.0F, 0.5F), 0.0F, 1.2F);
@@ -49,11 +53,19 @@ public abstract class CarrierBeeSound extends TickableSound {
   }
 
   private float getMinPitch() {
-    return this.beeInstance.isChild() ? 1.1F : 0.7F;
+    if (this.beeInstance.isBeehemoth()) {
+      return this.beeInstance.isChild() ? 0.4F : 0.2F;
+    } else {
+      return this.beeInstance.isChild() ? 1.1F : 0.7F;
+    }
   }
 
   private float getMaxPitch() {
-    return this.beeInstance.isChild() ? 1.5F : 1.1F;
+    if (this.beeInstance.isBeehemoth()) {
+      return this.beeInstance.isChild() ? 0.6F : 0.4F;
+    } else {
+      return this.beeInstance.isChild() ? 1.5F : 1.1F;
+    }
   }
 
   public boolean canBeSilent() {
