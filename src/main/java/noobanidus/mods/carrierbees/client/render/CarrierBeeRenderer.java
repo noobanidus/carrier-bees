@@ -28,6 +28,8 @@ public class CarrierBeeRenderer extends MobRenderer<AppleBeeEntity, CarrierBeeMo
   private static final ResourceLocation DRUMBLE_SKIN_ANGRY = new ResourceLocation(CarrierBees.MODID, "textures/entity/drumblebee_angry.png");
   private static final ResourceLocation TUMBLE_SKIN = new ResourceLocation(CarrierBees.MODID, "textures/entity/tumblebee.png");
   private static final ResourceLocation TUMBLE_SKIN_ANGRY = new ResourceLocation(CarrierBees.MODID, "textures/entity/tumblebee_angry.png");
+  private static final ResourceLocation THIMBLE_SKIN = new ResourceLocation(CarrierBees.MODID, "textures/entity/thimblebee.png");
+  private static final ResourceLocation THIMBLE_SKIN_ANGRY = new ResourceLocation(CarrierBees.MODID, "textures/entity/thimblebee_angry.png");
 
   public CarrierBeeRenderer(EntityRendererManager bee, CarrierBeeModel<AppleBeeEntity> model) {
     super(bee, model, 0.4F);
@@ -51,6 +53,8 @@ public class CarrierBeeRenderer extends MobRenderer<AppleBeeEntity, CarrierBeeMo
       scale = 3.5f;
     } else if (p_225623_1_ instanceof TumbleBeeEntity) {
       scale = 1.1f;
+    } else if (p_225623_1_ instanceof ThimbleBeeEntity) {
+      scale = 0.4f;
     }
     stack.scale(scale, scale, scale);
     super.render(p_225623_1_, p_225623_2_, p_225623_3_, stack, p_225623_5_, p_225623_6_);
@@ -94,6 +98,12 @@ public class CarrierBeeRenderer extends MobRenderer<AppleBeeEntity, CarrierBeeMo
         return TUMBLE_SKIN_ANGRY;
       }
       return TUMBLE_SKIN;
+    }
+    if (bee instanceof ThimbleBeeEntity) {
+      if (bee.isAngry()) {
+        return THIMBLE_SKIN_ANGRY;
+      }
+      return THIMBLE_SKIN;
     }
     if (bee.isAngry()) {
       return ANGRY_SKIN;

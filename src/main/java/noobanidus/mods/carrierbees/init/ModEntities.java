@@ -117,7 +117,7 @@ public class ModEntities {
       .register();
 
   public static RegistryEntry<EntityType<ThimbleBeeEntity>> THIMBLE_BEE = REGISTRATE.entity("thimble_bee", ThimbleBeeEntity::new, EntityClassification.CREATURE)
-      .properties(o -> o.size(0.8F, 0.7F))
+      .properties(o -> o.size(0.3F, 0.2F))
       .loot((p, e) -> p.registerLootTable(e, LootTable.builder()
               .addLootPool(LootPool.builder()
                   .addEntry(ItemLootEntry.builder(ModItems.THIMBLECOMB.get())
