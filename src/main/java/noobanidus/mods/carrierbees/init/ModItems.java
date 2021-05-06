@@ -30,7 +30,15 @@ public class ModItems {
       .register();
 
   public static RegistryEntry<Item> TUMBLECOMB = REGISTRATE.item("tumblecomb", Item::new)
-      .properties(o -> o.food(new Food.Builder().effect(() -> new EffectInstance(ModEffects.TUMBLE.get(), 20 * 10), 1.0f).fastToEat().hunger(3).saturation(1.5f).build()).rarity(Rarity.UNCOMMON))
+      .properties(o -> o.food(new Food.Builder().effect(() -> new EffectInstance(ModEffects.TUMBLE.get(), 20 * 10), 1.0f).fastToEat().hunger(18).saturation(1.5f).build()).rarity(Rarity.UNCOMMON))
+      .register();
+
+  public static RegistryEntry<Item> THIMBLECOMB = REGISTRATE.item("thimblecomb", Item::new)
+      .properties(o -> o.food(new Food.Builder().effect(() -> new EffectInstance(ModEffects.THIMBLE.get(), 20 * 10), 1.0f).fastToEat().hunger(3).saturation(1.5f).build()).rarity(Rarity.UNCOMMON))
+      .register();
+
+  public static RegistryEntry<Item> ROYAL_JELLY = REGISTRATE.item("royal_jelly", Item::new)
+      .properties(o -> o.food(new Food.Builder().fastToEat().hunger(20).saturation(20).setAlwaysEdible().build()).rarity(Rarity.EPIC))
       .register();
 
   public static void load() {

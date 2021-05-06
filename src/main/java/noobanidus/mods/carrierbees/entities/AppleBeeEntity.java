@@ -1,7 +1,6 @@
 package noobanidus.mods.carrierbees.entities;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -36,9 +35,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
 import noobanidus.mods.carrierbees.client.sound.SoundHolder;
 import noobanidus.mods.carrierbees.config.ConfigManager;
-import noobanidus.mods.carrierbees.client.sound.CarrierBeeAngrySound;
-import noobanidus.mods.carrierbees.client.sound.CarrierBeeFlightSound;
-import noobanidus.mods.carrierbees.client.sound.CarrierBeeSound;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
@@ -315,6 +311,9 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
       if (!this.world.isRemote && attacker instanceof PlayerEntity && !((PlayerEntity) attacker).isCreative() && this.canEntityBeSeen(attacker) && !this.isAIDisabled()) {
         this.setBeeAttacker(attacker);
       }
+
+      this.setHasStung(true);
+      this.playSound(SoundEvents.ENTITY_BEE_STING, 1.0F, 1.0F);
 
       return super.attackEntityFrom(source, amount);
     }

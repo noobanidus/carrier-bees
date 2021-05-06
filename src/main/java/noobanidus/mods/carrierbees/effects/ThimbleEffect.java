@@ -1,6 +1,7 @@
 package noobanidus.mods.carrierbees.effects;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effect;
@@ -10,11 +11,11 @@ import noobanidus.mods.carrierbees.init.ModBlocks;
 
 import java.util.Random;
 
-public class StumbleEffect extends Effect {
+public class ThimbleEffect extends Effect {
   private static final Random rand = new Random();
 
-  public StumbleEffect() {
-    super(EffectType.HARMFUL, 0x5ae8ff);
+  public ThimbleEffect() {
+    super(EffectType.HARMFUL, 0xd01adb);
   }
 
   @Override
@@ -31,7 +32,7 @@ public class StumbleEffect extends Effect {
         if (!shape.isEmpty() && shape.getBoundingBox().getYSize() < 1) {
           return;
         }
-        entity.world.setBlockState(entity.getPosition().up(), ModBlocks.CRAWL.get().getDefaultState());
+        entity.world.setBlockState(entity.getPosition().up(), Blocks.COBWEB.getDefaultState());
       }
     }
   }

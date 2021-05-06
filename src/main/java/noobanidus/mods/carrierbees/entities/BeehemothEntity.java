@@ -1,7 +1,6 @@
 package noobanidus.mods.carrierbees.entities;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -10,9 +9,12 @@ import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
@@ -32,8 +34,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import noobanidus.mods.carrierbees.client.sound.SoundHolder;
 import noobanidus.mods.carrierbees.entities.ai.BeehemothAIRide;
 import noobanidus.mods.carrierbees.init.ModSounds;
@@ -44,10 +44,8 @@ import java.util.EnumSet;
 public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IAppleBee {
   private static final DataParameter<Boolean> SADDLED = EntityDataManager.createKey(BeehemothEntity.class, DataSerializers.BOOLEAN);
 
-  public float tartigradePitch = 0;
-  public float prevTartigradePitch = 0;
-  public boolean stopWandering = false;
-  public boolean hasItemTarget = false;
+  private boolean stopWandering = false;
+  private boolean hasItemTarget = false;
 
   private final SoundHolder<BeehemothEntity> soundHolder;
 
@@ -134,15 +132,67 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IA
     return null;
   }
 
-  public ActionResultType func_230254_b_(PlayerEntity p_230254_1_, Hand p_230254_2_) {
-    if (!this.isBeingRidden() && !p_230254_1_.isSecondaryUseActive()) {
-      if (!this.world.isRemote) {
-        p_230254_1_.startRiding(this);
+  public ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
+    ItemStack stack = player.getHeldItem(hand);
+    Item item = stack.getItem();
+    if (this.world.isRemote) {
+      if (this.isTamed() && this.isOwner(player)) {
+        return ActionResultType.SUCCESS;
+      } else {
+        return !(this.getHealth() < this.getMaxHealth()) && this.isTamed() ? ActionResultType.PASS : ActionResultType.SUCCESS;
+      }
+    } else {
+      if (this.isTamed()) {
+        if (this.isOwner(player)) {
+          if (item == Items.SUGAR && this.getHealth() < this.getMaxHealth()) {
+            this.consumeItemFromStack(player, stack);
+            this.heal(10);
+            return ActionResultType.CONSUME;
+          }
+
+          if (item == Items.SADDLE && !isSaddled()) {
+            this.consumeItemFromStack(player, stack);
+            this.setSaddled(true);
+            return ActionResultType.CONSUME;
+          }
+
+          if (stack.isEmpty() && isSaddled() && player.isSneaking()) {
+            setSaddled(false);
+            ItemStack saddle = new ItemStack(Items.SADDLE);
+            if (player.addItemStackToInventory(saddle)) {
+              ItemEntity entity = new ItemEntity(player.world, player.getPosX(), player.getPosY(), player.getPosZ(), saddle);
+              player.world.addEntity(entity);
+            }
+          }
+
+          if (stack.isEmpty() && !this.isBeingRidden() && !player.isSecondaryUseActive()) {
+            if (!this.world.isRemote) {
+              player.startRiding(this);
+            }
+
+            return ActionResultType.func_233537_a_(this.world.isRemote);
+          }
+        }
+      } else if (item == Items.SUGAR) {
+        this.consumeItemFromStack(player, stack);
+        if (this.rand.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player)) {
+          this.setTamedBy(player);
+          this.func_233687_w_(true);
+          this.world.setEntityState(this, (byte) 7);
+        } else {
+          this.world.setEntityState(this, (byte) 6);
+        }
+
+        this.enablePersistence();
+        return ActionResultType.CONSUME;
       }
 
-      return ActionResultType.func_233537_a_(this.world.isRemote);
-    } else {
-      return super.func_230254_b_(p_230254_1_, p_230254_2_);
+      ActionResultType actionresulttype1 = super.func_230254_b_(player, hand);
+      if (actionresulttype1.isSuccessOrConsume()) {
+        this.enablePersistence();
+      }
+
+      return actionresulttype1;
     }
   }
 
@@ -200,7 +250,6 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IA
 
   public void tick() {
     super.tick();
-    prevTartigradePitch = this.tartigradePitch;
   }
 
   private BlockPos getGroundPosition(BlockPos radialPos) {

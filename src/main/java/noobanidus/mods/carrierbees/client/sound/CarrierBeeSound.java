@@ -38,9 +38,9 @@ public abstract class CarrierBeeSound<T extends AnimalEntity & IAppleBee> extend
       this.z = this.beeInstance.getPosZ();
       float dist = MathHelper.sqrt(Entity.horizontalMag(this.beeInstance.getMotion()));
       if (this.beeInstance.isBeehemoth()) {
-        dist *= 10;
+        dist *= 100;
       }
-      if ((double) dist >= 0.01D) {
+      if (dist >= 0.005f) {
         this.pitch = MathHelper.lerp(MathHelper.clamp(dist, this.getMinPitch(), this.getMaxPitch()), this.getMinPitch(), this.getMaxPitch());
         this.volume = MathHelper.lerp(MathHelper.clamp(dist, 0.0F, 0.5F), 0.0F, 1.2F);
       } else {

@@ -22,7 +22,7 @@ public class BeehemothAIRide extends Goal {
 
   @Override
   public boolean shouldExecute() {
-    if (tameableEntity.getControllingPassenger() instanceof PlayerEntity) {
+    if (tameableEntity.getControllingPassenger() instanceof PlayerEntity && tameableEntity.isSaddled()) {
       player = (PlayerEntity) tameableEntity.getControllingPassenger();
       return true;
     }
