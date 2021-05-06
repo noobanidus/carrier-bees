@@ -33,16 +33,16 @@ public abstract class CarrierBeeSound<T extends AnimalEntity & IAppleBee> extend
     }
 
     if (this.beeInstance.isAlive() && !this.hasSwitchedSound) {
-      this.x = (double) ((float) this.beeInstance.getPosX());
-      this.y = (double) ((float) this.beeInstance.getPosY());
-      this.z = (double) ((float) this.beeInstance.getPosZ());
-      float lvt_2_1_ = MathHelper.sqrt(Entity.horizontalMag(this.beeInstance.getMotion()));
+      this.x = this.beeInstance.getPosX();
+      this.y = this.beeInstance.getPosY();
+      this.z = this.beeInstance.getPosZ();
+      float dist = MathHelper.sqrt(Entity.horizontalMag(this.beeInstance.getMotion()));
       if (this.beeInstance.isBeehemoth()) {
-        lvt_2_1_ *= 10;
+        dist *= 10;
       }
-      if ((double) lvt_2_1_ >= 0.01D) {
-        this.pitch = MathHelper.lerp(MathHelper.clamp(lvt_2_1_, this.getMinPitch(), this.getMaxPitch()), this.getMinPitch(), this.getMaxPitch());
-        this.volume = MathHelper.lerp(MathHelper.clamp(lvt_2_1_, 0.0F, 0.5F), 0.0F, 1.2F);
+      if ((double) dist >= 0.01D) {
+        this.pitch = MathHelper.lerp(MathHelper.clamp(dist, this.getMinPitch(), this.getMaxPitch()), this.getMinPitch(), this.getMaxPitch());
+        this.volume = MathHelper.lerp(MathHelper.clamp(dist, 0.0F, 0.5F), 0.0F, 1.2F);
       } else {
         this.pitch = 0.0F;
         this.volume = 0.0F;
