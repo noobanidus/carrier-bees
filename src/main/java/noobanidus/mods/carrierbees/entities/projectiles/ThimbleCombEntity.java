@@ -24,7 +24,7 @@ public class ThimbleCombEntity extends HoneyCombEntity {
   }
 
   public ThimbleCombEntity(LivingEntity parent, double accelX, double accelY, double accelZ, World world) {
-    super(ModEntities.CRUMBLE_COMB_PROJECTILE.get(), parent, accelX, accelY, accelZ, world);
+    super(ModEntities.THIMBLE_COMB_PROJECTILE.get(), parent, accelX, accelY, accelZ, world);
   }
 
   @Override

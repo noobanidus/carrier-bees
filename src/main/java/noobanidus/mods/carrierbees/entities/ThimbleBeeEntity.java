@@ -1,15 +1,24 @@
 package noobanidus.mods.carrierbees.entities;
 
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import noobanidus.mods.carrierbees.config.ConfigManager;
-import noobanidus.mods.carrierbees.entities.projectiles.CrumbleCombEntity;
 import noobanidus.mods.carrierbees.entities.projectiles.ThimbleCombEntity;
+import noobanidus.mods.carrierbees.init.ModEntities;
+
+import javax.annotation.Nullable;
 
 public class ThimbleBeeEntity extends AppleBeeEntity {
+  private boolean summoned = false;
+
   public ThimbleBeeEntity(EntityType<? extends ThimbleBeeEntity> type, World world) {
     super(type, world);
   }
@@ -17,9 +26,23 @@ public class ThimbleBeeEntity extends AppleBeeEntity {
   @Override
   protected void registerGoals() {
     super.registerGoals();
-    if (ConfigManager.getHoneycombDamage() > 0) {
+    if (ConfigManager.getHoneycombDamage(this) > 0) {
       this.goalSelector.addGoal(1, new ThimbleBeeEntity.HoneycombProjectileAttackGoal(this));
     }
+  }
+
+  @Override
+  public ILivingEntityData onInitialSpawn(IServerWorld world, DifficultyInstance difficulty, SpawnReason reason, @Nullable ILivingEntityData data, @Nullable CompoundNBT nbt) {
+    if (world instanceof ServerWorld && !summoned) {
+      int count = rand.nextInt(3);
+      for (int i = 0; i < count; i++) {
+        ThimbleBeeEntity entity = ModEntities.THIMBLE_BEE.get().create((ServerWorld) world, nbt, null, null, getPosition(), reason, true, true);
+        if (entity != null) {
+          entity.summoned = true;
+        }
+      }
+    }
+    return super.onInitialSpawn(world, difficulty, reason, data, nbt);
   }
 
   static class HoneycombProjectileAttackGoal extends Goal {

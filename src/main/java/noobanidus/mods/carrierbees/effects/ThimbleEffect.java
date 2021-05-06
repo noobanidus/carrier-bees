@@ -15,7 +15,7 @@ public class ThimbleEffect extends Effect {
   private static final Random rand = new Random();
 
   public ThimbleEffect() {
-    super(EffectType.HARMFUL, 0xd01adb);
+    super(EffectType.HARMFUL, 0xcacbc1);
   }
 
   @Override
@@ -26,7 +26,7 @@ public class ThimbleEffect extends Effect {
   @Override
   public void performEffect(LivingEntity entity, int amplifier) {
     if (entity instanceof PlayerEntity) {
-      if (!entity.world.isRemote() && rand.nextInt(16) == 0) {
+      if (!entity.world.isRemote() && rand.nextInt(24) == 0) {
         BlockState state = entity.world.getBlockState(entity.getPosition());
         VoxelShape shape = state.getShape(entity.world, entity.getPosition());
         if (!shape.isEmpty() && shape.getBoundingBox().getYSize() < 1) {

@@ -87,7 +87,7 @@ public class HoneyCombEntity extends DamagingProjectileEntity implements IEntity
           } else {
             source = DamageSource.MAGIC;
           }
-          living.attackEntityFrom(source, ConfigManager.getHoneycombDamage());
+          living.attackEntityFrom(source, ConfigManager.getHoneycombDamage(shootingEntity));
           double val = ConfigManager.getHoneycombSize();
           List<LivingEntity> list = this.world.getEntitiesWithinAABBExcludingEntity(living, this.getBoundingBox().grow(val, val, val)).stream().filter(o -> o instanceof LivingEntity).map(o -> (LivingEntity) o).collect(Collectors.toList());
           world.addParticle(ParticleTypes.FALLING_HONEY, living.getPosX(), living.getPosY(), living.getPosZ(), 0, 0, 0);
@@ -97,7 +97,7 @@ public class HoneyCombEntity extends DamagingProjectileEntity implements IEntity
               continue;
             }
             l.addPotionEffect(getInstance());
-            l.attackEntityFrom(source, ConfigManager.getHoneycombDamage());
+            l.attackEntityFrom(source, ConfigManager.getHoneycombDamage(shootingEntity));
             world.addParticle(ParticleTypes.FALLING_HONEY, l.getPosX(), l.getPosY(), l.getPosZ(), 0, 0, 0);
           }
         }

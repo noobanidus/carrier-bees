@@ -17,6 +17,7 @@ import noobanidus.libs.noobutil.registrate.CustomRegistrate;
 import noobanidus.mods.carrierbees.commands.BeeSummonCommand;
 import noobanidus.mods.carrierbees.config.ConfigManager;
 import noobanidus.mods.carrierbees.init.*;
+import noobanidus.mods.carrierbees.setup.ClientInit;
 import noobanidus.mods.carrierbees.setup.ClientSetup;
 import noobanidus.mods.carrierbees.setup.CommonSetup;
 import org.apache.logging.log4j.LogManager;
@@ -44,9 +45,7 @@ public class CarrierBees {
     modBus.addListener(ConfigManager::configReloaded);
     MinecraftForge.EVENT_BUS.addListener(this::onCommands);
 
-    DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-      modBus.addListener(ClientSetup::setup);
-    });
+    DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientInit::init);
 
     REGISTRATE = CustomRegistrate.create(MODID);
     REGISTRATE.itemGroup(() -> GROUP);
@@ -60,7 +59,7 @@ public class CarrierBees {
     ModTiles.load();
   }
 
-  public void onCommands(RegisterCommandsEvent event) {
+  private void onCommands(RegisterCommandsEvent event) {
     BeeSummonCommand.register(event.getDispatcher());
   }
 }

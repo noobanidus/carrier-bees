@@ -2,9 +2,12 @@ package noobanidus.mods.carrierbees.config;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
+import net.minecraft.entity.Entity;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 import noobanidus.mods.carrierbees.CarrierBees;
+import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
+import noobanidus.mods.carrierbees.entities.projectiles.ThimbleCombEntity;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -91,9 +94,12 @@ public class ConfigManager {
     return always_angry == 1;
   }
 
-  public static float getHoneycombDamage() {
+  public static float getHoneycombDamage(Entity entity) {
     if (honeycomb_damage == -1) {
       honeycomb_damage = (float) (double) HONEYCOMB_DAMAGE.get();
+    }
+    if (entity instanceof ThimbleCombEntity) {
+      return 1f;
     }
     return honeycomb_damage;
   }

@@ -29,7 +29,7 @@ public class CarrierBeeEntity extends AppleBeeEntity {
   @Override
   protected void registerGoals() {
     super.registerGoals();
-    if (ConfigManager.getHoneycombDamage() > 0) {
+    if (ConfigManager.getHoneycombDamage(this) > 0) {
       this.goalSelector.addGoal(1, new CarrierBeeEntity.HoneycombProjectileAttackGoal(this));
     }
   }
