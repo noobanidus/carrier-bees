@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "FBS",
+    "C D",
+    "THL"
+  ],
+  "key": {
+    "F": {
+      "item": "carrierbees:fumblecomb"
+    },
+    "B": {
+      "item": "carrierbees:bombycomb"
+    },
+    "S": {
+      "item": "carrierbees:stumblecomb"
+    },
+    "C": {
+      "item": "carrierbees:crumblecomb"
+    },
+    "D": {
+      "item": "carrierbees:drumblecomb"
+    },
+    "T": {
+      "item": "carrierbees:tumblecomb"
+    },
+    "H": {
+      "item": "minecraft:honeycomb"
+    },
+    "L": {
+      "item": "carrierbees:thimblecomb"
+    }
+  },
+  "result": {
+    "item": "carrierbees:royal_jelly"
+  }
+}
