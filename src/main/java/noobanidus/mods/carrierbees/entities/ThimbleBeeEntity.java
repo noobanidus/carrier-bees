@@ -22,6 +22,7 @@ import javax.annotation.Nullable;
 public class ThimbleBeeEntity extends AppleBeeEntity {
   public ThimbleBeeEntity(EntityType<? extends ThimbleBeeEntity> type, World world) {
     super(type, world);
+    shouldSting = false;
   }
 
   @Override

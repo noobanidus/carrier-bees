@@ -50,6 +50,7 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
   private int timeSinceSting;
   private int underWaterTicks;
   private float attackDamage = -1;
+  protected boolean shouldSting = true;
 
   public AppleBeeEntity(EntityType<? extends AnimalEntity> type, World world) {
     super(type, world);
@@ -62,7 +63,9 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
 
   @Override
   protected void registerGoals() {
-    this.goalSelector.addGoal(0, new AppleBeeEntity.StingGoal(this, 1.4D, true));
+    if (shouldSting) {
+      this.goalSelector.addGoal(0, new AppleBeeEntity.StingGoal(this, 1.4D, true));
+    }
     this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.25D));
     this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
     this.goalSelector.addGoal(8, new AppleBeeEntity.WanderGoal());
@@ -315,11 +318,15 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
         this.setBeeAttacker(attacker);
       }
 
-      this.setHasStung(true);
-      this.playSound(SoundEvents.ENTITY_BEE_STING, 1.0F, 1.0F);
-
       return super.attackEntityFrom(source, amount);
     }
+  }
+
+  @Override
+  public boolean attackEntityAsMob(Entity p_70652_1_) {
+    this.setHasStung(true);
+    this.playSound(SoundEvents.ENTITY_BEE_STING, 1.0F, 1.0F);
+    return super.attackEntityAsMob(p_70652_1_);
   }
 
   @Override
@@ -369,6 +376,11 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
     @Override
     public boolean shouldExecute() {
       return super.shouldExecute() && AppleBeeEntity.this.isAngry() && !AppleBeeEntity.this.hasStung();
+    }
+
+    @Override
+    public boolean shouldContinueExecuting() {
+      return super.shouldContinueExecuting() && AppleBeeEntity.this.isAngry() && !AppleBeeEntity.this.hasStung();
     }
 
     @Override
