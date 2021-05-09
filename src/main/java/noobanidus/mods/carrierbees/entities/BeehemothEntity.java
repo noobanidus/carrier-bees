@@ -82,7 +82,7 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IA
     this.dataManager.register(QUEEN, false);
   }
 
-  public boolean isQueen () {
+  public boolean isQueen() {
     return this.dataManager.get(QUEEN);
   }
 
@@ -94,7 +94,7 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IA
     this.dataManager.set(SADDLED, saddled);
   }
 
-  public void setQueen (boolean queen) {
+  public void setQueen(boolean queen) {
     this.dataManager.set(QUEEN, queen);
   }
 
@@ -169,7 +169,7 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IA
           if (item == ModItems.ROYAL_JELLY.get() && !isQueen()) {
             this.consumeItemFromStack(player, stack);
             setQueen(true);
-            CarrierBees.QUEEN_PREDICATE.trigger((ServerPlayerEntity)player,null);
+            CarrierBees.QUEEN_PREDICATE.trigger((ServerPlayerEntity) player, null);
             return ActionResultType.CONSUME;
           }
 
@@ -182,7 +182,7 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IA
           if (item == Items.SADDLE && !isSaddled()) {
             this.consumeItemFromStack(player, stack);
             this.setSaddled(true);
-            CarrierBees.STEED_PREDICATE.trigger((ServerPlayerEntity)player,null);
+            CarrierBees.STEED_PREDICATE.trigger((ServerPlayerEntity) player, null);
             return ActionResultType.CONSUME;
           }
 
@@ -306,6 +306,12 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IA
   @Override
   public boolean isBeehemoth() {
     return true;
+  }
+
+  @Override
+  public void setLeashHolder(Entity p_110162_1_, boolean p_110162_2_) {
+    super.setLeashHolder(p_110162_1_, p_110162_2_);
+    stopWandering = true;
   }
 
   static class MoveHelperController extends MovementController {
