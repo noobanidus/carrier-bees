@@ -1,5 +1,7 @@
 package noobanidus.mods.carrierbees.init;
 
+import net.minecraft.potion.Effects;
+
 import static noobanidus.mods.carrierbees.CarrierBees.REGISTRATE;
 
 public class ModLang {

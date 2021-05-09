@@ -130,8 +130,22 @@ public class ModEntities {
       )
       .register();
 
+  public static RegistryEntry<EntityType<JumbleBeeEntity>> JUMBLE_BEE = REGISTRATE.entity("jumble_bee", JumbleBeeEntity::new, EntityClassification.CREATURE)
+      .properties(o -> o.size(0.8F, 0.7F))
+      .loot((p, e) -> p.registerLootTable(e, LootTable.builder()
+              .addLootPool(LootPool.builder()
+                  .addEntry(ItemLootEntry.builder(ModItems.JUMBLECOMB.get())
+                      .acceptFunction(SetCount.builder(RandomValueRange.of(0, 1)))
+                      .acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0, 3)))
+                  )
+                  .rolls(ConstantRange.of(1))
+              )
+          )
+      )
+      .register();
+
   public static RegistryEntry<EntityType<BeehemothEntity>> BEEHEMOTH = REGISTRATE.entity("beehemoth", BeehemothEntity::new, EntityClassification.CREATURE)
-      .properties(o -> o.size(1.6f, 1.5f))
+      .properties(o -> o.size(1.2f, 1.2f))
       .loot((p, e) -> p.registerLootTable(e, LootTable.builder()))
       .register();
 
@@ -152,6 +166,8 @@ public class ModEntities {
   public static RegistryEntry<LazySpawnEggItem<TumbleBeeEntity>> TUMBLE_BEE_EGG = REGISTRATE.item("tumble_bee_spawn_egg", (b) -> new LazySpawnEggItem<>(TUMBLE_BEE, 0xb974c2, 0x212373, b)).model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("item/template_spawn_egg"))).register();
 
   public static RegistryEntry<LazySpawnEggItem<ThimbleBeeEntity>> THIMBLE_BEE_EGG = REGISTRATE.item("thimble_bee_spawn_egg", (b) -> new LazySpawnEggItem<>(THIMBLE_BEE, 0x2f363f, 0xd7d8d0, b)).model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("item/template_spawn_egg"))).register();
+
+  public static RegistryEntry<LazySpawnEggItem<JumbleBeeEntity>> JUMBLE_BEE_EGG = REGISTRATE.item("jumble_bee_spawn_egg", (b) -> new LazySpawnEggItem<>(JUMBLE_BEE, 0xff00de, 0x510042, b)).model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("item/template_spawn_egg"))).register();
 
   public static RegistryEntry<LazySpawnEggItem<BeehemothEntity>> BEEHEMOTH_EGG = REGISTRATE.item("beehemoth_spawn_egg", (b) -> new LazySpawnEggItem<>(BEEHEMOTH, 0xed8a82, 0xe336a7, b)).model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("item/template_spawn_egg"))).register();
 
@@ -184,6 +200,10 @@ public class ModEntities {
       .register();
 
   public static RegistryEntry<EntityType<ThimbleCombEntity>> THIMBLE_COMB_PROJECTILE = REGISTRATE.<ThimbleCombEntity>entity("thimble_comb_entity", ThimbleCombEntity::new, EntityClassification.MISC)
+      .properties(o -> o.size(1.0f, 1.0f).disableSummoning())
+      .register();
+
+  public static RegistryEntry<EntityType<JumbleCombEntity>> JUMBLE_COMB_PROJECTILE = REGISTRATE.<JumbleCombEntity>entity("jumble_comb_entity", JumbleCombEntity::new, EntityClassification.MISC)
       .properties(o -> o.size(1.0f, 1.0f).disableSummoning())
       .register();
 

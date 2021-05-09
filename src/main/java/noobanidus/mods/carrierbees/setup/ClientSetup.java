@@ -28,6 +28,7 @@ public class ClientSetup {
       manager.register(ModEntities.DRUMBLE_BEE.get(), new CarrierBeeRenderer(manager));
       manager.register(ModEntities.TUMBLE_BEE.get(), new CarrierBeeRenderer(manager));
       manager.register(ModEntities.THIMBLE_BEE.get(), new CarrierBeeRenderer(manager));
+      manager.register(ModEntities.JUMBLE_BEE.get(), new CarrierBeeRenderer(manager));
       manager.register(ModEntities.BEEHEMOTH.get(), new BeehemothRenderer(manager));
       ItemRenderer renderer = mc.getItemRenderer();
       manager.register(ModEntities.HONEY_COMB_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 0.9F, true));
@@ -38,7 +39,8 @@ public class ClientSetup {
       manager.register(ModEntities.DRUMBLE_COMB_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 0.9f, true));
       manager.register(ModEntities.TUMBLE_COMB_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 0.9f, true));
       manager.register(ModEntities.THIMBLE_COMB_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 0.9f, true));
-      for (LazySpawnEggItem<?> item : Arrays.asList(ModEntities.CARRIER_BEE_EGG.get(), ModEntities.BOMBLE_BEE_EGG.get(), ModEntities.FUMBLE_BEE_EGG.get(), ModEntities.STUMBLE_BEE_EGG.get(), ModEntities.CRUMBLE_BEE_EGG.get(), ModEntities.DRUMBLE_BEE_EGG.get(), ModEntities.TUMBLE_BEE_EGG.get(), ModEntities.THIMBLE_BEE_EGG.get(), ModEntities.BEEHEMOTH_EGG.get())) {
+      manager.register(ModEntities.JUMBLE_COMB_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 0.9f, true));
+      for (LazySpawnEggItem<?> item : Arrays.asList(ModEntities.CARRIER_BEE_EGG.get(), ModEntities.BOMBLE_BEE_EGG.get(), ModEntities.FUMBLE_BEE_EGG.get(), ModEntities.STUMBLE_BEE_EGG.get(), ModEntities.CRUMBLE_BEE_EGG.get(), ModEntities.DRUMBLE_BEE_EGG.get(), ModEntities.TUMBLE_BEE_EGG.get(), ModEntities.THIMBLE_BEE_EGG.get(), ModEntities.JUMBLE_BEE_EGG.get(), ModEntities.BEEHEMOTH_EGG.get())) {
         mc.getItemColors().register((a, layer) -> item.getColor(layer), item);
       }
     });

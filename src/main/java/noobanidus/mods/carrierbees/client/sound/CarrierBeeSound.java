@@ -32,7 +32,7 @@ public abstract class CarrierBeeSound<T extends AnimalEntity & IAppleBee> extend
       this.hasSwitchedSound = true;
     }
 
-    if (this.beeInstance.isAlive() && !this.hasSwitchedSound) {
+    if (!this.beeInstance.removed && !this.hasSwitchedSound) {
       this.x = this.beeInstance.getPosX();
       this.y = this.beeInstance.getPosY();
       this.z = this.beeInstance.getPosZ();

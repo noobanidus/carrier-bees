@@ -33,7 +33,6 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
-import noobanidus.mods.carrierbees.client.sound.SoundHolder;
 import noobanidus.mods.carrierbees.config.ConfigManager;
 
 import javax.annotation.Nullable;
@@ -51,8 +50,6 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
   private int underWaterTicks;
   private float attackDamage = -1;
 
-  private final SoundHolder<AppleBeeEntity> soundHolder;
-
   public AppleBeeEntity(EntityType<? extends AnimalEntity> type, World world) {
     super(type, world);
     this.lookController = new BeeLookController(this);
@@ -60,8 +57,6 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
     this.setPathPriority(PathNodeType.WATER, -1.0F);
     this.setPathPriority(PathNodeType.COCOA, -1.0F);
     this.setPathPriority(PathNodeType.FENCE, -1.0F);
-    soundHolder = new SoundHolder<>();
-    soundHolder.init(this, world);
   }
 
   @Override

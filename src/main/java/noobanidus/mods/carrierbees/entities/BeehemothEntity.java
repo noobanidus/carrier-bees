@@ -38,7 +38,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import noobanidus.mods.carrierbees.CarrierBees;
-import noobanidus.mods.carrierbees.client.sound.SoundHolder;
 import noobanidus.mods.carrierbees.entities.ai.BeehemothAIRide;
 import noobanidus.mods.carrierbees.init.ModItems;
 import noobanidus.mods.carrierbees.init.ModSounds;
@@ -53,8 +52,6 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IA
   private boolean stopWandering = false;
   private boolean hasItemTarget = false;
 
-  private final SoundHolder<BeehemothEntity> soundHolder;
-
   public float offset1, offset2, offset3, offset4, offset5, offset6;
 
   public BeehemothEntity(EntityType<? extends BeehemothEntity> type, World world) {
@@ -66,8 +63,6 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IA
     this.offset4 = (this.rand.nextFloat() - 0.5f);
     this.offset5 = (this.rand.nextFloat() - 0.5f);
     this.offset6 = (this.rand.nextFloat() - 0.5f);
-    soundHolder = new SoundHolder<>();
-    soundHolder.init(this, world);
   }
 
   private static TranslationTextComponent QUEEN_NAME = new TranslationTextComponent("entity.carrierbees.beehemoth_queen");

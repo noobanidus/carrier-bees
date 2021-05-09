@@ -2,8 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "FBS",
-    "C D",
-    "THL"
+    "CHD",
+    "TJL"
   ],
   "key": {
     "F": {
@@ -29,6 +29,9 @@
     },
     "L": {
       "item": "carrierbees:thimblecomb"
+    },
+    "J": {
+      "item": "carrierbees:jumblecomb"
     }
   },
   "result": {
