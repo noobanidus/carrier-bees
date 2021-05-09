@@ -280,6 +280,7 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IA
 
   public void tick() {
     super.tick();
+    stopWandering = getLeashed();
   }
 
   private BlockPos getGroundPosition(BlockPos radialPos) {
