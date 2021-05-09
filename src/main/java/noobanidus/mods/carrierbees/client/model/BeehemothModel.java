@@ -236,9 +236,8 @@ public class BeehemothModel extends EntityModel<BeehemothEntity> {
       LEG_REARLEFT.rotateAngleX = 0.0f;
       LEG_REARRIGHT.rotateAngleX = 0.0f;
     } else {
-      limbSwing = limbSwing * 2.f;
       WING_RIGHT.rotateAngleY = 0.0f;
-      WING_LEFT.rotateAngleZ = ((float) (MathHelper.cos(limbSwing) * Math.PI * 0.15f));
+      WING_LEFT.rotateAngleZ = ((float) (MathHelper.cos((limbSwing + ageInTicks) * 2.1f) * Math.PI * 0.15f));
       WING_LEFT.rotateAngleX = WING_RIGHT.rotateAngleX;
       WING_LEFT.rotateAngleY = WING_RIGHT.rotateAngleY;
       WING_RIGHT.rotateAngleZ = -WING_LEFT.rotateAngleZ;
