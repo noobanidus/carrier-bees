@@ -1,6 +1,7 @@
 package noobanidus.mods.carrierbees.entities;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -81,6 +82,13 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
   @SuppressWarnings("deprecation")
   public float getBlockPathWeight(BlockPos pos, IWorldReader world) {
     return world.getBlockState(pos).isAir() ? 10.0F : 0.0F;
+  }
+
+  @Override
+  public void setMotionMultiplier(BlockState state, Vector3d motionMultiplierIn) {
+    if (!state.isIn(Blocks.COBWEB)) {
+      super.setMotionMultiplier(state, motionMultiplierIn);
+    }
   }
 
   @Override

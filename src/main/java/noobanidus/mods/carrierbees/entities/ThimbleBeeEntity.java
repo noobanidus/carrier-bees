@@ -33,13 +33,6 @@ public class ThimbleBeeEntity extends AppleBeeEntity {
   }
 
   @Override
-  public void setMotionMultiplier(BlockState state, Vector3d motionMultiplierIn) {
-    if (!state.isIn(Blocks.COBWEB)) {
-      super.setMotionMultiplier(state, motionMultiplierIn);
-    }
-  }
-
-  @Override
   public ILivingEntityData onInitialSpawn(IServerWorld world, DifficultyInstance difficulty, SpawnReason reason, @Nullable ILivingEntityData data, @Nullable CompoundNBT nbt) {
     if (nbt == null || !nbt.contains("summoned")) {
       if (nbt == null) {
