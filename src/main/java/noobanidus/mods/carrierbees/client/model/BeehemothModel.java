@@ -18,6 +18,8 @@ public class BeehemothModel extends EntityModel<BeehemothEntity> {
   private final ModelRenderer CROWN;
   private final ModelRenderer LEG_FRONTLEFT;
   private final ModelRenderer KNEE_FRONTLEFT;
+  private final ModelRenderer ANTENNA_LEFT;
+  private final ModelRenderer ANTENNA_RIGHT;
   private final ModelRenderer KneeFrontLeftCube_r1;
   private final ModelRenderer LEG_MIDLEFT;
   private final ModelRenderer KNEE_MIDLEFT;
@@ -48,14 +50,21 @@ public class BeehemothModel extends EntityModel<BeehemothEntity> {
     ROOT = new ModelRenderer(this);
     ROOT.setRotationPoint(0.0F, 24.0F, 0.0F);
 
-
     FACE = new ModelRenderer(this);
     FACE.setRotationPoint(0.0F, -8.0F, -6.0F);
     ROOT.addChild(FACE);
     setRotationAngle(FACE, 0.3927F, 0.0F, 0.0F);
     FACE.setTextureOffset(0, 0).addBox(-3.5F, 0.0F, -6.0F, 7.0F, 7.0F, 7.0F, 0.0F, false);
-    FACE.setTextureOffset(57, 1).addBox(-1.5F, 0.0F, -9.0F, 0.0F, 2.0F, 3.0F, 0.0F, false);
-    FACE.setTextureOffset(57, 1).addBox(1.5F, 0.0F, -9.0F, 0.0F, 2.0F, 3.0F, 0.0F, false);
+
+    ANTENNA_LEFT = new ModelRenderer(this);
+    ANTENNA_LEFT.setRotationPoint(0.0F, 8.0F, 6.0F);
+    FACE.addChild(ANTENNA_LEFT);
+    ANTENNA_LEFT.setTextureOffset(57, 1).addBox(-1.5F, -8.0F, -15.0F, 0.0F, 2.0F, 3.0F, 0.0F, false);
+
+    ANTENNA_RIGHT = new ModelRenderer(this);
+    ANTENNA_RIGHT.setRotationPoint(0.0F, 8.0F, 6.0F);
+    FACE.addChild(ANTENNA_RIGHT);
+    ANTENNA_RIGHT.setTextureOffset(57, 1).addBox(1.5F, -8.0F, -15.0F, 0.0F, 2.0F, 3.0F, 0.0F, false);
 
     CROWN = new ModelRenderer(this);
     CROWN.setRotationPoint(0.0F, 0.0F, 0.0F);
@@ -261,6 +270,17 @@ public class BeehemothModel extends EntityModel<BeehemothEntity> {
       KneeFrontLeftCube_r1.rotateAngleY = getSine(ageInTicks + entity.offset4, -0.20f, -0.475f);
       KneeMidLeftCube_r1.rotateAngleY = getSine(ageInTicks + entity.offset5, -0.375f, -0.525f);
       KneeRearLeftCube_r1.rotateAngleY = getSine(ageInTicks + entity.offset6, -0.45f, -0.625f);
+    }
+
+    ROOT.rotateAngleX = 0.0F;
+    ROOT.rotateAngleY = 0.0F;
+    ROOT.rotateAngleZ = 0.0F;
+    if (!onGround) {
+      float f1 = MathHelper.cos(ageInTicks * 0.18F);
+      ROOT.rotateAngleX = 0.1F + f1 * (float) Math.PI * 0.025F;
+      ANTENNA_LEFT.rotateAngleX = f1 * (float) Math.PI * 0.03F;
+      ANTENNA_RIGHT.rotateAngleX = f1 * (float) Math.PI * 0.03F;
+      ROOT.rotationPointY = 19.0F - MathHelper.cos(ageInTicks * 0.18F) * 0.9F;
     }
 
     if (this.bodyPitch > 0.0F) {
