@@ -81,7 +81,7 @@ public class CarrierBeeModel<T extends AppleBeeEntity> extends AgeableModel<T> {
   }
 
   @Override
-  public void setRotationAngles(T entity, float limbSwing, float limbSwingAmount, float netHeadYaw, float headPitch, float scaleFactor) {
+  public void setRotationAngles(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
     this.rightWing.rotateAngleX = 0.0F;
     this.leftAntenna.rotateAngleX = 0.0F;
     this.rightAntenna.rotateAngleX = 0.0F;
@@ -99,7 +99,7 @@ public class CarrierBeeModel<T extends AppleBeeEntity> extends AgeableModel<T> {
       this.middleLegs.rotateAngleX = 0.0F;
       this.backLegs.rotateAngleX = 0.0F;
     } else {
-      v1 = netHeadYaw * 2.1F;
+      v1 = ageInTicks * 2.1F;
       this.rightWing.rotateAngleY = 0.0F;
       this.rightWing.rotateAngleZ = MathHelper.cos(v1) * 3.1415927F * 0.15F;
       this.leftWing.rotateAngleX = this.rightWing.rotateAngleX;
@@ -111,6 +111,21 @@ public class CarrierBeeModel<T extends AppleBeeEntity> extends AgeableModel<T> {
       this.body.rotateAngleX = 0.0F;
       this.body.rotateAngleY = 0.0F;
       this.body.rotateAngleZ = 0.0F;
+    }
+
+    if (!entity.isAngry()) {
+      this.body.rotateAngleX = 0.0F;
+      this.body.rotateAngleY = 0.0F;
+      this.body.rotateAngleZ = 0.0F;
+      if (!onGround) {
+        float f1 = MathHelper.cos(ageInTicks * 0.18F);
+        this.body.rotateAngleX = 0.1F + f1 * (float) Math.PI * 0.025F;
+        this.leftAntenna.rotateAngleX = f1 * (float) Math.PI * 0.03F;
+        this.rightAntenna.rotateAngleX = f1 * (float) Math.PI * 0.03F;
+        this.frontLegs.rotateAngleX = -f1 * (float) Math.PI * 0.1F + ((float) Math.PI / 8F);
+        this.backLegs.rotateAngleX = -f1 * (float) Math.PI * 0.05F + ((float) Math.PI / 4F);
+        this.body.rotationPointY = 19.0F - MathHelper.cos(ageInTicks * 0.18F) * 0.9F;
+      }
     }
 
     if (this.bodyPitch > 0.0F) {
