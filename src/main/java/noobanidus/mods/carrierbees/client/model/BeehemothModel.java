@@ -277,9 +277,9 @@ public class BeehemothModel extends EntityModel<BeehemothEntity> {
     ROOT.rotateAngleZ = 0.0F;
     if (!onGround) {
       float f1 = MathHelper.cos(ageInTicks * 0.18F);
-      ROOT.rotateAngleX = 0.1F + f1 * (float) Math.PI * 0.025F;
-      ANTENNA_LEFT.rotateAngleX = f1 * (float) Math.PI * 0.03F;
-      ANTENNA_RIGHT.rotateAngleX = f1 * (float) Math.PI * 0.03F;
+      ROOT.rotateAngleX = 0.1F + f1 * (float) Math.PI * 0.015F;
+      ANTENNA_LEFT.rotateAngleX = f1 * (float) Math.PI * 0.01F;
+      ANTENNA_RIGHT.rotateAngleX = f1 * (float) Math.PI * 0.01F;
       ROOT.rotationPointY = 19.0F - MathHelper.cos(ageInTicks * 0.18F) * 0.9F;
     }
 
