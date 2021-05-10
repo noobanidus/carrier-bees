@@ -156,7 +156,6 @@ public class LadderBeeModel<T extends LadderBeeEntity> extends AgeableModel<T> {
     if (this.bodyPitch > 0.0F) {
       this.body.rotateAngleX = ModelUtils.func_228283_a_(this.body.rotateAngleX, 3.0915928F, this.bodyPitch);
     }
-
   }
 
   protected Iterable<ModelRenderer> getHeadParts() {
