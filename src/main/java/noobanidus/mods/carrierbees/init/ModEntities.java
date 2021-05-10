@@ -149,6 +149,11 @@ public class ModEntities {
       .loot((p, e) -> p.registerLootTable(e, LootTable.builder()))
       .register();
 
+  public static RegistryEntry<EntityType<LadderBeeEntity>> LADDER_BEE = REGISTRATE.entity("ladder_bee", LadderBeeEntity::new, EntityClassification.CREATURE)
+      .properties(o -> o.size(0.8F, 0.7F))
+      .loot((p, e) -> p.registerLootTable(e, LootTable.builder()))
+      .register();
+
   public static List<ResourceLocation> SUMMONABLES = Arrays.asList(CARRIER_BEE.getId(), FUMBLE_BEE.getId(), BOMBLE_BEE.getId(), STUMBLE_BEE.getId(), CRUMBLE_BEE.getId(), DRUMBLE_BEE.getId(), TUMBLE_BEE.getId(), THIMBLE_BEE.getId());
 
   public static RegistryEntry<LazySpawnEggItem<CarrierBeeEntity>> CARRIER_BEE_EGG = REGISTRATE.item("carrier_bee_spawn_egg", (b) -> new LazySpawnEggItem<>(CARRIER_BEE, 0xedc343, 0x43241b, b)).model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("item/template_spawn_egg"))).register();
@@ -204,6 +209,10 @@ public class ModEntities {
       .register();
 
   public static RegistryEntry<EntityType<JumbleCombEntity>> JUMBLE_COMB_PROJECTILE = REGISTRATE.<JumbleCombEntity>entity("jumble_comb_entity", JumbleCombEntity::new, EntityClassification.MISC)
+      .properties(o -> o.size(1.0f, 1.0f).disableSummoning())
+      .register();
+
+  public static RegistryEntry<EntityType<BucketEntity>> BUCKET_PROJECTILE = REGISTRATE.<BucketEntity>entity("bucket_entity", BucketEntity::new, EntityClassification.MISC)
       .properties(o -> o.size(1.0f, 1.0f).disableSummoning())
       .register();
 

@@ -42,6 +42,14 @@ public class HoneyCombEntity extends DamagingProjectileEntity implements IEntity
     return new EffectInstance(Effects.SLOWNESS, 2, ConfigManager.getHoneycombSlow());
   }
 
+  @Override
+  public void tick() {
+    super.tick();
+
+    if (!world.isRemote && this.ticksExisted > 30 * 20) {
+      this.remove();
+    }
+  }
 
   public HoneyCombEntity(EntityType<? extends DamagingProjectileEntity> type, LivingEntity parent, double aX, double aY, double aZ, World world) {
     super(type, parent, aX, aY, aZ, world);

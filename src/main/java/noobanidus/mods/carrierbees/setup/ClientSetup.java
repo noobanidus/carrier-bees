@@ -8,9 +8,12 @@ import net.minecraft.client.renderer.entity.SpriteRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import noobanidus.mods.carrierbees.client.particle.AirBubbleParticle;
 import noobanidus.mods.carrierbees.client.render.BeehemothRenderer;
 import noobanidus.mods.carrierbees.client.render.CarrierBeeRenderer;
+import noobanidus.mods.carrierbees.client.render.LadderBeeRenderer;
 import noobanidus.mods.carrierbees.init.ModEntities;
+import noobanidus.mods.carrierbees.init.ModParticles;
 
 import java.util.Arrays;
 
@@ -30,6 +33,7 @@ public class ClientSetup {
       manager.register(ModEntities.THIMBLE_BEE.get(), new CarrierBeeRenderer(manager));
       manager.register(ModEntities.JUMBLE_BEE.get(), new CarrierBeeRenderer(manager));
       manager.register(ModEntities.BEEHEMOTH.get(), new BeehemothRenderer(manager));
+      manager.register(ModEntities.LADDER_BEE.get(), new LadderBeeRenderer(manager));
       ItemRenderer renderer = mc.getItemRenderer();
       manager.register(ModEntities.HONEY_COMB_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 0.9F, true));
       manager.register(ModEntities.FUMBLE_COMB_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 0.9F, true));
@@ -40,9 +44,11 @@ public class ClientSetup {
       manager.register(ModEntities.TUMBLE_COMB_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 0.9f, true));
       manager.register(ModEntities.THIMBLE_COMB_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 0.9f, true));
       manager.register(ModEntities.JUMBLE_COMB_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 0.9f, true));
+      manager.register(ModEntities.BUCKET_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 0.9f, true));
       for (LazySpawnEggItem<?> item : Arrays.asList(ModEntities.CARRIER_BEE_EGG.get(), ModEntities.BOMBLE_BEE_EGG.get(), ModEntities.FUMBLE_BEE_EGG.get(), ModEntities.STUMBLE_BEE_EGG.get(), ModEntities.CRUMBLE_BEE_EGG.get(), ModEntities.DRUMBLE_BEE_EGG.get(), ModEntities.TUMBLE_BEE_EGG.get(), ModEntities.THIMBLE_BEE_EGG.get(), ModEntities.JUMBLE_BEE_EGG.get(), ModEntities.BEEHEMOTH_EGG.get())) {
         mc.getItemColors().register((a, layer) -> item.getColor(layer), item);
       }
+      Minecraft.getInstance().particles.registerFactory(ModParticles.AIR_BUBBLE.get(), AirBubbleParticle.Factory::new);
     });
   }
 }

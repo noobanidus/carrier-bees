@@ -10,6 +10,7 @@ import noobanidus.mods.carrierbees.CarrierBees;
 import noobanidus.mods.carrierbees.advancements.QueenPredicate;
 import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
 import noobanidus.mods.carrierbees.entities.BeehemothEntity;
+import noobanidus.mods.carrierbees.entities.LadderBeeEntity;
 import noobanidus.mods.carrierbees.init.ModEntities;
 
 public class CommonSetup {
@@ -26,6 +27,7 @@ public class CommonSetup {
       GlobalEntityTypeAttributes.put(ModEntities.THIMBLE_BEE.get(), attr.create());
       GlobalEntityTypeAttributes.put(ModEntities.JUMBLE_BEE.get(), attr.create());
       GlobalEntityTypeAttributes.put(ModEntities.BEEHEMOTH.get(), BeehemothEntity.createAttributes().create());
+      GlobalEntityTypeAttributes.put(ModEntities.LADDER_BEE.get(), LadderBeeEntity.attr().create());
 
       SpawnEggItem.EGGS.remove(null);
       SpawnEggItem.EGGS.put(ModEntities.BOMBLE_BEE.get(), ModEntities.BOMBLE_BEE_EGG.get());

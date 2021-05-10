@@ -13,6 +13,7 @@ import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -23,26 +24,25 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import noobanidus.mods.carrierbees.config.ConfigManager;
 import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
 import noobanidus.mods.carrierbees.init.ModEntities;
-import noobanidus.mods.carrierbees.world.BeeExplosion;
+import noobanidus.mods.carrierbees.init.ModParticles;
+import noobanidus.mods.carrierbees.init.ModSounds;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @OnlyIn(
     value = Dist.CLIENT,
     _interface = IRendersAsItem.class
 )
-public class BombEntity extends DamagingProjectileEntity implements IEntityAdditionalSpawnData, IRendersAsItem {
-  public static ItemStack BOMB = new ItemStack(Items.TNT);
+public class BucketEntity extends DamagingProjectileEntity implements IEntityAdditionalSpawnData, IRendersAsItem {
+  private static ItemStack BUCKET = new ItemStack(Items.WATER_BUCKET);
 
-  public BombEntity(EntityType<? extends BombEntity> type, World world) {
+  public BucketEntity(EntityType<? extends DamagingProjectileEntity> type, LivingEntity parent, double aX, double aY, double aZ, World world) {
+    super(type, parent, aX, aY, aZ, world);
+  }
+
+  public BucketEntity(EntityType<? extends BucketEntity> type, World world) {
     super(type, world);
-  }
-
-  public BombEntity(LivingEntity parent, double accelX, double accelY, double accelZ, World world) {
-    super(ModEntities.BOMB_PROJECTILE.get(), parent, accelX, accelY, accelZ, world);
-  }
-
-  @Override
-  protected IParticleData getParticle() {
-    return new ItemParticleData(ParticleTypes.ITEM, getItem());
   }
 
   @Override
@@ -54,9 +54,18 @@ public class BombEntity extends DamagingProjectileEntity implements IEntityAddit
     }
   }
 
+  public BucketEntity(LivingEntity parent, double accelX, double accelY, double accelZ, World world) {
+    this(ModEntities.BUCKET_PROJECTILE.get(), parent, accelX, accelY, accelZ, world);
+  }
+
   @Override
   public ItemStack getItem() {
-    return BOMB;
+    return BUCKET;
+  }
+
+  @Override
+  protected IParticleData getParticle() {
+    return ModParticles.AIR_BUBBLE.get();
   }
 
   @Override
@@ -67,16 +76,10 @@ public class BombEntity extends DamagingProjectileEntity implements IEntityAddit
   @Override
   protected void onImpact(RayTraceResult ray) {
     super.onImpact(ray);
-    if (!world.isRemote) {
-      if (ray instanceof EntityRayTraceResult) {
-        EntityRayTraceResult eray = (EntityRayTraceResult) ray;
-        Entity entity = eray.getEntity();
-        if (entity != this && entity != this.func_234616_v_() && !(entity instanceof AppleBeeEntity)) {
-          entity.attackEntityFrom(DamageSource.GENERIC, ConfigManager.getExplosionDamage());
-        }
+    if (!world.isRemote()) {
+      if (ray.getType() == RayTraceResult.Type.ENTITY) {
       }
     }
-    BeeExplosion.createExplosion(this.world, this, this.getPosX(), this.getPosYHeight(0.0625D), this.getPosZ());
     if (!world.isRemote) {
       this.remove();
     }
