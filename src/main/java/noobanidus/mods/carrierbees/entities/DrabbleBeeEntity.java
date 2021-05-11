@@ -37,17 +37,17 @@ import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.UUID;
 
-public class LadderBeeEntity extends AnimalEntity implements IFlyingAnimal {
-  private static final DataParameter<Byte> DATA_FLAGS_ID = EntityDataManager.createKey(LadderBeeEntity.class, DataSerializers.BYTE);
+public class DrabbleBeeEntity extends AnimalEntity implements IFlyingAnimal {
+  private static final DataParameter<Byte> DATA_FLAGS_ID = EntityDataManager.createKey(DrabbleBeeEntity.class, DataSerializers.BYTE);
   private static final RangedInteger field_234180_bw_ = TickRangeConverter.convertRange(20, 39);
   private UUID lastHurtBy;
   private float rollAmount;
   private float rollAmountO;
 
-  public LadderBeeEntity(EntityType<? extends LadderBeeEntity> type, World worldIn) {
+  public DrabbleBeeEntity(EntityType<? extends DrabbleBeeEntity> type, World worldIn) {
     super(type, worldIn);
     this.moveController = new FlyingMovementController(this, 20, true);
-    this.lookController = new LadderBeeEntity.BeeLookController(this);
+    this.lookController = new DrabbleBeeEntity.BeeLookController(this);
     this.setPathPriority(PathNodeType.WATER, -1.0F);
     this.setPathPriority(PathNodeType.WATER_BORDER, 16.0F);
     this.setPathPriority(PathNodeType.COCOA, -1.0F);
@@ -67,7 +67,7 @@ public class LadderBeeEntity extends AnimalEntity implements IFlyingAnimal {
 
   @Override
   protected void registerGoals() {
-    this.goalSelector.addGoal(8, new LadderBeeEntity.WanderGoal());
+    this.goalSelector.addGoal(8, new DrabbleBeeEntity.WanderGoal());
     this.goalSelector.addGoal(9, new SwimGoal(this));
   }
 
@@ -223,7 +223,7 @@ public class LadderBeeEntity extends AnimalEntity implements IFlyingAnimal {
   }
 
   @Override
-  public LadderBeeEntity func_241840_a(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
+  public DrabbleBeeEntity func_241840_a(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
     return null;
   }
 
@@ -325,7 +325,7 @@ public class LadderBeeEntity extends AnimalEntity implements IFlyingAnimal {
      */
     @Override
     public boolean shouldExecute() {
-      return LadderBeeEntity.this.navigator.noPath() && LadderBeeEntity.this.rand.nextInt(10) == 0;
+      return DrabbleBeeEntity.this.navigator.noPath() && DrabbleBeeEntity.this.rand.nextInt(10) == 0;
     }
 
     /**
@@ -333,7 +333,7 @@ public class LadderBeeEntity extends AnimalEntity implements IFlyingAnimal {
      */
     @Override
     public boolean shouldContinueExecuting() {
-      return LadderBeeEntity.this.navigator.hasPath();
+      return DrabbleBeeEntity.this.navigator.hasPath();
     }
 
     /**
@@ -343,18 +343,18 @@ public class LadderBeeEntity extends AnimalEntity implements IFlyingAnimal {
     public void startExecuting() {
       Vector3d vector3d = this.getRandomLocation();
       if (vector3d != null) {
-        LadderBeeEntity.this.navigator.setPath(LadderBeeEntity.this.navigator.getPathToPos(new BlockPos(vector3d), 1), 1.0D);
+        DrabbleBeeEntity.this.navigator.setPath(DrabbleBeeEntity.this.navigator.getPathToPos(new BlockPos(vector3d), 1), 1.0D);
       }
 
     }
 
     @Nullable
     private Vector3d getRandomLocation() {
-      Vector3d vector3d = LadderBeeEntity.this.getLook(0.0F);
+      Vector3d vector3d = DrabbleBeeEntity.this.getLook(0.0F);
 
       int i = 8;
-      Vector3d vector3d2 = RandomPositionGenerator.findAirTarget(LadderBeeEntity.this, 8, 7, vector3d, ((float) Math.PI / 2F), 2, 1);
-      return vector3d2 != null ? vector3d2 : RandomPositionGenerator.findGroundTarget(LadderBeeEntity.this, 8, 4, -2, vector3d, (double) ((float) Math.PI / 2F));
+      Vector3d vector3d2 = RandomPositionGenerator.findAirTarget(DrabbleBeeEntity.this, 8, 7, vector3d, ((float) Math.PI / 2F), 2, 1);
+      return vector3d2 != null ? vector3d2 : RandomPositionGenerator.findGroundTarget(DrabbleBeeEntity.this, 8, 4, -2, vector3d, (double) ((float) Math.PI / 2F));
     }
   }
 }

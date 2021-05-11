@@ -35,6 +35,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
 import noobanidus.mods.carrierbees.config.ConfigManager;
+import noobanidus.mods.carrierbees.entities.ai.CachedPathHolder;
+import noobanidus.mods.carrierbees.entities.ai.SmartBee;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
@@ -411,6 +413,8 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
   }
 
   class WanderGoal extends Goal {
+    private CachedPathHolder cachedPathHolder;
+
     WanderGoal() {
       this.setMutexFlags(EnumSet.of(Flag.MOVE));
     }
@@ -427,9 +431,13 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
 
     @Override
     public void startExecuting() {
-      Vector3d pos = this.getRandomLocation();
-      if (pos != null) {
-        AppleBeeEntity.this.navigator.setPath(AppleBeeEntity.this.navigator.getPathToPos(new BlockPos(pos), 1), 1.0D);
+      if (ConfigManager.getImprovedAI()) {
+        cachedPathHolder = SmartBee.smartBee(AppleBeeEntity.this, cachedPathHolder);
+      } else {
+        Vector3d pos = this.getRandomLocation();
+        if (pos != null) {
+          AppleBeeEntity.this.navigator.setPath(AppleBeeEntity.this.navigator.getPathToPos(new BlockPos(pos), 1), 1.0D);
+        }
       }
     }
 

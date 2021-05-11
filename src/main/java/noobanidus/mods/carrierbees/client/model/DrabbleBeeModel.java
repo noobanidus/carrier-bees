@@ -9,14 +9,14 @@ import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import noobanidus.mods.carrierbees.entities.LadderBeeEntity;
+import noobanidus.mods.carrierbees.entities.DrabbleBeeEntity;
 
 /**
  * BeeModel - Either Mojang or a mod author (Taken From Memory)
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class LadderBeeModel<T extends LadderBeeEntity> extends AgeableModel<T> {
+public class DrabbleBeeModel<T extends DrabbleBeeEntity> extends AgeableModel<T> {
   public ModelRenderer body;
   public ModelRenderer torso;
   public ModelRenderer rightWing;
@@ -32,7 +32,7 @@ public class LadderBeeModel<T extends LadderBeeEntity> extends AgeableModel<T> {
   public ModelRenderer hat3;
   private float bodyPitch;
 
-  public LadderBeeModel() {
+  public DrabbleBeeModel() {
     super(false, 24.0F, 0.0F);
     this.textureWidth = 64;
     this.textureHeight = 64;

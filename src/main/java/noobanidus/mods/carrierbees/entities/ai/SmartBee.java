@@ -1,13 +1,10 @@
 package noobanidus.mods.carrierbees.entities.ai;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.pathfinding.Path;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
+import net.minecraft.world.gen.Heightmap;
 
 public class SmartBee {
   public static CachedPathHolder smartBee(MobEntity beeEntity, CachedPathHolder cachedPathHolder) {
@@ -24,6 +21,11 @@ public class SmartBee {
             world.rand.nextInt(21) - 10,
             world.rand.nextInt(21) - 10
         );
+
+        if (mutable.getY() <= 2 || world.getHeight(Heightmap.Type.MOTION_BLOCKING, mutable.getX(), mutable.getZ()) == 0) {
+          mutable.setY(Math.max((int) beeEntity.getPosX(), 2));
+          continue;
+        }
 
         if (world.getBlockState(mutable).isAir()) {
           break; // Valid spot to go towards.

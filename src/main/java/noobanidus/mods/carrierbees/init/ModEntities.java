@@ -149,7 +149,7 @@ public class ModEntities {
       .loot((p, e) -> p.registerLootTable(e, LootTable.builder()))
       .register();
 
-  public static RegistryEntry<EntityType<LadderBeeEntity>> LADDER_BEE = REGISTRATE.entity("ladder_bee", LadderBeeEntity::new, EntityClassification.CREATURE)
+  public static RegistryEntry<EntityType<DrabbleBeeEntity>> DRABBLE_BEE = REGISTRATE.entity("drabble_bee", DrabbleBeeEntity::new, EntityClassification.CREATURE)
       .properties(o -> o.size(0.8F, 0.7F))
       .loot((p, e) -> p.registerLootTable(e, LootTable.builder()))
       .register();

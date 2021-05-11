@@ -19,6 +19,7 @@ public class ConfigManager {
 
   public static ForgeConfigSpec COMMON_CONFIG;
 
+  private static ForgeConfigSpec.BooleanValue IMPROVE_AI;
   private static ForgeConfigSpec.DoubleValue HONEYCOMB_DAMAGE;
   private static ForgeConfigSpec.DoubleValue EXPLOSION_DAMAGE;
   private static ForgeConfigSpec.DoubleValue EXPLOSION_SIZE;
@@ -44,6 +45,14 @@ public class ConfigManager {
   private static int nice_mode = -1;
   private static int fumble_chance = -1;
   private static int drumble_chance = -1;
+  private static int improve_ai = -1;
+
+  public static boolean getImprovedAI () {
+    if (improve_ai == -1) {
+      improve_ai = IMPROVE_AI.get() ? 1 : 0;
+    }
+    return improve_ai == 1;
+  }
 
   public static int getDrumbleChance() {
     if (drumble_chance == -1) {
@@ -159,6 +168,7 @@ public class ConfigManager {
     COMMON_BUILDER.push("general");
     ALWAYS_ANGRY = COMMON_BUILDER.comment("whether or not bees will always attack or only if angered").define("always_angry", true);
     STING_KILLS = COMMON_BUILDER.comment("whether or not bees will die after stinging").define("sting_kills", false);
+    IMPROVE_AI = COMMON_BUILDER.comment("whether or not bees should have their AI improved").define("improved_ai", true);
     COMMON_BUILDER.pop();
     COMMON_CONFIG = COMMON_BUILDER.build();
   }

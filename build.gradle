@@ -103,6 +103,7 @@ minecraft {
 }
 
 repositories {
+    mavenLocal()
     maven {
         url "http://maven.tterrag.com/"
     }
@@ -146,8 +147,8 @@ dependencies {
     implementation fg.deobf(noobutil)
     shade noobutil
 
-    compile 'org.spongepowered:mixin:0.8'
-    annotationProcessor 'org.spongepowered:mixin:0.8:processor'
+    compile 'org.spongepowered:mixin:0.8.2'
+    annotationProcessor 'org.spongepowered:mixin:0.8.2:processor'
 }
 
 shadowJar {

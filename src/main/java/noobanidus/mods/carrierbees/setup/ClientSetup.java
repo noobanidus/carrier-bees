@@ -11,7 +11,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import noobanidus.mods.carrierbees.client.particle.AirBubbleParticle;
 import noobanidus.mods.carrierbees.client.render.BeehemothRenderer;
 import noobanidus.mods.carrierbees.client.render.CarrierBeeRenderer;
-import noobanidus.mods.carrierbees.client.render.LadderBeeRenderer;
+import noobanidus.mods.carrierbees.client.render.DrabbleBeeRenderer;
 import noobanidus.mods.carrierbees.init.ModEntities;
 import noobanidus.mods.carrierbees.init.ModParticles;
 
@@ -33,7 +33,7 @@ public class ClientSetup {
       manager.register(ModEntities.THIMBLE_BEE.get(), new CarrierBeeRenderer(manager));
       manager.register(ModEntities.JUMBLE_BEE.get(), new CarrierBeeRenderer(manager));
       manager.register(ModEntities.BEEHEMOTH.get(), new BeehemothRenderer(manager));
-      manager.register(ModEntities.LADDER_BEE.get(), new LadderBeeRenderer(manager));
+      manager.register(ModEntities.DRABBLE_BEE.get(), new DrabbleBeeRenderer(manager));
       ItemRenderer renderer = mc.getItemRenderer();
       manager.register(ModEntities.HONEY_COMB_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 0.9F, true));
       manager.register(ModEntities.FUMBLE_COMB_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 0.9F, true));
