@@ -176,6 +176,8 @@ public class ModEntities {
 
   public static RegistryEntry<LazySpawnEggItem<BeehemothEntity>> BEEHEMOTH_EGG = REGISTRATE.item("beehemoth_spawn_egg", (b) -> new LazySpawnEggItem<>(BEEHEMOTH, 0xed8a82, 0xe336a7, b)).model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("item/template_spawn_egg"))).register();
 
+  public static RegistryEntry<LazySpawnEggItem<DrabbleBeeEntity>> DRABBLE_BEE_EGG = REGISTRATE.item("drabble_bee_spawn_egg", (b) -> new LazySpawnEggItem<>(DRABBLE_BEE, 0x4bc1d1, 0xe33e14, b)).model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("item/template_spawn_egg"))).register();
+
   public static RegistryEntry<EntityType<HoneyCombEntity>> HONEY_COMB_PROJECTILE = REGISTRATE.<HoneyCombEntity>entity("honey_comb_projectile", HoneyCombEntity::new, EntityClassification.MISC)
       .properties(o -> o.size(1.0f, 1.0f).disableSummoning())
       .register();

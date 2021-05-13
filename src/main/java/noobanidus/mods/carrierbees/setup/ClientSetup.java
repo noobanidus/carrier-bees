@@ -8,12 +8,10 @@ import net.minecraft.client.renderer.entity.SpriteRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import noobanidus.mods.carrierbees.client.particle.AirBubbleParticle;
 import noobanidus.mods.carrierbees.client.render.BeehemothRenderer;
 import noobanidus.mods.carrierbees.client.render.CarrierBeeRenderer;
 import noobanidus.mods.carrierbees.client.render.DrabbleBeeRenderer;
 import noobanidus.mods.carrierbees.init.ModEntities;
-import noobanidus.mods.carrierbees.init.ModParticles;
 
 import java.util.Arrays;
 
@@ -45,7 +43,7 @@ public class ClientSetup {
       manager.register(ModEntities.THIMBLE_COMB_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 0.9f, true));
       manager.register(ModEntities.JUMBLE_COMB_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 0.9f, true));
       manager.register(ModEntities.BUCKET_PROJECTILE.get(), new SpriteRenderer<>(manager, renderer, 0.9f, true));
-      for (LazySpawnEggItem<?> item : Arrays.asList(ModEntities.CARRIER_BEE_EGG.get(), ModEntities.BOMBLE_BEE_EGG.get(), ModEntities.FUMBLE_BEE_EGG.get(), ModEntities.STUMBLE_BEE_EGG.get(), ModEntities.CRUMBLE_BEE_EGG.get(), ModEntities.DRUMBLE_BEE_EGG.get(), ModEntities.TUMBLE_BEE_EGG.get(), ModEntities.THIMBLE_BEE_EGG.get(), ModEntities.JUMBLE_BEE_EGG.get(), ModEntities.BEEHEMOTH_EGG.get())) {
+      for (LazySpawnEggItem<?> item : Arrays.asList(ModEntities.CARRIER_BEE_EGG.get(), ModEntities.BOMBLE_BEE_EGG.get(), ModEntities.FUMBLE_BEE_EGG.get(), ModEntities.STUMBLE_BEE_EGG.get(), ModEntities.CRUMBLE_BEE_EGG.get(), ModEntities.DRUMBLE_BEE_EGG.get(), ModEntities.TUMBLE_BEE_EGG.get(), ModEntities.THIMBLE_BEE_EGG.get(), ModEntities.JUMBLE_BEE_EGG.get(), ModEntities.DRABBLE_BEE_EGG.get(), ModEntities.BEEHEMOTH_EGG.get())) {
         mc.getItemColors().register((a, layer) -> item.getColor(layer), item);
       }
     });
