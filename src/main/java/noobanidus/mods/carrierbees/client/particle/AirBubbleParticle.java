@@ -2,13 +2,12 @@ package noobanidus.mods.carrierbees.client.particle;
 
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particles.BasicParticleType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class AirBubbleParticle extends SpriteTexturedParticle {
-  private AirBubbleParticle(ClientWorld p_i232351_1_, double p_i232351_2_, double p_i232351_4_, double p_i232351_6_, double p_i232351_8_, double p_i232351_10_, double p_i232351_12_) {
+  public AirBubbleParticle(ClientWorld p_i232351_1_, double p_i232351_2_, double p_i232351_4_, double p_i232351_6_, double p_i232351_8_, double p_i232351_10_, double p_i232351_12_) {
     super(p_i232351_1_, p_i232351_2_, p_i232351_4_, p_i232351_6_);
     this.setSize(0.02F, 0.02F);
     this.particleScale *= this.rand.nextFloat() * 0.6F + 0.2F;
@@ -38,14 +37,14 @@ public class AirBubbleParticle extends SpriteTexturedParticle {
   }
 
   @OnlyIn(Dist.CLIENT)
-  public static class Factory implements IParticleFactory<BasicParticleType> {
+  public static class Factory implements IParticleFactory<AirBubbleParticleType> {
     private final IAnimatedSprite spriteSet;
 
     public Factory(IAnimatedSprite p_i50227_1_) {
       this.spriteSet = p_i50227_1_;
     }
 
-    public Particle makeParticle(BasicParticleType p_199234_1_, ClientWorld p_199234_2_, double p_199234_3_, double p_199234_5_, double p_199234_7_, double p_199234_9_, double p_199234_11_, double p_199234_13_) {
+    public Particle makeParticle(AirBubbleParticleType p_199234_1_, ClientWorld p_199234_2_, double p_199234_3_, double p_199234_5_, double p_199234_7_, double p_199234_9_, double p_199234_11_, double p_199234_13_) {
       AirBubbleParticle lvt_15_1_ = new AirBubbleParticle(p_199234_2_, p_199234_3_, p_199234_5_, p_199234_7_, p_199234_9_, p_199234_11_, p_199234_13_);
       lvt_15_1_.selectSpriteRandomly(this.spriteSet);
       return lvt_15_1_;

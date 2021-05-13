@@ -64,6 +64,7 @@ public class CarrierBees {
     ModEffects.load();
     ModBlocks.load();
     ModTiles.load();
+    ModParticles.load();
   }
 
   private void onCommands(RegisterCommandsEvent event) {

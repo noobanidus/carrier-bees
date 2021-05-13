@@ -6,7 +6,6 @@ import net.minecraft.entity.Entity;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 import noobanidus.mods.carrierbees.CarrierBees;
-import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
 import noobanidus.mods.carrierbees.entities.projectiles.ThimbleCombEntity;
 
 import java.nio.file.Path;
@@ -32,6 +31,7 @@ public class ConfigManager {
   private static ForgeConfigSpec.BooleanValue NICE_MODE;
   private static ForgeConfigSpec.IntValue FUMBLE_CHANCE;
   private static ForgeConfigSpec.IntValue DRUMBLE_CHANCE;
+  private static ForgeConfigSpec.DoubleValue DRABBLEBEE_CHANCE;
 
   private static int always_angry = -1;
   private static float honeycomb_damage = -1;
@@ -46,8 +46,16 @@ public class ConfigManager {
   private static int fumble_chance = -1;
   private static int drumble_chance = -1;
   private static int improve_ai = -1;
+  private static double drabblebee_chance = -1;
 
-  public static boolean getImprovedAI () {
+  public static double getDrabblebeeChance() {
+    if (drabblebee_chance == -1) {
+      drabblebee_chance = DRABBLEBEE_CHANCE.get();
+    }
+    return drabblebee_chance;
+  }
+
+  public static boolean getImprovedAI() {
     if (improve_ai == -1) {
       improve_ai = IMPROVE_AI.get() ? 1 : 0;
     }
@@ -165,6 +173,9 @@ public class ConfigManager {
     DAMAGE_CHANCE = COMMON_BUILDER.comment("the chance as a percent per tick of the potion effect that a tool or sword will take durability damage").defineInRange("durability_chance", 0.015, 0, Double.MAX_VALUE);
     NICE_MODE = COMMON_BUILDER.comment("whether or not crumble will damage items at or below 10 durability").define("nice_mode", true);
     COMMON_BUILDER.pop();
+    COMMON_BUILDER.push("drabblebees");
+    DRABBLEBEE_CHANCE = COMMON_BUILDER.comment("the chance per fire tick to summon a drabble bee").defineInRange("drabblebee_chance", 0.4, -1, Double.MAX_VALUE);
+    COMMON_BUILDER.pop();
     COMMON_BUILDER.push("general");
     ALWAYS_ANGRY = COMMON_BUILDER.comment("whether or not bees will always attack or only if angered").define("always_angry", true);
     STING_KILLS = COMMON_BUILDER.comment("whether or not bees will die after stinging").define("sting_kills", false);
@@ -201,6 +212,10 @@ public class ConfigManager {
       damage_amount = -1;
       damage_chance = -1;
       nice_mode = -1;
+      fumble_chance = -1;
+      drumble_chance = -1;
+      improve_ai = -1;
+      drabblebee_chance = -1;
       CarrierBees.LOG.info("CarrierBees config reloaded!");
     }
   }

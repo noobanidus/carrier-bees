@@ -1,6 +1,6 @@
 package noobanidus.mods.carrierbees.entities.projectiles;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.LivingEntity;
@@ -12,23 +12,21 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.DamageSource;
+import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.EntityRayTraceResult;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
-import noobanidus.mods.carrierbees.config.ConfigManager;
-import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
 import noobanidus.mods.carrierbees.init.ModEntities;
 import noobanidus.mods.carrierbees.init.ModParticles;
-import noobanidus.mods.carrierbees.init.ModSounds;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import javax.annotation.Nullable;
 
 @OnlyIn(
     value = Dist.CLIENT,
@@ -47,7 +45,16 @@ public class BucketEntity extends DamagingProjectileEntity implements IEntityAdd
 
   @Override
   public void tick() {
+    if (!world.isRemote && world.getBlockState(getPosition()).getBlock() == Blocks.FIRE) {
+      removeFire(world, getPosition());
+      this.remove();
+    }
+
     super.tick();
+
+    for (int i = 0; i < 8; i++) {
+      world.addParticle(ParticleTypes.SPLASH, getPosX() + world.rand.nextDouble() - 0.5, getPosY() + world.rand.nextFloat() - 0.5, getPosZ() + world.rand.nextDouble() - 0.5, accelerationX, accelerationY, accelerationZ);
+    }
 
     if (!world.isRemote && this.ticksExisted > 30 * 20) {
       this.remove();
@@ -65,7 +72,7 @@ public class BucketEntity extends DamagingProjectileEntity implements IEntityAdd
 
   @Override
   protected IParticleData getParticle() {
-    return ModParticles.AIR_BUBBLE.get();
+    return ParticleTypes.SPLASH;
   }
 
   @Override
@@ -73,16 +80,45 @@ public class BucketEntity extends DamagingProjectileEntity implements IEntityAdd
     return false;
   }
 
+  @Nullable
+  private BlockPos firePosition(World world, BlockPos pos) {
+    for (BlockPos possible : BlockPos.getAllInBoxMutable(pos.getX() - 2, pos.getY() - 2, pos.getZ() - 2, pos.getX() + 2, pos.getY() + 2, pos.getZ() + 2)) {
+      if (world.getBlockState(possible).getBlock() == Blocks.FIRE) {
+        if (!world.getBlockState(possible.down()).isFireSource(world, possible.down(), Direction.UP)) {
+          return possible.toImmutable();
+        }
+      }
+    }
+    return null;
+  }
+
+  private void removeFire(World world, BlockPos firePos) {
+    world.removeBlock(firePos, false);
+    world.playSound(null, firePos, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.NEUTRAL, 1, 1);
+    for (int i = 0; i < 5; i++) {
+      world.addParticle(ParticleTypes.SPLASH, firePos.getX() + 0.5 + world.rand.nextFloat() - 0.5, firePos.getY() + 0.5 + world.rand.nextFloat() - 0.5, firePos.getZ() + 0.5 + world.rand.nextFloat() - 0.5, 0, 0, 0);
+    }
+  }
+
   @Override
   protected void onImpact(RayTraceResult ray) {
     super.onImpact(ray);
     if (!world.isRemote()) {
-      if (ray.getType() == RayTraceResult.Type.ENTITY) {
+      if (ray.getType() == RayTraceResult.Type.BLOCK) {
+        BlockRayTraceResult blockTrace = (BlockRayTraceResult) ray;
+        BlockPos firePos = this.firePosition(world, blockTrace.getPos());
+        if (firePos != null) {
+          removeFire(world, firePos);
+        }
       }
     }
     if (!world.isRemote) {
       this.remove();
     }
+  }
+
+  @Override
+  public void setFire(int seconds) {
   }
 
   @Override

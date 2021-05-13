@@ -8,6 +8,7 @@ import noobanidus.mods.carrierbees.client.sound.CarrierBeeFlightSound;
 import noobanidus.mods.carrierbees.client.sound.CarrierBeeSound;
 import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
 import noobanidus.mods.carrierbees.entities.BeehemothEntity;
+import noobanidus.mods.carrierbees.entities.DrabbleBeeEntity;
 import noobanidus.mods.carrierbees.entities.IAppleBee;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -32,6 +33,8 @@ public class MixinClientWorld {
         } else {
           beeSound = new CarrierBeeFlightSound<>((AppleBeeEntity) entityToSpawn);
         }
+      } else if (entityToSpawn instanceof DrabbleBeeEntity) {
+        beeSound = new CarrierBeeFlightSound<>((DrabbleBeeEntity) entityToSpawn);
       }
       if (beeSound != null) {
         Minecraft.getInstance().getSoundHandler().playOnNextTick(beeSound);

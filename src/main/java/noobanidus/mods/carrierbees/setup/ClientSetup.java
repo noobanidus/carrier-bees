@@ -48,7 +48,6 @@ public class ClientSetup {
       for (LazySpawnEggItem<?> item : Arrays.asList(ModEntities.CARRIER_BEE_EGG.get(), ModEntities.BOMBLE_BEE_EGG.get(), ModEntities.FUMBLE_BEE_EGG.get(), ModEntities.STUMBLE_BEE_EGG.get(), ModEntities.CRUMBLE_BEE_EGG.get(), ModEntities.DRUMBLE_BEE_EGG.get(), ModEntities.TUMBLE_BEE_EGG.get(), ModEntities.THIMBLE_BEE_EGG.get(), ModEntities.JUMBLE_BEE_EGG.get(), ModEntities.BEEHEMOTH_EGG.get())) {
         mc.getItemColors().register((a, layer) -> item.getColor(layer), item);
       }
-      Minecraft.getInstance().particles.registerFactory(ModParticles.AIR_BUBBLE.get(), AirBubbleParticle.Factory::new);
     });
   }
 }

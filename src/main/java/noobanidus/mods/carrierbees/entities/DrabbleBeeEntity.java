@@ -1,6 +1,7 @@
 package noobanidus.mods.carrierbees.entities;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -20,10 +21,13 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.FlyingPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.pathfinding.PathNodeType;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.*;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.Direction;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
@@ -32,17 +36,23 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import noobanidus.mods.carrierbees.config.ConfigManager;
+import noobanidus.mods.carrierbees.entities.ai.CachedPathHolder;
+import noobanidus.mods.carrierbees.entities.ai.SmartBee;
+import noobanidus.mods.carrierbees.entities.projectiles.BucketEntity;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
-import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class DrabbleBeeEntity extends AnimalEntity implements IFlyingAnimal {
+public class DrabbleBeeEntity extends AnimalEntity implements IFlyingAnimal, IAppleBee {
   private static final DataParameter<Byte> DATA_FLAGS_ID = EntityDataManager.createKey(DrabbleBeeEntity.class, DataSerializers.BYTE);
-  private static final RangedInteger field_234180_bw_ = TickRangeConverter.convertRange(20, 39);
-  private UUID lastHurtBy;
   private float rollAmount;
   private float rollAmountO;
+  private BlockPos target = null;
+  private int ttl = -1;
+
+  public static AxisAlignedBB FIRE_SEARCH = new AxisAlignedBB(-10, -10, -10, 11, 11, 11);
 
   public DrabbleBeeEntity(EntityType<? extends DrabbleBeeEntity> type, World worldIn) {
     super(type, worldIn);
@@ -52,6 +62,10 @@ public class DrabbleBeeEntity extends AnimalEntity implements IFlyingAnimal {
     this.setPathPriority(PathNodeType.WATER_BORDER, 16.0F);
     this.setPathPriority(PathNodeType.COCOA, -1.0F);
     this.setPathPriority(PathNodeType.FENCE, -1.0F);
+  }
+
+  public void setTTL (int ttl) {
+    this.ttl = ttl;
   }
 
   @Override
@@ -67,18 +81,24 @@ public class DrabbleBeeEntity extends AnimalEntity implements IFlyingAnimal {
 
   @Override
   protected void registerGoals() {
+    this.goalSelector.addGoal(1, new DrabbleBeeEntity.FireFightingGoal(this));
     this.goalSelector.addGoal(8, new DrabbleBeeEntity.WanderGoal());
     this.goalSelector.addGoal(9, new SwimGoal(this));
+    this.targetSelector.addGoal(0, new DrabbleBeeEntity.TargetFireGoal(this));
   }
 
   @Override
   public void writeAdditional(CompoundNBT compound) {
     super.writeAdditional(compound);
+    compound.putInt("ttl", this.ttl);
   }
 
   @Override
   public void readAdditional(CompoundNBT compound) {
     super.readAdditional(compound);
+    if (compound.contains("ttl")) {
+      setTTL(compound.getInt("ttl"));
+    }
   }
 
   @Override
@@ -92,7 +112,7 @@ public class DrabbleBeeEntity extends AnimalEntity implements IFlyingAnimal {
     this.updateBodyPitch();
   }
 
-  private void startMovingTo(BlockPos pos) {
+/*  private void startMovingTo(BlockPos pos) {
     Vector3d vector3d = Vector3d.copyCenteredHorizontally(pos);
     int i = 0;
     BlockPos blockpos = this.getPosition();
@@ -116,7 +136,7 @@ public class DrabbleBeeEntity extends AnimalEntity implements IFlyingAnimal {
       this.navigator.setRangeMultiplier(0.5F);
       this.navigator.tryMoveToXYZ(vector3d1.x, vector3d1.y, vector3d1.z, 1.0D);
     }
-  }
+  }*/
 
   @OnlyIn(Dist.CLIENT)
   public float getBodyPitch(float p_226455_1_) {
@@ -140,6 +160,11 @@ public class DrabbleBeeEntity extends AnimalEntity implements IFlyingAnimal {
   @Override
   public void livingTick() {
     super.livingTick();
+    if (!this.world.isRemote && ttl != -1) {
+      if (ttl-- <= 0) {
+        this.remove();
+      }
+    }
     if (!this.world.isRemote) {
       boolean flag = this.getAttackTarget() != null && this.getAttackTarget().getDistanceSq(this) < 4.0D;
       this.setNearTarget(flag);
@@ -154,9 +179,9 @@ public class DrabbleBeeEntity extends AnimalEntity implements IFlyingAnimal {
     this.setBeeFlag(2, p_226452_1_);
   }
 
-  private boolean isTooFar(BlockPos pos) {
+/*  private boolean isTooFar(BlockPos pos) {
     return !this.isWithinDistance(pos, 32);
-  }
+  }*/
 
   private void setBeeFlag(int flagId, boolean p_226404_2_) {
     if (p_226404_2_) {
@@ -194,9 +219,9 @@ public class DrabbleBeeEntity extends AnimalEntity implements IFlyingAnimal {
     return stack.getItem().isIn(ItemTags.FLOWERS);
   }
 
-  private boolean isFlowers(BlockPos pos) {
+/*  private boolean isFlowers(BlockPos pos) {
     return this.world.isBlockPresent(pos) && this.world.getBlockState(pos).getBlock().isIn(BlockTags.FLOWERS);
-  }
+  }*/
 
   @Override
   protected void playStepSound(BlockPos pos, BlockState blockIn) {
@@ -278,13 +303,35 @@ public class DrabbleBeeEntity extends AnimalEntity implements IFlyingAnimal {
     return new Vector3d(0.0D, (double) (0.5F * this.getEyeHeight()), (double) (this.getWidth() * 0.2F));
   }
 
-  private boolean isWithinDistance(BlockPos pos, int distance) {
-    return pos.withinDistance(this.getPosition(), (double) distance);
+  @Override
+  public boolean safeIsAngry() {
+    return false;
   }
+
+  @Override
+  public boolean isBeehemoth() {
+    return false;
+  }
+
+/*  private boolean isWithinDistance(BlockPos pos, int distance) {
+    return pos.withinDistance(this.getPosition(), (double) distance);
+  }*/
 
   class BeeLookController extends LookController {
     BeeLookController(MobEntity beeIn) {
       super(beeIn);
+    }
+
+    @Override
+    protected boolean shouldResetPitch() {
+      return true;
+    }
+
+    @Override
+    public void setLookPositionWithEntity(Entity p_75651_1_, float p_75651_2_, float p_75651_3_) {
+      if (p_75651_1_ != null) {
+        super.setLookPositionWithEntity(p_75651_1_, p_75651_2_, p_75651_3_);
+      }
     }
   }
 
@@ -297,7 +344,7 @@ public class DrabbleBeeEntity extends AnimalEntity implements IFlyingAnimal {
     public abstract boolean canBeeContinue();
 
     /**
-     * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
+     * Returns whether execution should begin. You can also read and cache any fire necessary for execution in this
      * method as well.
      */
     @Override
@@ -315,12 +362,14 @@ public class DrabbleBeeEntity extends AnimalEntity implements IFlyingAnimal {
   }
 
   class WanderGoal extends Goal {
+    private CachedPathHolder cachedPathHolder;
+
     WanderGoal() {
       this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE));
     }
 
     /**
-     * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
+     * Returns whether execution should begin. You can also read and cache any fire necessary for execution in this
      * method as well.
      */
     @Override
@@ -341,20 +390,97 @@ public class DrabbleBeeEntity extends AnimalEntity implements IFlyingAnimal {
      */
     @Override
     public void startExecuting() {
-      Vector3d vector3d = this.getRandomLocation();
-      if (vector3d != null) {
-        DrabbleBeeEntity.this.navigator.setPath(DrabbleBeeEntity.this.navigator.getPathToPos(new BlockPos(vector3d), 1), 1.0D);
+      if (ConfigManager.getImprovedAI()) {
+        cachedPathHolder = SmartBee.smartBee(DrabbleBeeEntity.this, cachedPathHolder);
+      } else {
+        Vector3d pos = this.getRandomLocation();
+        if (pos != null) {
+          DrabbleBeeEntity.this.navigator.setPath(DrabbleBeeEntity.this.navigator.getPathToPos(new BlockPos(pos), 1), 1.0D);
+        }
       }
-
     }
 
     @Nullable
     private Vector3d getRandomLocation() {
       Vector3d vector3d = DrabbleBeeEntity.this.getLook(0.0F);
 
-      int i = 8;
       Vector3d vector3d2 = RandomPositionGenerator.findAirTarget(DrabbleBeeEntity.this, 8, 7, vector3d, ((float) Math.PI / 2F), 2, 1);
       return vector3d2 != null ? vector3d2 : RandomPositionGenerator.findGroundTarget(DrabbleBeeEntity.this, 8, 4, -2, vector3d, (double) ((float) Math.PI / 2F));
+    }
+  }
+
+  public static class TargetFireGoal extends Goal {
+    private final DrabbleBeeEntity entity;
+    private int tickCache;
+
+    public TargetFireGoal(DrabbleBeeEntity entity) {
+      this.entity = entity;
+      tickCache = 40;
+    }
+
+    @Override
+    public void tick() {
+      if (this.tickCache-- <= 0) {
+        tickCache = 20;
+        if (this.entity.target == null) {
+          AtomicBoolean foundFire = new AtomicBoolean(false);
+          AxisAlignedBB box = DrabbleBeeEntity.FIRE_SEARCH.offset(this.entity.getPosition());
+          BlockPos.getAllInBoxMutable((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.maxX, (int) box.maxY, (int) box.maxZ).forEach(spot -> {
+            if (foundFire.get()) {
+              return;
+            }
+            BlockState state = this.entity.world.getBlockState(spot);
+            if (state.getBlock() == Blocks.FIRE && !this.entity.world.getBlockState(spot.down()).isFireSource(this.entity.world, spot.down(), Direction.UP)) {
+              this.entity.target = spot.toImmutable();
+              foundFire.set(true);
+            }
+          });
+        }
+      }
+    }
+
+    @Override
+    public boolean shouldExecute() {
+      return this.entity.target == null;
+    }
+
+    @Override
+    public void resetTask() {
+      this.entity.target = null;
+    }
+  }
+
+  public static class FireFightingGoal extends Goal {
+    private DrabbleBeeEntity entity;
+
+    public FireFightingGoal(DrabbleBeeEntity entity) {
+      this.entity = entity;
+    }
+
+    @Override
+    public boolean shouldExecute() {
+      return this.entity.target != null;
+    }
+
+    @Override
+    public void tick() {
+      if (this.entity.target != null) {
+        BlockState state = this.entity.world.getBlockState(this.entity.target);
+        if (state.getBlock() == Blocks.FIRE && !this.entity.world.getBlockState(this.entity.target.down()).isFireSource(this.entity.world, this.entity.target.down(), Direction.UP)) {
+          BlockPos pos = this.entity.target;
+          double d2 = pos.getX() + 0.5 - this.entity.getPosX();
+          double d3 = pos.getY() - (0.5D + this.entity.getPosYHeight(0.5d));
+          double d4 = pos.getZ() + 0.5 - this.entity.getPosZ();
+          BucketEntity bucket = new BucketEntity(this.entity, d2, d3, d4, this.entity.world);
+          bucket.setPosition(this.entity.getPosX(), this.entity.getPosYHeight(0.5D) + 0.5D, bucket.getPosZ());
+          this.entity.world.addEntity(bucket);
+        }
+      }
+    }
+
+    @Override
+    public void resetTask() {
+      this.entity.target = null;
     }
   }
 }
