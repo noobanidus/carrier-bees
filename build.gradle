@@ -160,11 +160,6 @@ shadowJar {
     classifier ''
 }
 
-task deobfJar(type: Jar) {
-    from sourceSets.main.output
-    classifier = 'deobf'
-}
-
 jar.classifier = 'nodep'
 
 reobf {
@@ -172,7 +167,6 @@ reobf {
 }
 
 build.dependsOn reobfShadowJar
-build.dependsOn deobfJar
 
 mixin {
     add sourceSets.main, "carrierbees.refmap.json"
@@ -185,9 +179,6 @@ publishing {
             artifactId project.archivesBaseName
             version project.version
             from components.java
-
-            artifact apiJar {
-            }
 
             artifact shadowJar {
             }
