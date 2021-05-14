@@ -22,8 +22,13 @@ public class SmartBee {
             world.rand.nextInt(21) - 10
         );
 
-        if (mutable.getY() <= 2 || world.getHeight(Heightmap.Type.MOTION_BLOCKING, mutable.getX(), mutable.getZ()) == 0) {
+        int height = world.getHeight(Heightmap.Type.MOTION_BLOCKING, mutable.getX(), mutable.getZ());
+        if (mutable.getY() <= 2 || height == 0) {
           mutable.setY(Math.max((int) beeEntity.getPosX(), 2));
+          continue;
+        }
+        if (mutable.getY() >= height + 10) {
+          mutable.setY(height + 10);
           continue;
         }
 

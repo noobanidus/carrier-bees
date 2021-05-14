@@ -22,6 +22,8 @@ public class ModEffects {
 
   public static final RegistryEntry<JumbleEffect> JUMBLE = REGISTRATE.effect("jumble", JumbleEffect::new).register();
 
+  public static final RegistryEntry<GenericEffect> GENERIC = REGISTRATE.effect("generic", GenericEffect::new).register();
+
   public static void load() {
   }
 }

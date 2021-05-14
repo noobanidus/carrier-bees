@@ -46,6 +46,10 @@ public class ModItems {
       .properties(o -> o.food(new Food.Builder().effect(() -> new EffectInstance(ModEffects.JUMBLE.get(), 20 * 10), 1.0f).fastToEat().hunger(3).saturation(1.5f).build()).rarity(Rarity.UNCOMMON))
       .register();
 
+  public static RegistryEntry<Item> GENERICCOMB = REGISTRATE.item("genericcomb", Item::new)
+      .properties(o -> o.food(new Food.Builder().effect(() -> new EffectInstance(ModEffects.GENERIC.get(), 20 * 10), 1.0f).fastToEat().hunger(3).saturation(1.5f).build()).rarity(Rarity.UNCOMMON))
+      .register();
+
   public static RegistryEntry<Item> ROYAL_JELLY = REGISTRATE.item("royal_jelly", Item::new)
       .properties(o -> o.food(new Food.Builder().fastToEat().hunger(20).saturation(20).setAlwaysEdible().build()).rarity(Rarity.EPIC))
       .recipe((ctx, p) -> {

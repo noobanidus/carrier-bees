@@ -36,6 +36,7 @@ public class CommonSetup {
       GlobalEntityTypeAttributes.put(ModEntities.TUMBLE_BEE.get(), attr.create());
       GlobalEntityTypeAttributes.put(ModEntities.THIMBLE_BEE.get(), attr.create());
       GlobalEntityTypeAttributes.put(ModEntities.JUMBLE_BEE.get(), attr.create());
+      GlobalEntityTypeAttributes.put(ModEntities.GENERIC_BEE.get(), attr.create());
       GlobalEntityTypeAttributes.put(ModEntities.BEEHEMOTH.get(), BeehemothEntity.createAttributes().create());
       GlobalEntityTypeAttributes.put(ModEntities.DRABBLE_BEE.get(), DrabbleBeeEntity.attr().create());
 
@@ -50,6 +51,7 @@ public class CommonSetup {
       SpawnEggItem.EGGS.put(ModEntities.THIMBLE_BEE.get(), ModEntities.THIMBLE_BEE_EGG.get());
       SpawnEggItem.EGGS.put(ModEntities.JUMBLE_BEE.get(), ModEntities.JUMBLE_BEE_EGG.get());
       SpawnEggItem.EGGS.put(ModEntities.DRABBLE_BEE.get(), ModEntities.DRABBLE_BEE_EGG.get());
+      SpawnEggItem.EGGS.put(ModEntities.GENERIC_BEE.get(), ModEntities.GENERIC_BEE_EGG.get());
       SpawnEggItem.EGGS.put(ModEntities.BEEHEMOTH.get(), ModEntities.BEEHEMOTH_EGG.get());
 
       DefaultDispenseItemBehavior spawnEggDispense = new DefaultDispenseItemBehavior() {
@@ -62,7 +64,7 @@ public class CommonSetup {
         }
       };
 
-      for (LazySpawnEggItem<?> item : Arrays.asList(ModEntities.CARRIER_BEE_EGG.get(), ModEntities.BOMBLE_BEE_EGG.get(), ModEntities.FUMBLE_BEE_EGG.get(), ModEntities.STUMBLE_BEE_EGG.get(), ModEntities.CRUMBLE_BEE_EGG.get(), ModEntities.DRUMBLE_BEE_EGG.get(), ModEntities.TUMBLE_BEE_EGG.get(), ModEntities.THIMBLE_BEE_EGG.get(), ModEntities.JUMBLE_BEE_EGG.get(), ModEntities.DRABBLE_BEE_EGG.get(), ModEntities.BEEHEMOTH_EGG.get())) {
+      for (LazySpawnEggItem<?> item : Arrays.asList(ModEntities.CARRIER_BEE_EGG.get(), ModEntities.BOMBLE_BEE_EGG.get(), ModEntities.FUMBLE_BEE_EGG.get(), ModEntities.STUMBLE_BEE_EGG.get(), ModEntities.CRUMBLE_BEE_EGG.get(), ModEntities.DRUMBLE_BEE_EGG.get(), ModEntities.TUMBLE_BEE_EGG.get(), ModEntities.THIMBLE_BEE_EGG.get(), ModEntities.JUMBLE_BEE_EGG.get(), ModEntities.DRABBLE_BEE_EGG.get(), ModEntities.GENERIC_BEE_EGG.get(), ModEntities.BEEHEMOTH_EGG.get())) {
         DispenserBlock.registerDispenseBehavior(item, spawnEggDispense);
       }
 

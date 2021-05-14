@@ -8,6 +8,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
+import noobanidus.mods.carrierbees.CarrierBees;
 import noobanidus.mods.carrierbees.config.ConfigManager;
 import noobanidus.mods.carrierbees.entities.DrabbleBeeEntity;
 import noobanidus.mods.carrierbees.init.ModEntities;
@@ -23,6 +24,10 @@ import java.util.Random;
 public class MixinFireBlock {
   @Inject(method = "Lnet/minecraft/block/FireBlock;tick(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/server/ServerWorld;Lnet/minecraft/util/math/BlockPos;Ljava/util/Random;)V", at = @At(value = "HEAD"), require = 1)
   public void fireTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand, CallbackInfo info) {
+    CarrierBees.LOG.error("my mixin is running");
+    if (worldIn.isRemote) {
+      return;
+    }
     if (worldIn.getBlockState(pos.down()).isFireSource(worldIn, pos.down(), Direction.UP)) {
       return;
     }
