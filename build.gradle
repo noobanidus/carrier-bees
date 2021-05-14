@@ -29,6 +29,9 @@ apply plugin: 'eclipse'
 apply plugin: 'org.spongepowered.mixin'
 
 version = "${minecraft_version}-${mod_version}"
+if (System.getenv('BUILD_NUMBER') != null) {
+    version = "${minecraft_version}-${mod_version}-" + System.getenv('BUILD_NUMBER')
+}
 group = "noobanidus.mods.carrierbees"
 archivesBaseName = "carrierbees"
 
@@ -157,6 +160,11 @@ shadowJar {
     classifier ''
 }
 
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
+}
+
 jar.classifier = 'nodep'
 
 reobf {
@@ -164,9 +172,36 @@ reobf {
 }
 
 build.dependsOn reobfShadowJar
+build.dependsOn deobfJar
 
 mixin {
     add sourceSets.main, "carrierbees.refmap.json"
 }
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
+            from components.java
 
+            artifact apiJar {
+            }
+
+            artifact shadowJar {
+            }
+
+            pom.withXml {
+                asNode().dependencies.dependency.each {
+                    dep -> dep.parent().remove(dep)
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url "file:///" + System.getenv("local_maven")
+        }
+    }
+}
