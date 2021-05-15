@@ -5,6 +5,7 @@ import net.minecraft.pathfinding.Path;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.Heightmap;
+import noobanidus.mods.carrierbees.config.ConfigManager;
 
 public class SmartBee {
   public static CachedPathHolder smartBee(MobEntity beeEntity, CachedPathHolder cachedPathHolder) {
@@ -27,8 +28,8 @@ public class SmartBee {
           mutable.setY(Math.max((int) beeEntity.getPosX(), 2));
           continue;
         }
-        if (mutable.getY() >= height + 10) {
-          mutable.setY(height + 10);
+        if (mutable.getY() >= height + ConfigManager.getAIHeight()) {
+          mutable.setY(height + ConfigManager.getAIHeight());
           continue;
         }
 

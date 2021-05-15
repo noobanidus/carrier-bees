@@ -32,6 +32,7 @@ public class ConfigManager {
   private static ForgeConfigSpec.IntValue FUMBLE_CHANCE;
   private static ForgeConfigSpec.IntValue DRUMBLE_CHANCE;
   private static ForgeConfigSpec.DoubleValue DRABBLEBEE_CHANCE;
+  private static ForgeConfigSpec.IntValue AI_HEIGHT;
 
   private static int always_angry = -1;
   private static float honeycomb_damage = -1;
@@ -47,6 +48,14 @@ public class ConfigManager {
   private static int drumble_chance = -1;
   private static int improve_ai = -1;
   private static double drabblebee_chance = -1;
+  private static int ai_height = -1;
+
+  public static int getAIHeight() {
+    if (ai_height == -1) {
+      ai_height = AI_HEIGHT.get();
+    }
+    return ai_height;
+  }
 
   public static double getDrabblebeeChance() {
     if (drabblebee_chance == -1) {
@@ -180,6 +189,7 @@ public class ConfigManager {
     ALWAYS_ANGRY = COMMON_BUILDER.comment("whether or not bees will always attack or only if angered").define("always_angry", true);
     STING_KILLS = COMMON_BUILDER.comment("whether or not bees will die after stinging").define("sting_kills", false);
     IMPROVE_AI = COMMON_BUILDER.comment("whether or not bees should have their AI improved").define("improved_ai", true);
+    AI_HEIGHT = COMMON_BUILDER.comment("if improved_ai is true, the maximum height above the highest block a bee should fly to").defineInRange("ai_height", 10, 1, Integer.MAX_VALUE);
     COMMON_BUILDER.pop();
     COMMON_CONFIG = COMMON_BUILDER.build();
   }
@@ -216,6 +226,7 @@ public class ConfigManager {
       drumble_chance = -1;
       improve_ai = -1;
       drabblebee_chance = -1;
+      ai_height = -1;
       CarrierBees.LOG.info("CarrierBees config reloaded!");
     }
   }
