@@ -32,8 +32,6 @@ public class CarrierBeeRenderer extends MobRenderer<AppleBeeEntity, CarrierBeeMo
   private static final ResourceLocation THIMBLE_SKIN_ANGRY = new ResourceLocation(CarrierBees.MODID, "textures/entity/thimblebee_angry.png");
   private static final ResourceLocation JUMBLE_SKIN = new ResourceLocation(CarrierBees.MODID, "textures/entity/jumblebee.png");
   private static final ResourceLocation JUMBLE_SKIN_ANGRY = new ResourceLocation(CarrierBees.MODID, "textures/entity/jumblebee_angry.png");
-  private static final ResourceLocation GENERIC_SKIN = new ResourceLocation(CarrierBees.MODID, "textures/entity/genericbee.png");
-  private static final ResourceLocation GENERIC_SKIN_ANGRY = new ResourceLocation(CarrierBees.MODID, "textures/entity/genericbee_angry.png");
 
   public CarrierBeeRenderer(EntityRendererManager bee, CarrierBeeModel<AppleBeeEntity> model) {
     super(bee, model, 0.4F);
@@ -116,12 +114,6 @@ public class CarrierBeeRenderer extends MobRenderer<AppleBeeEntity, CarrierBeeMo
         return JUMBLE_SKIN_ANGRY;
       }
       return JUMBLE_SKIN;
-    }
-    if (bee instanceof GenericBeeEntity) {
-      if (bee.isAngry()) {
-        return GENERIC_SKIN_ANGRY;
-      }
-      return GENERIC_SKIN;
     }
     if (bee.isAngry()) {
       return ANGRY_SKIN;

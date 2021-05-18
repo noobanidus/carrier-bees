@@ -10,8 +10,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
 
 @OnlyIn(Dist.CLIENT)
-public class CarrierBeeModel<T extends AppleBeeEntity> extends AgeableModel<T> {
-  public final ModelRenderer body;
+public class CarrierBeeModel<T extends AppleBeeEntity> extends BodyModel<T> {
   private final ModelRenderer torso;
   private final ModelRenderer rightWing;
   private final ModelRenderer leftWing;

@@ -5,19 +5,22 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraft.client.renderer.entity.model.AgeableModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import noobanidus.mods.carrierbees.client.model.BodyModel;
 import noobanidus.mods.carrierbees.client.model.CarrierBeeModel;
 import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
 
 @SuppressWarnings("deprecation")
 @OnlyIn(Dist.CLIENT)
-public class BeeHeldItemLayer<T extends AppleBeeEntity, M extends CarrierBeeModel<T>> extends LayerRenderer<T, M> {
+public class BeeHeldItemLayer<T extends AnimalEntity, M extends BodyModel<T>> extends LayerRenderer<T, M> {
   public BeeHeldItemLayer(IEntityRenderer<T, M> bee) {
     super(bee);
   }
@@ -36,7 +39,7 @@ public class BeeHeldItemLayer<T extends AppleBeeEntity, M extends CarrierBeeMode
         matrixStack.scale(0.5F, 0.5F, 0.5F);
       }
 
-      CarrierBeeModel m = getEntityModel();
+      BodyModel<T> m = getEntityModel();
       matrixStack.push();
       matrixStack.translate(0, block ? 1.57 : 1.5, block ? 0.15 : 0.05);
       matrixStack.translate(0, -m.body.rotateAngleX * 0.5f, 0);

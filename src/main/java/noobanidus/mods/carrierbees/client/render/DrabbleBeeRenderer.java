@@ -9,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import noobanidus.mods.carrierbees.CarrierBees;
+import noobanidus.mods.carrierbees.client.layers.BeeHeldItemLayer;
 import noobanidus.mods.carrierbees.client.model.DrabbleBeeModel;
 import noobanidus.mods.carrierbees.entities.DrabbleBeeEntity;
 
@@ -18,6 +19,7 @@ public class DrabbleBeeRenderer extends MobRenderer<DrabbleBeeEntity, DrabbleBee
 
   public DrabbleBeeRenderer(EntityRendererManager p_i226033_1_) {
     super(p_i226033_1_, new DrabbleBeeModel<>(), 0.4F);
+    this.addLayer(new BeeHeldItemLayer<>(this));
   }
 
   public ResourceLocation getEntityTexture(DrabbleBeeEntity p_110775_1_) {

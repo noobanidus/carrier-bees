@@ -16,8 +16,7 @@ import noobanidus.mods.carrierbees.entities.DrabbleBeeEntity;
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class DrabbleBeeModel<T extends DrabbleBeeEntity> extends AgeableModel<T> {
-  public ModelRenderer body;
+public class DrabbleBeeModel<T extends DrabbleBeeEntity> extends BodyModel<T> {
   public ModelRenderer torso;
   public ModelRenderer rightWing;
   public ModelRenderer leftWing;
