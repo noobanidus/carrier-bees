@@ -33,6 +33,7 @@ public class ConfigManager {
   private static ForgeConfigSpec.IntValue DRUMBLE_CHANCE;
   private static ForgeConfigSpec.DoubleValue DRABBLEBEE_CHANCE;
   private static ForgeConfigSpec.IntValue AI_HEIGHT;
+  private static ForgeConfigSpec.BooleanValue ADDITIONAL_THIMBLEBEES;
 
   private static int always_angry = -1;
   private static float honeycomb_damage = -1;
@@ -49,6 +50,14 @@ public class ConfigManager {
   private static int improve_ai = -1;
   private static double drabblebee_chance = -1;
   private static int ai_height = -1;
+  private static int additional_thimblebees = -1;
+
+  public static boolean getAdditionalThimblebees () {
+    if (additional_thimblebees == -1) {
+      additional_thimblebees = ADDITIONAL_THIMBLEBEES.get() ? 1 : 0;
+    }
+    return additional_thimblebees == 1;
+  }
 
   public static int getAIHeight() {
     if (ai_height == -1) {
@@ -185,11 +194,15 @@ public class ConfigManager {
     COMMON_BUILDER.push("drabblebees");
     DRABBLEBEE_CHANCE = COMMON_BUILDER.comment("the chance per fire tick to summon a drabble bee").defineInRange("drabblebee_chance", 0.4, -1, Double.MAX_VALUE);
     COMMON_BUILDER.pop();
+    COMMON_BUILDER.push("thimblebee");
+    ADDITIONAL_THIMBLEBEES = COMMON_BUILDER.comment("whether or not up to 2 additional thimblebees should spawn when a single thimblebee is spawned").define("additional_thimblebees", true);
+    COMMON_BUILDER.pop();
     COMMON_BUILDER.push("general");
     ALWAYS_ANGRY = COMMON_BUILDER.comment("whether or not bees will always attack or only if angered").define("always_angry", true);
     STING_KILLS = COMMON_BUILDER.comment("whether or not bees will die after stinging").define("sting_kills", false);
     IMPROVE_AI = COMMON_BUILDER.comment("whether or not bees should have their AI improved").define("improved_ai", true);
     AI_HEIGHT = COMMON_BUILDER.comment("if improved_ai is true, the maximum height above the highest block a bee should fly to").defineInRange("ai_height", 10, 1, Integer.MAX_VALUE);
+
     COMMON_BUILDER.pop();
     COMMON_CONFIG = COMMON_BUILDER.build();
   }

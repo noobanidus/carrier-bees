@@ -38,17 +38,19 @@ public class ThimbleBeeEntity extends AppleBeeEntity {
 
   @Override
   public ILivingEntityData onInitialSpawn(IServerWorld world, DifficultyInstance difficulty, SpawnReason reason, @Nullable ILivingEntityData data, @Nullable CompoundNBT nbt) {
-    if (nbt == null || !nbt.contains("summoned")) {
-      if (nbt == null) {
-        nbt = new CompoundNBT();
-      }
-      nbt.putBoolean("summoned", true);
-      if (world instanceof ServerWorld) {
-        int count = rand.nextInt(1) + 1;
-        for (int i = 0; i < count; i++) {
-          ThimbleBeeEntity entity = ModEntities.THIMBLE_BEE.get().create((ServerWorld) world, nbt, null, null, getPosition(), reason, true, true);
-          if (entity != null) {
-            world.addEntity(entity);
+    if (ConfigManager.getAdditionalThimblebees()) {
+      if (nbt == null || !nbt.contains("summoned")) {
+        if (nbt == null) {
+          nbt = new CompoundNBT();
+        }
+        nbt.putBoolean("summoned", true);
+        if (world instanceof ServerWorld) {
+          int count = rand.nextInt(1) + 1;
+          for (int i = 0; i < count; i++) {
+            ThimbleBeeEntity entity = ModEntities.THIMBLE_BEE.get().create((ServerWorld) world, nbt, null, null, getPosition(), reason, true, true);
+            if (entity != null) {
+              world.addEntity(entity);
+            }
           }
         }
       }
