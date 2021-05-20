@@ -9,7 +9,7 @@ import net.minecraft.potion.Effects;
 
 import java.util.Random;
 
-public class DrumbleEffect extends Effect {
+public class DrumbleEffect extends Effect implements IBeeEffect {
   private static final Random rand = new Random();
 
   public DrumbleEffect() {

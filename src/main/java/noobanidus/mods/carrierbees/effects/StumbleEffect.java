@@ -10,7 +10,7 @@ import noobanidus.mods.carrierbees.init.ModBlocks;
 
 import java.util.Random;
 
-public class StumbleEffect extends Effect {
+public class StumbleEffect extends Effect implements IBeeEffect {
   private static final Random rand = new Random();
 
   public StumbleEffect() {

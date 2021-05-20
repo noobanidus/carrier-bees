@@ -10,7 +10,7 @@ import noobanidus.mods.carrierbees.config.ConfigManager;
 
 import java.util.Random;
 
-public class FumbleEffect extends Effect {
+public class FumbleEffect extends Effect implements IBeeEffect {
   private static final Random rand = new Random();
   private static int OFF_HAND_SLOT = 40;
 

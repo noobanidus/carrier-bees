@@ -11,7 +11,7 @@ import noobanidus.mods.carrierbees.init.ModBlocks;
 
 import java.util.Random;
 
-public class ThimbleEffect extends Effect {
+public class ThimbleEffect extends Effect implements IBeeEffect {
   private static final Random rand = new Random();
 
   public ThimbleEffect() {

@@ -7,7 +7,7 @@ import net.minecraft.potion.InstantEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.Explosion;
 
-public class ExplosiveEffect extends InstantEffect {
+public class ExplosiveEffect extends InstantEffect implements IBeeEffect {
   public ExplosiveEffect() {
     super(EffectType.HARMFUL, 0xeb4e10);
   }

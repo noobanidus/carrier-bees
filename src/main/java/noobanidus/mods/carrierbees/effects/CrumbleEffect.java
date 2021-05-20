@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class CrumbleEffect extends Effect {
+public class CrumbleEffect extends Effect implements IBeeEffect {
   private static final Random rand = new Random();
 
   public CrumbleEffect() {
