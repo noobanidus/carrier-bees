@@ -19,6 +19,7 @@ import noobanidus.mods.carrierbees.advancements.QueenPredicate;
 import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
 import noobanidus.mods.carrierbees.entities.BeehemothEntity;
 import noobanidus.mods.carrierbees.entities.DrabbleBeeEntity;
+import noobanidus.mods.carrierbees.entities.ThimbleBeeEntity;
 import noobanidus.mods.carrierbees.init.ModEntities;
 
 import java.util.Arrays;
@@ -34,7 +35,7 @@ public class CommonSetup {
       GlobalEntityTypeAttributes.put(ModEntities.CRUMBLE_BEE.get(), attr.create());
       GlobalEntityTypeAttributes.put(ModEntities.DRUMBLE_BEE.get(), attr.create());
       GlobalEntityTypeAttributes.put(ModEntities.TUMBLE_BEE.get(), attr.create());
-      GlobalEntityTypeAttributes.put(ModEntities.THIMBLE_BEE.get(), attr.create());
+      GlobalEntityTypeAttributes.put(ModEntities.THIMBLE_BEE.get(), ThimbleBeeEntity.createAttributes().create());
       GlobalEntityTypeAttributes.put(ModEntities.JUMBLE_BEE.get(), attr.create());
       GlobalEntityTypeAttributes.put(ModEntities.GENERIC_BEE.get(), attr.create());
       GlobalEntityTypeAttributes.put(ModEntities.BEEHEMOTH.get(), BeehemothEntity.createAttributes().create());

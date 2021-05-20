@@ -2,10 +2,9 @@ package noobanidus.mods.carrierbees.entities;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.vector.Vector3d;
@@ -31,6 +30,10 @@ public class ThimbleBeeEntity extends AppleBeeEntity {
     if (ConfigManager.getHoneycombDamage(this) > 0) {
       this.goalSelector.addGoal(1, new ThimbleBeeEntity.HoneycombProjectileAttackGoal(this));
     }
+  }
+
+  public static AttributeModifierMap.MutableAttribute createAttributes() {
+    return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 4.0D).createMutableAttribute(Attributes.FLYING_SPEED, 0.4).createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.3).createMutableAttribute(Attributes.ATTACK_DAMAGE, 4.0D).createMutableAttribute(Attributes.FOLLOW_RANGE, 128.0D);
   }
 
   @Override

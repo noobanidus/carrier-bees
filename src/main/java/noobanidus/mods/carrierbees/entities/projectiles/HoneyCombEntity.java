@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.entity.projectile.DamagingProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -28,6 +29,7 @@ import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
 import noobanidus.mods.carrierbees.init.ModEntities;
 import noobanidus.mods.carrierbees.init.ModSounds;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +40,7 @@ import java.util.stream.Collectors;
 public class HoneyCombEntity extends DamagingProjectileEntity implements IEntityAdditionalSpawnData, IRendersAsItem {
   private static ItemStack HONEY_COMB = new ItemStack(Items.HONEYCOMB);
 
+  @Nullable
   public EffectInstance getInstance() {
     return new EffectInstance(Effects.SLOWNESS, 2, ConfigManager.getHoneycombSlow());
   }
@@ -88,24 +91,34 @@ public class HoneyCombEntity extends DamagingProjectileEntity implements IEntity
         Entity shootingEntity = this.func_234616_v_();
         if ((entity != this || entity != shootingEntity) && entity instanceof LivingEntity && !(entity instanceof AppleBeeEntity)) {
           LivingEntity living = (LivingEntity) ray2.getEntity();
-          living.addPotionEffect(getInstance());
+          EffectInstance instance = getInstance();
+          if (instance != null) {
+            living.addPotionEffect(instance);
+          }
           DamageSource source;
           if (shootingEntity instanceof LivingEntity) {
             source = DamageSource.causeMobDamage((LivingEntity) shootingEntity).setMagicDamage();
           } else {
             source = DamageSource.MAGIC;
           }
-          living.attackEntityFrom(source, ConfigManager.getHoneycombDamage(shootingEntity));
+          float damage = ConfigManager.getHoneycombDamage(shootingEntity);
+          if (damage > 0) {
+            living.attackEntityFrom(source, damage);
+          }
           double val = ConfigManager.getHoneycombSize();
           List<LivingEntity> list = this.world.getEntitiesWithinAABBExcludingEntity(living, this.getBoundingBox().grow(val, val, val)).stream().filter(o -> o instanceof LivingEntity).map(o -> (LivingEntity) o).collect(Collectors.toList());
           world.addParticle(ParticleTypes.FALLING_HONEY, living.getPosX(), living.getPosY(), living.getPosZ(), 0, 0, 0);
           world.playSound(null, this.getPosition(), ModSounds.SPLOOSH.get(), SoundCategory.HOSTILE, 1f, 0.5f);
           for (LivingEntity l : list) {
-            if (l == shootingEntity || l instanceof AppleBeeEntity) {
+            if (l == shootingEntity || l instanceof AppleBeeEntity || l instanceof BeeEntity) {
               continue;
             }
-            l.addPotionEffect(getInstance());
-            l.attackEntityFrom(source, ConfigManager.getHoneycombDamage(shootingEntity));
+            if (instance != null) {
+              l.addPotionEffect(instance);
+            }
+            if (damage > 0) {
+              l.attackEntityFrom(source, damage);
+            }
             world.addParticle(ParticleTypes.FALLING_HONEY, l.getPosX(), l.getPosY(), l.getPosZ(), 0, 0, 0);
           }
         }

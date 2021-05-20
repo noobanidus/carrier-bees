@@ -125,7 +125,7 @@ public class ConfigManager {
       honeycomb_damage = (float) (double) HONEYCOMB_DAMAGE.get();
     }
     if (entity instanceof ThimbleCombEntity) {
-      return 1f;
+      return 0.5f;
     }
     return honeycomb_damage;
   }
