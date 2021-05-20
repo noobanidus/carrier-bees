@@ -56,7 +56,7 @@ public class CarrierBeeRenderer extends MobRenderer<AppleBeeEntity, CarrierBeeMo
     } else if (p_225623_1_ instanceof TumbleBeeEntity) {
       scale = 1.1f;
     } else if (p_225623_1_ instanceof ThimbleBeeEntity) {
-      scale = 0.4f;
+      scale = 0.6f;
     } else if (p_225623_1_ instanceof GenericBeeEntity) {
       scale = 1.1f;
     }
