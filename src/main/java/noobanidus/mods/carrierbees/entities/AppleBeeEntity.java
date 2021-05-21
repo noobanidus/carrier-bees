@@ -394,6 +394,13 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
     }
   }
 
+  public boolean noSnipe() {
+    if (!ConfigManager.getSniperMode()) {
+      return this.getAttackTarget() != null && this.getDistanceSq(this.getAttackTarget()) < 400 && this.canEntityBeSeen(this.getAttackTarget());
+    }
+    return false;
+  }
+
   class BeeLookController extends LookController {
     BeeLookController(MobEntity entity) {
       super(entity);
@@ -421,11 +428,19 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
 
     @Override
     public boolean shouldExecute() {
+/*      if (noSnipe()) {
+        return false;
+      }*/
+
       return AppleBeeEntity.this.navigator.noPath() && AppleBeeEntity.this.rand.nextInt(10) == 0;
     }
 
     @Override
     public boolean shouldContinueExecuting() {
+/*      if (noSnipe()) {
+        return false;
+      }*/
+
       return AppleBeeEntity.this.navigator.hasPath();
     }
 

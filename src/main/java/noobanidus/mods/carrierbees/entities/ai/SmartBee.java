@@ -6,6 +6,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.Heightmap;
 import noobanidus.mods.carrierbees.config.ConfigManager;
+import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
 
 public class SmartBee {
   public static CachedPathHolder smartBee(MobEntity beeEntity, CachedPathHolder cachedPathHolder) {
@@ -15,26 +16,38 @@ public class SmartBee {
       BlockPos.Mutable mutable = new BlockPos.Mutable();
       World world = beeEntity.world;
 
-      for (int attempt = 0; attempt < 11 || beeEntity.getPosition().manhattanDistance(mutable) <= 5; attempt++) {
-        // pick a random place to fly to
-        mutable.setPos(beeEntity.getPosition()).move(
-            world.rand.nextInt(21) - 10,
-            world.rand.nextInt(21) - 10,
-            world.rand.nextInt(21) - 10
-        );
+      boolean targeting = beeEntity.getAttackTarget() != null;
+      boolean noSnipe = beeEntity instanceof AppleBeeEntity && ((AppleBeeEntity) beeEntity).noSnipe();
+      int maxDistance = noSnipe ? 3 : 5;
+      int rand1 = noSnipe ? 11 : 21;
+      int rand2 = noSnipe ? 5 : 10;
 
-        int height = world.getHeight(Heightmap.Type.MOTION_BLOCKING, mutable.getX(), mutable.getZ());
-        if (mutable.getY() <= 2 || height == 0) {
-          mutable.setY(Math.max((int) beeEntity.getPosX(), 2));
-          continue;
-        }
-        if (mutable.getY() >= height + ConfigManager.getAIHeight()) {
-          mutable.setY(height + ConfigManager.getAIHeight());
-          continue;
-        }
+      double targetDistance = targeting ? beeEntity.getDistanceSq(beeEntity.getAttackTarget()) + maxDistance * maxDistance : 0;
 
-        if (world.getBlockState(mutable).isAir()) {
-          break; // Valid spot to go towards.
+      mutable.setPos(beeEntity.getPosition());
+
+      if (!noSnipe || world.rand.nextInt(15) == 0) {
+        for (int attempt = 0; attempt < 11 || beeEntity.getPosition().manhattanDistance(mutable) <= maxDistance || (targeting && noSnipe && beeEntity.getDistanceSq(beeEntity.getAttackTarget()) <= targetDistance); attempt++) {
+          // pick a random place to fly to
+          mutable.setPos(beeEntity.getPosition()).move(
+              world.rand.nextInt(rand1) - rand2,
+              world.rand.nextInt(rand1) - rand2,
+              world.rand.nextInt(rand1) - rand2
+          );
+
+          int height = world.getHeight(Heightmap.Type.MOTION_BLOCKING, mutable.getX(), mutable.getZ());
+          if (mutable.getY() <= 2 || height == 0) {
+            mutable.setY(Math.max((int) beeEntity.getPosX(), 2));
+            continue;
+          }
+          if (mutable.getY() >= height + ConfigManager.getAIHeight()) {
+            mutable.setY(height + ConfigManager.getAIHeight());
+            continue;
+          }
+
+          if (world.getBlockState(mutable).isAir()) {
+            break; // Valid spot to go towards.
+          }
         }
       }
 
@@ -53,6 +66,4 @@ public class SmartBee {
 
     return cachedPathHolder;
   }
-
-
 }

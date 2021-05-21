@@ -35,6 +35,7 @@ public class ConfigManager {
   private static ForgeConfigSpec.IntValue AI_HEIGHT;
   private static ForgeConfigSpec.BooleanValue ADDITIONAL_THIMBLEBEES;
   private static ForgeConfigSpec.BooleanValue EFFECTS_PERSIST;
+  private static ForgeConfigSpec.BooleanValue SNIPER_MODE;
 
   private static int always_angry = -1;
   private static float honeycomb_damage = -1;
@@ -53,6 +54,14 @@ public class ConfigManager {
   private static int ai_height = -1;
   private static int additional_thimblebees = -1;
   private static int effects_persist = -1;
+  private static int sniper_mode = -1;
+
+  public static boolean getSniperMode () {
+    if (sniper_mode == -1) {
+      sniper_mode = SNIPER_MODE.get() ? 1 : 0;
+    }
+    return sniper_mode == 1;
+  }
 
   public static boolean getEffectsPersist () {
     if (effects_persist == -1) {
@@ -212,6 +221,7 @@ public class ConfigManager {
     EFFECTS_PERSIST = COMMON_BUILDER.comment("whether or not potion effects given by bees should persist through death").define("effects_persist", true);
     IMPROVE_AI = COMMON_BUILDER.comment("whether or not bees should have their AI improved").define("improved_ai", true);
     AI_HEIGHT = COMMON_BUILDER.comment("if improved_ai is true, the maximum height above the highest block a bee should fly to").defineInRange("ai_height", 10, 1, Integer.MAX_VALUE);
+    SNIPER_MODE = COMMON_BUILDER.comment("if improved_ai is true, whether or not bees should remain stationary when they have a target").define("sniper_mode", true);
 
     COMMON_BUILDER.pop();
     COMMON_CONFIG = COMMON_BUILDER.build();
@@ -250,6 +260,9 @@ public class ConfigManager {
       improve_ai = -1;
       drabblebee_chance = -1;
       ai_height = -1;
+      sniper_mode = -1;
+      effects_persist = -1;
+      additional_thimblebees = -1;
       CarrierBees.LOG.info("CarrierBees config reloaded!");
     }
   }
