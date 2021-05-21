@@ -16,10 +16,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import noobanidus.libs.noobutil.advancement.GenericTrigger;
 import noobanidus.mods.carrierbees.CarrierBees;
 import noobanidus.mods.carrierbees.advancements.QueenPredicate;
-import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
-import noobanidus.mods.carrierbees.entities.BeehemothEntity;
-import noobanidus.mods.carrierbees.entities.DrabbleBeeEntity;
-import noobanidus.mods.carrierbees.entities.ThimbleBeeEntity;
+import noobanidus.mods.carrierbees.entities.*;
 import noobanidus.mods.carrierbees.init.ModEntities;
 
 import java.util.Arrays;
@@ -36,7 +33,7 @@ public class CommonSetup {
       GlobalEntityTypeAttributes.put(ModEntities.DRUMBLE_BEE.get(), attr.create());
       GlobalEntityTypeAttributes.put(ModEntities.TUMBLE_BEE.get(), attr.create());
       GlobalEntityTypeAttributes.put(ModEntities.THIMBLE_BEE.get(), ThimbleBeeEntity.createAttributes().create());
-      GlobalEntityTypeAttributes.put(ModEntities.JUMBLE_BEE.get(), attr.create());
+      GlobalEntityTypeAttributes.put(ModEntities.JUMBLE_BEE.get(), JumbleBeeEntity.createAttributes().create());
       GlobalEntityTypeAttributes.put(ModEntities.GENERIC_BEE.get(), attr.create());
       GlobalEntityTypeAttributes.put(ModEntities.BEEHEMOTH.get(), BeehemothEntity.createAttributes().create());
       GlobalEntityTypeAttributes.put(ModEntities.DRABBLE_BEE.get(), DrabbleBeeEntity.attr().create());
