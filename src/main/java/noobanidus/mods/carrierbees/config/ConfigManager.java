@@ -34,6 +34,7 @@ public class ConfigManager {
   private static ForgeConfigSpec.DoubleValue DRABBLEBEE_CHANCE;
   private static ForgeConfigSpec.IntValue AI_HEIGHT;
   private static ForgeConfigSpec.BooleanValue ADDITIONAL_THIMBLEBEES;
+  private static ForgeConfigSpec.BooleanValue EFFECTS_PERSIST;
 
   private static int always_angry = -1;
   private static float honeycomb_damage = -1;
@@ -51,6 +52,14 @@ public class ConfigManager {
   private static double drabblebee_chance = -1;
   private static int ai_height = -1;
   private static int additional_thimblebees = -1;
+  private static int effects_persist = -1;
+
+  public static boolean getEffectsPersist () {
+    if (effects_persist == -1) {
+      effects_persist = EFFECTS_PERSIST.get() ? 1 : 0;
+    }
+    return effects_persist == 1;
+  }
 
   public static boolean getAdditionalThimblebees () {
     if (additional_thimblebees == -1) {
@@ -200,6 +209,7 @@ public class ConfigManager {
     COMMON_BUILDER.push("general");
     ALWAYS_ANGRY = COMMON_BUILDER.comment("whether or not bees will always attack or only if angered").define("always_angry", true);
     STING_KILLS = COMMON_BUILDER.comment("whether or not bees will die after stinging").define("sting_kills", false);
+    EFFECTS_PERSIST = COMMON_BUILDER.comment("whether or not potion effects given by bees should persist through death").define("effects_persist", true);
     IMPROVE_AI = COMMON_BUILDER.comment("whether or not bees should have their AI improved").define("improved_ai", true);
     AI_HEIGHT = COMMON_BUILDER.comment("if improved_ai is true, the maximum height above the highest block a bee should fly to").defineInRange("ai_height", 10, 1, Integer.MAX_VALUE);
 
