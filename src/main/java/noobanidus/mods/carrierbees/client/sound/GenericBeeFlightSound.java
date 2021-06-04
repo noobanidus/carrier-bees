@@ -7,11 +7,12 @@ import net.minecraft.util.SoundEvents;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import noobanidus.mods.carrierbees.entities.IAppleBee;
+import noobanidus.mods.carrierbees.init.ModSounds;
 
 @OnlyIn(Dist.CLIENT)
 public class GenericBeeFlightSound<T extends AnimalEntity & IAppleBee> extends CarrierBeeSound<T> {
   public GenericBeeFlightSound(T p_i226059_1_) {
-    super(p_i226059_1_, SoundEvents.ENTITY_BEE_LOOP, SoundCategory.NEUTRAL);
+    super(p_i226059_1_, ModSounds.GENERIC_BEE_LOOP.get(), SoundCategory.NEUTRAL);
   }
 
   protected TickableSound getNextSound() {

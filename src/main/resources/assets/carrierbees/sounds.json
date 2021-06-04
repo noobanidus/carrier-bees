@@ -76,5 +76,73 @@
       }
     ],
     "subtitle": "subtitles.carrierbees.crumbled"
+  },
+  "entity.genericbee.dies": {
+    "sounds": [
+      "carrierbees:generic/death1",
+      "carrierbees:generic/death2",
+      "carrierbees:generic/death3",
+      "carrierbees:generic/death4",
+      "carrierbees:generic/death5",
+      "carrierbees:generic/death6",
+      "carrierbees:generic/death7"
+    ],
+    "subtitle": "subtitles.carrierbees.genericbee.dies"
+  },
+  "entity.genericbee.hurt": {
+    "sounds": [
+      "carrierbees:generic/hurt1",
+      "carrierbees:generic/hurt2",
+      "carrierbees:generic/hurt3",
+      "carrierbees:generic/hurt4",
+      "carrierbees:generic/hurt5",
+      "carrierbees:generic/hurt6",
+      "carrierbees:generic/hurt7",
+      "carrierbees:generic/hurt8",
+      "carrierbees:generic/hurt9",
+      "carrierbees:generic/hurt10",
+      "carrierbees:generic/hurt11",
+      "carrierbees:generic/hurt12",
+      "carrierbees:generic/hurt13"
+    ],
+    "subtitle": "subtitles.carrierbees.genericbee.hurt"
+  },
+  "entity.genericbee.ambient": {
+    "sounds": [
+      "carrierbees:generic/ambient1",
+      "carrierbees:generic/ambient2",
+      "carrierbees:generic/ambient3",
+      "carrierbees:generic/ambient4",
+      "carrierbees:generic/ambient5",
+      "carrierbees:generic/ambient6",
+      "carrierbees:generic/ambient7",
+      "carrierbees:generic/ambient8",
+      "carrierbees:generic/ambient9",
+      "carrierbees:generic/ambient10",
+      "carrierbees:generic/ambient11",
+      "carrierbees:generic/ambient12",
+      "carrierbees:generic/ambient13",
+      "carrierbees:generic/ambient14",
+      "carrierbees:generic/ambient15"
+    ],
+    "subtitle": "subtitles.carrierbees.genericbee.ambient"
+  },
+  "entity.genericbee.loop": {
+    "sounds": [
+      {
+        "attenuation_distance": 6,
+        "name": "carrierbees:generic/loop"
+      }
+    ],
+    "subtitle": "subtitles.entity.genericbee.loop"
+  },
+  "entity.genericbee.loop_aggressive": {
+    "sounds": [
+      {
+        "attenuation_distance": 6,
+        "name": "carrierbees:generic/loop_aggressive"
+      }
+    ],
+    "subtitle": "subtitles.entity.genericbee.loop_aggressive"
   }
 }

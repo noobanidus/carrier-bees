@@ -3,9 +3,12 @@ package noobanidus.mods.carrierbees.entities;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import noobanidus.mods.carrierbees.config.ConfigManager;
 import noobanidus.mods.carrierbees.entities.projectiles.GenericCombEntity;
+import noobanidus.mods.carrierbees.init.ModSounds;
 
 public class GenericBeeEntity extends AppleBeeEntity {
   public GenericBeeEntity(EntityType<? extends GenericBeeEntity> type, World world) {
@@ -72,5 +75,25 @@ public class GenericBeeEntity extends AppleBeeEntity {
         --this.attackTimer;
       }
     }
+  }
+
+  @Override
+  protected SoundEvent getDeathSound() {
+    return ModSounds.GENERIC_BEE_DIES.get();
+  }
+
+  @Override
+  protected SoundEvent getHurtSound(DamageSource p_184601_1_) {
+    return ModSounds.GENERIC_BEE_HURT.get();
+  }
+
+  @Override
+  protected SoundEvent getAmbientSound() {
+    return ModSounds.GENERIC_BEE_AMBIENT.get();
+  }
+
+  @Override
+  public int getTalkInterval() {
+    return 360;
   }
 }
