@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.entity.projectile.DamagingProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -22,6 +23,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import noobanidus.mods.carrierbees.config.ConfigManager;
 import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
+import noobanidus.mods.carrierbees.entities.IAppleBee;
 import noobanidus.mods.carrierbees.init.ModEntities;
 import noobanidus.mods.carrierbees.world.BeeExplosion;
 
@@ -71,7 +73,7 @@ public class BombEntity extends DamagingProjectileEntity implements IEntityAddit
       if (ray instanceof EntityRayTraceResult) {
         EntityRayTraceResult eray = (EntityRayTraceResult) ray;
         Entity entity = eray.getEntity();
-        if (entity != this && entity != this.func_234616_v_() && !(entity instanceof AppleBeeEntity)) {
+        if (entity != this && entity != this.func_234616_v_() && !(entity instanceof IAppleBee) && !(entity instanceof BeeEntity)) {
           entity.attackEntityFrom(DamageSource.GENERIC, ConfigManager.getExplosionDamage());
         }
       }

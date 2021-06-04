@@ -3,6 +3,7 @@ package noobanidus.mods.carrierbees.world;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.TNTEntity;
+import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.entity.projectile.DamagingProjectileEntity;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
@@ -18,6 +19,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 import noobanidus.mods.carrierbees.config.ConfigManager;
 import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
+import noobanidus.mods.carrierbees.entities.IAppleBee;
 import noobanidus.mods.carrierbees.entities.projectiles.BombEntity;
 
 import javax.annotation.Nullable;
@@ -66,7 +68,7 @@ public class BeeExplosion extends Explosion {
     ForgeEventFactory.onExplosionDetonate(this.world, this, list, f3);
 
     for (Entity entity : list) {
-      if (entity.isImmuneToExplosions() || entity instanceof BombEntity || entity instanceof AppleBeeEntity) {
+      if (entity.isImmuneToExplosions() || entity instanceof BombEntity || entity instanceof IAppleBee || entity instanceof BeeEntity) {
         continue;
       }
       if (entity instanceof LivingEntity) {

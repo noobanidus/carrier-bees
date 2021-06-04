@@ -26,6 +26,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import noobanidus.mods.carrierbees.config.ConfigManager;
 import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
+import noobanidus.mods.carrierbees.entities.IAppleBee;
 import noobanidus.mods.carrierbees.init.ModEntities;
 import noobanidus.mods.carrierbees.init.ModSounds;
 
@@ -89,7 +90,7 @@ public class HoneyCombEntity extends DamagingProjectileEntity implements IEntity
         EntityRayTraceResult ray2 = (EntityRayTraceResult) ray;
         Entity entity = ray2.getEntity();
         Entity shootingEntity = this.func_234616_v_();
-        if ((entity != this || entity != shootingEntity) && entity instanceof LivingEntity && !(entity instanceof AppleBeeEntity)) {
+        if ((entity != this || entity != shootingEntity) && entity instanceof LivingEntity && !(entity instanceof IAppleBee) && !(entity instanceof BeeEntity)) {
           LivingEntity living = (LivingEntity) ray2.getEntity();
           EffectInstance instance = getInstance();
           if (instance != null) {
@@ -110,7 +111,7 @@ public class HoneyCombEntity extends DamagingProjectileEntity implements IEntity
           world.addParticle(ParticleTypes.FALLING_HONEY, living.getPosX(), living.getPosY(), living.getPosZ(), 0, 0, 0);
           world.playSound(null, this.getPosition(), ModSounds.SPLOOSH.get(), SoundCategory.HOSTILE, 1f, 0.5f);
           for (LivingEntity l : list) {
-            if (l == shootingEntity || l instanceof AppleBeeEntity || l instanceof BeeEntity) {
+            if (l == shootingEntity || l instanceof IAppleBee || l instanceof BeeEntity) {
               continue;
             }
             if (instance != null) {

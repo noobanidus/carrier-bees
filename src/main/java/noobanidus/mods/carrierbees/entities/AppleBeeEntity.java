@@ -10,6 +10,7 @@ import net.minecraft.entity.ai.controller.FlyingMovementController;
 import net.minecraft.entity.ai.controller.LookController;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
@@ -313,7 +314,7 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
       return false;
     } else {
       Entity attacker = source.getTrueSource();
-      if (attacker instanceof AppleBeeEntity) {
+      if (attacker instanceof IAppleBee || attacker instanceof BeeEntity) {
         return false;
       }
       if (!this.world.isRemote && attacker instanceof PlayerEntity && !((PlayerEntity) attacker).isCreative() && this.canEntityBeSeen(attacker) && !this.isAIDisabled()) {
@@ -476,7 +477,7 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
         return false;
       }
 
-      return potentialTarget != null && !(potentialTarget instanceof AppleBeeEntity) && this.goalOwner instanceof AppleBeeEntity && this.goalOwner.canEntityBeSeen(potentialTarget);
+      return potentialTarget != null && this.goalOwner.canEntityBeSeen(potentialTarget) && !(potentialTarget instanceof IAppleBee) && !(potentialTarget instanceof BeeEntity) && this.goalOwner instanceof IAppleBee;
     }
 
     @Override

@@ -21,6 +21,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import noobanidus.mods.carrierbees.config.ConfigManager;
 import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
+import noobanidus.mods.carrierbees.entities.IAppleBee;
 import noobanidus.mods.carrierbees.init.ModEntities;
 import noobanidus.mods.carrierbees.init.ModItems;
 import noobanidus.mods.carrierbees.init.ModSounds;
@@ -64,7 +65,7 @@ public class ThimbleCombEntity extends HoneyCombEntity {
         EntityRayTraceResult ray2 = (EntityRayTraceResult) ray;
         Entity entity = ray2.getEntity();
         Entity shootingEntity = this.func_234616_v_();
-        if ((entity != this || entity != shootingEntity) && entity instanceof LivingEntity && !(entity instanceof AppleBeeEntity)) {
+        if ((entity != this || entity != shootingEntity) && entity instanceof LivingEntity && !(entity instanceof IAppleBee) && !(entity instanceof BeeEntity)) {
           LivingEntity living = (LivingEntity) ray2.getEntity();
           DamageSource source;
           if (shootingEntity instanceof LivingEntity) {
