@@ -130,7 +130,7 @@
   "entity.genericbee.loop": {
     "sounds": [
       {
-        "attenuation_distance": 6,
+        "attenuation_distance": 10,
         "name": "carrierbees:generic/loop"
       }
     ],
@@ -139,7 +139,7 @@
   "entity.genericbee.loop_aggressive": {
     "sounds": [
       {
-        "attenuation_distance": 6,
+        "attenuation_distance": 10,
         "name": "carrierbees:generic/loop_aggressive"
       }
     ],
