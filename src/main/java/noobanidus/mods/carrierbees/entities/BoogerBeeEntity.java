@@ -107,6 +107,6 @@ public class BoogerBeeEntity extends AppleBeeEntity {
 
   @Override
   public int getTalkInterval() {
-    return 1;
+    return 40;
   }
 }

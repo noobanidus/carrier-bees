@@ -94,6 +94,6 @@ public class GenericBeeEntity extends AppleBeeEntity {
 
   @Override
   public int getTalkInterval() {
-    return 360;
+    return 60;
   }
 }
