@@ -158,6 +158,20 @@ public class ModEntities {
       )
       .register();
 
+  public static RegistryEntry<EntityType<BoogerBeeEntity>> BOOGER_BEE = REGISTRATE.entity("booger_bee", BoogerBeeEntity::new, EntityClassification.CREATURE)
+      .properties(o -> o.size(0.45F, 0.35F))
+      .loot((p, e) -> p.registerLootTable(e, LootTable.builder()
+              .addLootPool(LootPool.builder()
+                  .addEntry(ItemLootEntry.builder(ModItems.BOOGERCOMB.get())
+                      .acceptFunction(SetCount.builder(RandomValueRange.of(0, 1)))
+                      .acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0, 3)))
+                  )
+                  .rolls(ConstantRange.of(1))
+              )
+          )
+      )
+      .register();
+
   public static RegistryEntry<EntityType<BeehemothEntity>> BEEHEMOTH = REGISTRATE.entity("beehemoth", BeehemothEntity::new, EntityClassification.CREATURE)
       .properties(o -> o.size(1.2f, 1.2f))
       .loot((p, e) -> p.registerLootTable(e, LootTable.builder()))
@@ -189,6 +203,8 @@ public class ModEntities {
   public static RegistryEntry<LazySpawnEggItem<JumbleBeeEntity>> JUMBLE_BEE_EGG = REGISTRATE.item("jumble_bee_spawn_egg", (b) -> new LazySpawnEggItem<>(JUMBLE_BEE, 0xff00de, 0x510042, b)).model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("item/template_spawn_egg"))).register();
 
   public static RegistryEntry<LazySpawnEggItem<GenericBeeEntity>> GENERIC_BEE_EGG = REGISTRATE.item("generic_bee_spawn_egg", (b) -> new LazySpawnEggItem<>(GENERIC_BEE, 0xc8ff00, 0x160a82, b)).model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("item/template_spawn_egg"))).register();
+
+  public static RegistryEntry<LazySpawnEggItem<BoogerBeeEntity>> BOOGER_BEE_EGG = REGISTRATE.item("booger_bee_spawn_egg", (b) -> new LazySpawnEggItem<>(BOOGER_BEE, 0xc7b086, 0xe5b660, b)).model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("item/template_spawn_egg"))).register();
 
   public static RegistryEntry<LazySpawnEggItem<BeehemothEntity>> BEEHEMOTH_EGG = REGISTRATE.item("beehemoth_spawn_egg", (b) -> new LazySpawnEggItem<>(BEEHEMOTH, 0xed8a82, 0xe336a7, b)).model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("item/template_spawn_egg"))).register();
 
@@ -235,6 +251,10 @@ public class ModEntities {
       .register();
 
   public static RegistryEntry<EntityType<BucketEntity>> BUCKET_PROJECTILE = REGISTRATE.<BucketEntity>entity("bucket_entity", BucketEntity::new, EntityClassification.MISC)
+      .properties(o -> o.size(1.0f, 1.0f).disableSummoning())
+      .register();
+
+  public static RegistryEntry<EntityType<BoogerCombEntity>> BOOGER_COMB_PROJECTILE = REGISTRATE.<BoogerCombEntity>entity("booger_comb_entity", BoogerCombEntity::new, EntityClassification.MISC)
       .properties(o -> o.size(1.0f, 1.0f).disableSummoning())
       .register();
 
