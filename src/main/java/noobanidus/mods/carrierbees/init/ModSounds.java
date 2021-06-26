@@ -25,6 +25,12 @@ public class ModSounds {
 
   public static RegistryEntry<SoundEvent> GENERIC_BEE_LOOP_AGGRESSIVE = REGISTRATE.soundEvent("entity.genericbee.loop_aggressive").register();
 
+  public static RegistryEntry<SoundEvent> BOOGER_BEE_HURT = REGISTRATE.soundEvent("entity.boogerbee.hurt").register();
+
+  public static RegistryEntry<SoundEvent> BOOGER_BEE_AMBIENT = REGISTRATE.soundEvent("entity.boogerbee.ambient").register();
+
+  public static RegistryEntry<SoundEvent> BOOGER_BEE_DIES = REGISTRATE.soundEvent("entity.boogerbee.dies").register();
+
   public static void load() {
   }
 }

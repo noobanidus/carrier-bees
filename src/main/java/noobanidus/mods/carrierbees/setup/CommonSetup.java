@@ -1,6 +1,7 @@
 package noobanidus.mods.carrierbees.setup;
 
 import com.tterrag.registrate.util.LazySpawnEggItem;
+import jdk.nashorn.internal.objects.Global;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.dispenser.DefaultDispenseItemBehavior;
@@ -12,6 +13,7 @@ import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.util.Direction;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import noobanidus.libs.noobutil.advancement.GenericTrigger;
 import noobanidus.mods.carrierbees.CarrierBees;
@@ -22,23 +24,25 @@ import noobanidus.mods.carrierbees.init.ModEntities;
 import java.util.Arrays;
 
 public class CommonSetup {
+  public static void onAttribute (EntityAttributeCreationEvent event) {
+      AttributeModifierMap.MutableAttribute attr = AppleBeeEntity.createAttributes();
+      event.put(ModEntities.BOMBLE_BEE.get(), attr.create());
+      event.put(ModEntities.FUMBLE_BEE.get(), attr.create());
+      event.put(ModEntities.CARRIER_BEE.get(), attr.create());
+      event.put(ModEntities.STUMBLE_BEE.get(), attr.create());
+      event.put(ModEntities.CRUMBLE_BEE.get(), attr.create());
+      event.put(ModEntities.DRUMBLE_BEE.get(), attr.create());
+      event.put(ModEntities.TUMBLE_BEE.get(), attr.create());
+      event.put(ModEntities.THIMBLE_BEE.get(), ThimbleBeeEntity.createAttributes().create());
+      event.put(ModEntities.JUMBLE_BEE.get(), JumbleBeeEntity.createAttributes().create());
+      event.put(ModEntities.GENERIC_BEE.get(), attr.create());
+      event.put(ModEntities.BEEHEMOTH.get(), BeehemothEntity.createAttributes().create());
+      event.put(ModEntities.DRABBLE_BEE.get(), DrabbleBeeEntity.attr().create());
+      event.put(ModEntities.BOOGER_BEE.get(), BoogerBeeEntity.createAttributes().create());
+  }
+
   public static void setup(FMLCommonSetupEvent event) {
     event.enqueueWork(() -> {
-      AttributeModifierMap.MutableAttribute attr = AppleBeeEntity.createAttributes();
-      GlobalEntityTypeAttributes.put(ModEntities.BOMBLE_BEE.get(), attr.create());
-      GlobalEntityTypeAttributes.put(ModEntities.FUMBLE_BEE.get(), attr.create());
-      GlobalEntityTypeAttributes.put(ModEntities.CARRIER_BEE.get(), attr.create());
-      GlobalEntityTypeAttributes.put(ModEntities.STUMBLE_BEE.get(), attr.create());
-      GlobalEntityTypeAttributes.put(ModEntities.CRUMBLE_BEE.get(), attr.create());
-      GlobalEntityTypeAttributes.put(ModEntities.DRUMBLE_BEE.get(), attr.create());
-      GlobalEntityTypeAttributes.put(ModEntities.TUMBLE_BEE.get(), attr.create());
-      GlobalEntityTypeAttributes.put(ModEntities.THIMBLE_BEE.get(), ThimbleBeeEntity.createAttributes().create());
-      GlobalEntityTypeAttributes.put(ModEntities.JUMBLE_BEE.get(), JumbleBeeEntity.createAttributes().create());
-      GlobalEntityTypeAttributes.put(ModEntities.GENERIC_BEE.get(), attr.create());
-      GlobalEntityTypeAttributes.put(ModEntities.BEEHEMOTH.get(), BeehemothEntity.createAttributes().create());
-      GlobalEntityTypeAttributes.put(ModEntities.DRABBLE_BEE.get(), DrabbleBeeEntity.attr().create());
-      GlobalEntityTypeAttributes.put(ModEntities.GENERIC_BEE.get(), attr.create());
-
       SpawnEggItem.EGGS.remove(null);
       SpawnEggItem.EGGS.put(ModEntities.BOMBLE_BEE.get(), ModEntities.BOMBLE_BEE_EGG.get());
       SpawnEggItem.EGGS.put(ModEntities.FUMBLE_BEE.get(), ModEntities.FUMBLE_BEE_EGG.get());
@@ -52,6 +56,7 @@ public class CommonSetup {
       SpawnEggItem.EGGS.put(ModEntities.DRABBLE_BEE.get(), ModEntities.DRABBLE_BEE_EGG.get());
       SpawnEggItem.EGGS.put(ModEntities.GENERIC_BEE.get(), ModEntities.GENERIC_BEE_EGG.get());
       SpawnEggItem.EGGS.put(ModEntities.BEEHEMOTH.get(), ModEntities.BEEHEMOTH_EGG.get());
+      SpawnEggItem.EGGS.put(ModEntities.BOOGER_BEE.get(), ModEntities.BOOGER_BEE_EGG.get());
 
       DefaultDispenseItemBehavior spawnEggDispense = new DefaultDispenseItemBehavior() {
         public ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
@@ -63,7 +68,7 @@ public class CommonSetup {
         }
       };
 
-      for (LazySpawnEggItem<?> item : Arrays.asList(ModEntities.CARRIER_BEE_EGG.get(), ModEntities.BOMBLE_BEE_EGG.get(), ModEntities.FUMBLE_BEE_EGG.get(), ModEntities.STUMBLE_BEE_EGG.get(), ModEntities.CRUMBLE_BEE_EGG.get(), ModEntities.DRUMBLE_BEE_EGG.get(), ModEntities.TUMBLE_BEE_EGG.get(), ModEntities.THIMBLE_BEE_EGG.get(), ModEntities.JUMBLE_BEE_EGG.get(), ModEntities.DRABBLE_BEE_EGG.get(), ModEntities.GENERIC_BEE_EGG.get(), ModEntities.BEEHEMOTH_EGG.get())) {
+      for (LazySpawnEggItem<?> item : Arrays.asList(ModEntities.CARRIER_BEE_EGG.get(), ModEntities.BOMBLE_BEE_EGG.get(), ModEntities.FUMBLE_BEE_EGG.get(), ModEntities.STUMBLE_BEE_EGG.get(), ModEntities.CRUMBLE_BEE_EGG.get(), ModEntities.DRUMBLE_BEE_EGG.get(), ModEntities.TUMBLE_BEE_EGG.get(), ModEntities.THIMBLE_BEE_EGG.get(), ModEntities.JUMBLE_BEE_EGG.get(), ModEntities.DRABBLE_BEE_EGG.get(), ModEntities.GENERIC_BEE_EGG.get(), ModEntities.BEEHEMOTH_EGG.get(), ModEntities.BOOGER_BEE_EGG.get())) {
         DispenserBlock.registerDispenseBehavior(item, spawnEggDispense);
       }
 

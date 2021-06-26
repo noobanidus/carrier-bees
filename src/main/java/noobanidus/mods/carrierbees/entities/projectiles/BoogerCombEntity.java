@@ -8,7 +8,7 @@ import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.particles.ParticleTypes;
+import net.minecraft.particles.IParticleData;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
@@ -24,6 +24,7 @@ import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
 import noobanidus.mods.carrierbees.entities.IAppleBee;
 import noobanidus.mods.carrierbees.init.ModEntities;
 import noobanidus.mods.carrierbees.init.ModItems;
+import noobanidus.mods.carrierbees.init.ModParticles;
 import noobanidus.mods.carrierbees.init.ModSounds;
 
 import java.util.List;
@@ -50,6 +51,11 @@ public class BoogerCombEntity extends HoneyCombEntity {
       BOOGER_COMB = new ItemStack(ModItems.BOOGERCOMB.get());
     }
     return BOOGER_COMB;
+  }
+
+  @Override
+  protected IParticleData getParticle() {
+    return ModParticles.FALLING_BOOGER.get();
   }
 
   @Override
@@ -81,7 +87,7 @@ public class BoogerCombEntity extends HoneyCombEntity {
           }
           double val = ConfigManager.getHoneycombSize();
           List<LivingEntity> list = this.world.getEntitiesWithinAABBExcludingEntity(living, this.getBoundingBox().grow(val, val, val)).stream().filter(o -> o instanceof LivingEntity).map(o -> (LivingEntity) o).collect(Collectors.toList());
-          world.addParticle(ParticleTypes.FALLING_HONEY, living.getPosX(), living.getPosY(), living.getPosZ(), 0, 0, 0);
+          world.addParticle(ModParticles.FALLING_BOOGER.get(), living.getPosX(), living.getPosY(), living.getPosZ(), 0, 0, 0);
           world.playSound(null, this.getPosition(), ModSounds.SPLOOSH.get(), SoundCategory.HOSTILE, 1f, 0.5f);
           for (LivingEntity l : list) {
             if (l == shootingEntity || l instanceof AppleBeeEntity || l instanceof BeeEntity) {
@@ -93,7 +99,7 @@ public class BoogerCombEntity extends HoneyCombEntity {
               entity.world.setBlockState(entity.getPosition().up(), Blocks.COBWEB.getDefaultState());
             }
             l.attackEntityFrom(source, ConfigManager.getHoneycombDamage(shootingEntity));
-            world.addParticle(ParticleTypes.FALLING_HONEY, l.getPosX(), l.getPosY(), l.getPosZ(), 0, 0, 0);
+            world.addParticle(ModParticles.FALLING_BOOGER.get(), l.getPosX(), l.getPosY(), l.getPosZ(), 0, 0, 0);
           }
         }
       }

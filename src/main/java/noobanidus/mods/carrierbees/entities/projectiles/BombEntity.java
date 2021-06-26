@@ -23,7 +23,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import noobanidus.mods.carrierbees.config.ConfigManager;
-import noobanidus.mods.carrierbees.entities.AppleBeeEntity;
 import noobanidus.mods.carrierbees.entities.IAppleBee;
 import noobanidus.mods.carrierbees.init.ModEntities;
 import noobanidus.mods.carrierbees.world.BeeExplosion;

@@ -5,6 +5,8 @@ import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
@@ -12,6 +14,7 @@ import net.minecraft.world.server.ServerWorld;
 import noobanidus.mods.carrierbees.config.ConfigManager;
 import noobanidus.mods.carrierbees.entities.projectiles.BoogerCombEntity;
 import noobanidus.mods.carrierbees.init.ModEntities;
+import noobanidus.mods.carrierbees.init.ModSounds;
 
 import javax.annotation.Nullable;
 
@@ -85,5 +88,25 @@ public class BoogerBeeEntity extends AppleBeeEntity {
         --this.attackTimer;
       }
     }
+  }
+
+  @Override
+  protected SoundEvent getDeathSound() {
+    return ModSounds.BOOGER_BEE_DIES.get();
+  }
+
+  @Override
+  protected SoundEvent getHurtSound(DamageSource p_184601_1_) {
+    return ModSounds.BOOGER_BEE_HURT.get();
+  }
+
+  @Override
+  protected SoundEvent getAmbientSound() {
+    return ModSounds.BOOGER_BEE_AMBIENT.get();
+  }
+
+  @Override
+  public int getTalkInterval() {
+    return 200;
   }
 }

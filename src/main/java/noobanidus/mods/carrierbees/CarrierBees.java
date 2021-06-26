@@ -49,6 +49,7 @@ public class CarrierBees {
 
     IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
     modBus.addListener(CommonSetup::setup);
+    modBus.addListener(CommonSetup::onAttribute);
     modBus.addListener(ConfigManager::configReloaded);
     MinecraftForge.EVENT_BUS.addListener(this::onCommands);
 

@@ -3,14 +3,22 @@ package noobanidus.mods.carrierbees.entities.projectiles;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.EntityRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import noobanidus.mods.carrierbees.init.ModEffects;
 import noobanidus.mods.carrierbees.init.ModEntities;
 import noobanidus.mods.carrierbees.init.ModItems;
+import noobanidus.mods.carrierbees.init.ModParticles;
 
 @OnlyIn(
     value = Dist.CLIENT,
@@ -30,13 +38,50 @@ public class GenericCombEntity extends HoneyCombEntity {
   @Override
   public ItemStack getItem() {
     if (GENERIC_COMB.isEmpty()) {
-      GENERIC_COMB = new ItemStack(ModItems.GENERICCOMB.get());
+      GENERIC_COMB = new ItemStack(ModItems.BOOGERCOMB.get());
     }
     return GENERIC_COMB;
   }
 
   @Override
   public EffectInstance getInstance() {
-    return new EffectInstance(ModEffects.GENERIC.get(), 30);
+    return null;
+  }
+
+  @Override
+  protected IParticleData getParticle() {
+    return ModParticles.FALLING_BOOGER.get();
+  }
+
+  @Override
+  protected void onImpact(RayTraceResult ray) {
+    if (!world.isRemote) {
+      BlockPos position;
+      if (ray.getType() == RayTraceResult.Type.ENTITY) {
+        position = ((EntityRayTraceResult) ray).getEntity().getPosition();
+      } else if (ray.getType() == RayTraceResult.Type.BLOCK) {
+        position = ((BlockRayTraceResult) ray).getPos();
+      } else {
+        return;
+      }
+
+      int counter = 15;
+      while (!world.isAirBlock(position) && counter > 0) {
+        counter--;
+        double x = position.getX() + (rand.nextDouble() - 0.5d) * 3;
+        double y = position.getY() + (rand.nextDouble() - 0.5d) * 3;
+        double z = position.getZ() + (rand.nextDouble() - 0.5d) * 3;
+        position = new BlockPos(x, y, z);
+      }
+
+      if (!world.isAirBlock(position)) {
+        return;
+      }
+
+      for (int i = 0; i < 2 + rand.nextInt(2); i++) {
+        ModEntities.BOOGER_BEE.get().spawn((ServerWorld) world, null, null, position, SpawnReason.REINFORCEMENT, true, false);
+      }
+      world.addParticle(ModParticles.FALLING_BOOGER.get(), position.getX(), position.getY(), position.getZ(), 0, 0, 0);
+    }
   }
 }
