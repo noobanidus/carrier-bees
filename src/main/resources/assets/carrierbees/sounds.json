@@ -134,7 +134,7 @@
         "name": "carrierbees:generic/loop"
       }
     ],
-    "subtitle": "subtitles.entity.genericbee.loop"
+    "subtitle": "subtitles.carrierbees.genericbee.loop"
   },
   "entity.genericbee.loop_aggressive": {
     "sounds": [
@@ -143,6 +143,37 @@
         "name": "carrierbees:generic/loop_aggressive"
       }
     ],
-    "subtitle": "subtitles.entity.genericbee.loop_aggressive"
+    "subtitle": "subtitles.carrierbees.genericbee.loop_aggressive"
+  },
+  "entity.boogerbee.hurt": {
+    "subtitle": "subtitles.carrierbees.boogerbee.hurt",
+    "sounds": [
+      {"name": "carrierbees:booger/growl1", "pitch": 0.8, "stream": "false"},
+      {"name": "carrierbees:booger/growl2", "pitch": 0.8, "stream": "false"},
+      {"name": "carrierbees:booger/hurt1", "pitch": 0.8, "stream": "false"},
+      {"name": "carrierbees:booger/hurt2", "pitch": 0.8, "stream": "false"},
+      {"name": "carrierbees:booger/hurt3", "pitch": 0.8, "stream": "false"}
+    ]
+  },
+  "entity.boogerbee.ambient": {
+    "subtitle": "subtitles.carrierbees.boogerbee.ambient",
+    "sounds": [
+      {"name": "carrierbees:booger/hermitcraft", "pitch": 0.8, "stream": "false"},
+      {"name": "carrierbees:booger/meee1", "pitch": 0.8, "stream": "false"},
+      {"name": "carrierbees:booger/meee2", "pitch": 0.8, "stream": "false"},
+      {"name": "carrierbees:booger/meee3", "pitch": 0.8, "stream": "false"},
+      {"name": "carrierbees:booger/meee4", "pitch": 0.8, "stream": "false"},
+      {"name": "carrierbees:booger/meeegrowl", "pitch": 0.8, "stream": "false"},
+      {"name": "carrierbees:booger/server", "pitch": 0.8, "stream": "false"}
+    ]
+  },
+  "entity.boogerbee.dies": {
+    "subtitle": "subtitles.carrierbees.boogereater.death",
+    "sounds": [
+      {"name": "carrierbees:booger/death1", "pitch": 0.8, "stream": "false"},
+      {"name": "carrierbees:booger/death2", "pitch": 0.8, "stream": "false"},
+      {"name": "carrierbees:booger/death3", "pitch": 0.8, "stream": "false"},
+      {"name": "carrierbees:booger/death4", "pitch": 0.8, "stream": "false"}
+    ]
   }
 }
