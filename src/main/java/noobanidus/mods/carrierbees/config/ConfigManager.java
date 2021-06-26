@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 import noobanidus.mods.carrierbees.CarrierBees;
+import noobanidus.mods.carrierbees.entities.BoogerBeeEntity;
 import noobanidus.mods.carrierbees.entities.projectiles.ThimbleCombEntity;
 
 import java.nio.file.Path;
@@ -151,7 +152,7 @@ public class ConfigManager {
     if (honeycomb_damage == -1) {
       honeycomb_damage = (float) (double) HONEYCOMB_DAMAGE.get();
     }
-    if (entity instanceof ThimbleCombEntity) {
+    if (entity instanceof ThimbleCombEntity || entity instanceof BoogerBeeEntity) {
       return 0.5f;
     }
     return honeycomb_damage;

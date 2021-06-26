@@ -80,11 +80,6 @@ public class BoogerCombEntity extends HoneyCombEntity {
             source = DamageSource.MAGIC;
           }
           living.attackEntityFrom(source, ConfigManager.getHoneycombDamage(shootingEntity));
-          BlockState state = entity.world.getBlockState(entity.getPosition());
-          VoxelShape shape = state.getShape(entity.world, entity.getPosition());
-          if (shape.isEmpty() || !(shape.getBoundingBox().getYSize() < 1)) {
-            entity.world.setBlockState(entity.getPosition().up(), Blocks.COBWEB.getDefaultState());
-          }
           double val = ConfigManager.getHoneycombSize();
           List<LivingEntity> list = this.world.getEntitiesWithinAABBExcludingEntity(living, this.getBoundingBox().grow(val, val, val)).stream().filter(o -> o instanceof LivingEntity).map(o -> (LivingEntity) o).collect(Collectors.toList());
           world.addParticle(ModParticles.FALLING_BOOGER.get(), living.getPosX(), living.getPosY(), living.getPosZ(), 0, 0, 0);
@@ -92,11 +87,6 @@ public class BoogerCombEntity extends HoneyCombEntity {
           for (LivingEntity l : list) {
             if (l == shootingEntity || l instanceof AppleBeeEntity || l instanceof BeeEntity) {
               continue;
-            }
-            state = entity.world.getBlockState(entity.getPosition());
-            shape = state.getShape(entity.world, entity.getPosition());
-            if (shape.isEmpty() || !(shape.getBoundingBox().getYSize() < 1)) {
-              entity.world.setBlockState(entity.getPosition().up(), Blocks.COBWEB.getDefaultState());
             }
             l.attackEntityFrom(source, ConfigManager.getHoneycombDamage(shootingEntity));
             world.addParticle(ModParticles.FALLING_BOOGER.get(), l.getPosX(), l.getPosY(), l.getPosZ(), 0, 0, 0);

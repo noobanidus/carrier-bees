@@ -10,7 +10,7 @@ import noobanidus.mods.carrierbees.CarrierBees;
 import noobanidus.mods.carrierbees.client.particle.BoogerParticle;
 import noobanidus.mods.carrierbees.init.ModParticles;
 
-@Mod.EventBusSubscriber(modid = CarrierBees.MODID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = CarrierBees.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientEvents {
   @SubscribeEvent
   public static void onParticle(ParticleFactoryRegisterEvent event) {

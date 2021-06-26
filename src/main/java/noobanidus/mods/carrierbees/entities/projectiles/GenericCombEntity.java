@@ -6,7 +6,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -78,9 +77,7 @@ public class GenericCombEntity extends HoneyCombEntity {
         return;
       }
 
-      for (int i = 0; i < 2 + rand.nextInt(2); i++) {
-        ModEntities.BOOGER_BEE.get().spawn((ServerWorld) world, null, null, position, SpawnReason.REINFORCEMENT, true, false);
-      }
+      ModEntities.BOOGER_BEE.get().spawn((ServerWorld) world, null, null, position, SpawnReason.COMMAND, true, false);
       world.addParticle(ModParticles.FALLING_BOOGER.get(), position.getX(), position.getY(), position.getZ(), 0, 0, 0);
     }
   }
