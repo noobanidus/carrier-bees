@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.entity.projectile.DamagingProjectileEntity;
 import net.minecraft.item.ItemStack;
@@ -73,7 +74,7 @@ public class BombEntity extends DamagingProjectileEntity implements IEntityAddit
       if (ray instanceof EntityRayTraceResult) {
         EntityRayTraceResult eray = (EntityRayTraceResult) ray;
         Entity entity = eray.getEntity();
-        if (entity != this && entity != this.func_234616_v_() && !(entity instanceof IAppleBee) && !(entity instanceof BeeEntity)) {
+        if (entity != this && entity != this.func_234616_v_() && !(entity instanceof IAppleBee) && !(entity instanceof BeeEntity) && !(entity instanceof ItemEntity)) {
           entity.attackEntityFrom(DamageSource.GENERIC, ConfigManager.getExplosionDamage());
         }
       }
