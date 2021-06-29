@@ -24,7 +24,6 @@ import java.util.Random;
 public class MixinFireBlock {
   @Inject(method = "Lnet/minecraft/block/FireBlock;tick(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/server/ServerWorld;Lnet/minecraft/util/math/BlockPos;Ljava/util/Random;)V", at = @At(value = "HEAD"), require = 1)
   public void fireTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand, CallbackInfo info) {
-    CarrierBees.LOG.error("my mixin is running");
     if (worldIn.isRemote) {
       return;
     }
