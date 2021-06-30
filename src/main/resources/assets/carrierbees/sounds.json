@@ -158,7 +158,6 @@
   "entity.boogerbee.ambient": {
     "subtitle": "subtitles.carrierbees.boogerbee.ambient",
     "sounds": [
-      {"name": "carrierbees:booger/hermitcraft", "pitch": 0.8, "stream": "false"},
       {"name": "carrierbees:booger/meee1", "pitch": 0.8, "stream": "false"},
       {"name": "carrierbees:booger/meee2", "pitch": 0.8, "stream": "false"},
       {"name": "carrierbees:booger/meee3", "pitch": 0.8, "stream": "false"},
