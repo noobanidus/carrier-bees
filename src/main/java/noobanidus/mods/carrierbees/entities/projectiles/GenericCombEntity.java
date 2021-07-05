@@ -1,9 +1,6 @@
 package noobanidus.mods.carrierbees.entities.projectiles;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.IRendersAsItem;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.potion.EffectInstance;
@@ -15,6 +12,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import noobanidus.mods.carrierbees.entities.BoogerBeeEntity;
 import noobanidus.mods.carrierbees.init.ModEntities;
 import noobanidus.mods.carrierbees.init.ModItems;
 import noobanidus.mods.carrierbees.init.ModParticles;
@@ -77,8 +75,17 @@ public class GenericCombEntity extends HoneyCombEntity {
         return;
       }
 
-      ModEntities.BOOGER_BEE.get().spawn((ServerWorld) world, null, null, position, SpawnReason.COMMAND, true, false);
+      Entity bee = ModEntities.BOOGER_BEE.get().spawn((ServerWorld) world, null, null, position, SpawnReason.COMMAND, true, false);
+      Entity parent = func_234616_v_();
+      if (bee != null && parent != null) {
+        for (EffectInstance instance : ((LivingEntity)parent).getActivePotionEffects()) {
+          EffectInstance copy = new EffectInstance(instance.getPotion(), instance.getDuration(), instance.getAmplifier(), instance.isAmbient(), instance.doesShowParticles());
+          ((LivingEntity)bee).addPotionEffect(copy);
+        }
+      }
+
       world.addParticle(ModParticles.FALLING_BOOGER.get(), position.getX(), position.getY(), position.getZ(), 0, 0, 0);
+      this.remove();
     }
   }
 }

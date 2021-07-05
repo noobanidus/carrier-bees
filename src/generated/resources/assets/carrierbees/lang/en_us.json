@@ -72,6 +72,12 @@
   "subtitles.carrierbees.behemoth.hurt": "Beehemoth is hurt!",
   "subtitles.carrierbees.behemoth.loop": "Beehemoth buzzes",
   "subtitles.carrierbees.behemoth.loop_aggressive": "Beehemoth buzzes angrily",
+  "subtitles.carrierbees.boogerbee.ambient": "Booger Bee whinges!",
+  "subtitles.carrierbees.boogerbee.death": "Booger Bee dies!",
+  "subtitles.carrierbees.boogerbee.hurt": "Booger Bee hurts!",
   "subtitles.carrierbees.crumbled": "Item starts crumbling",
+  "subtitles.carrierbees.genericbee.ambient": "Generic Bee whinges!",
+  "subtitles.carrierbees.genericbee.dies": "Generic Bee dies!",
+  "subtitles.carrierbees.genericbee.hurt": "Generic Bee hurts!",
   "subtitles.carrierbees.sploosh": "Sploosh!"
 }

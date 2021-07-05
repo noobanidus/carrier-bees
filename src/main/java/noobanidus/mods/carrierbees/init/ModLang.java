@@ -25,6 +25,13 @@ public class ModLang {
     REGISTRATE.addRawLang("carrierbees.advancements.steed.title", "Loyal Steed");
     REGISTRATE.addRawLang("carrierbees.advancements.steed.description", "Befriend a Beehemoth and dub it your flying steed.");
     REGISTRATE.addRawLang("entity.carrierbees.beehemoth_queen", "Queen Beehemoth");
+
+    REGISTRATE.addRawLang("subtitles.carrierbees.genericbee.dies", "Generic Bee dies!");
+    REGISTRATE.addRawLang("subtitles.carrierbees.genericbee.hurt", "Generic Bee hurts!");
+    REGISTRATE.addRawLang("subtitles.carrierbees.genericbee.ambient", "Generic Bee whinges!");
+    REGISTRATE.addRawLang("subtitles.carrierbees.boogerbee.death", "Booger Bee dies!");
+    REGISTRATE.addRawLang("subtitles.carrierbees.boogerbee.hurt", "Booger Bee hurts!");
+    REGISTRATE.addRawLang("subtitles.carrierbees.boogerbee.ambient", "Booger Bee whinges!");
   }
 
   public static void load() {

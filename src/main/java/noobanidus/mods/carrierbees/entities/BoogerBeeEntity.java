@@ -51,7 +51,7 @@ public class BoogerBeeEntity extends AppleBeeEntity {
 
     @Override
     public void startExecuting() {
-      this.attackTimer = 0;
+      this.attackTimer = -(this.parentEntity.rand.nextInt(20)+30);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class BoogerBeeEntity extends AppleBeeEntity {
           BoogerCombEntity honeycomb = new BoogerCombEntity(this.parentEntity, d2, d3, d4, world);
           honeycomb.setPosition(this.parentEntity.getPosX(), this.parentEntity.getPosYHeight(0.5D) + 0.2D, honeycomb.getPosZ());
           world.addEntity(honeycomb);
-          this.attackTimer = -40;
+          this.attackTimer = -220;
         }
       } else if (this.attackTimer > 0) {
         --this.attackTimer;
@@ -106,7 +106,12 @@ public class BoogerBeeEntity extends AppleBeeEntity {
   }
 
   @Override
+  protected float getSoundVolume() {
+    return 0.25f;
+  }
+
+  @Override
   public int getTalkInterval() {
-    return 40;
+    return 660;
   }
 }
