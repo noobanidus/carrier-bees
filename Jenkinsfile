@@ -8,6 +8,7 @@ pipeline {
     stages {
         stage('Clean') {
             steps {
+                sh 'git submodule update --init'
                 echo 'Cleaning Project'
                 sh 'chmod +x gradlew'
                 sh './gradlew clean'
@@ -15,6 +16,7 @@ pipeline {
         }
         stage('Build and Deploy') {
             steps {
+                sh 'git submodule update --init'
                 echo 'Building and Deploying to Maven'
                 sh './gradlew build publish'
             }
