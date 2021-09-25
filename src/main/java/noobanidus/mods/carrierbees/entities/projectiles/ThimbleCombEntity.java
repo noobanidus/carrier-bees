@@ -53,52 +53,52 @@ public class ThimbleCombEntity extends HoneyCombEntity {
   }
 
   @Override
-  protected void onImpact(RayTraceResult ray) {
+  protected void onHit(RayTraceResult ray) {
     RayTraceResult.Type raytraceresult$type = ray.getType();
     if (raytraceresult$type == RayTraceResult.Type.ENTITY) {
-      this.onEntityHit((EntityRayTraceResult) ray);
+      this.onHitEntity((EntityRayTraceResult) ray);
     } else if (raytraceresult$type == RayTraceResult.Type.BLOCK) {
-      this.func_230299_a_((BlockRayTraceResult) ray);
+      this.onHitBlock((BlockRayTraceResult) ray);
     }
-    if (!world.isRemote()) {
+    if (!level.isClientSide()) {
       if (ray.getType() == RayTraceResult.Type.ENTITY) {
         EntityRayTraceResult ray2 = (EntityRayTraceResult) ray;
         Entity entity = ray2.getEntity();
-        Entity shootingEntity = this.func_234616_v_();
+        Entity shootingEntity = this.getOwner();
         if ((entity != this || entity != shootingEntity) && entity instanceof LivingEntity && !(entity instanceof IAppleBee) && !(entity instanceof BeeEntity)) {
           LivingEntity living = (LivingEntity) ray2.getEntity();
           DamageSource source;
           if (shootingEntity instanceof LivingEntity) {
-            source = DamageSource.causeMobDamage((LivingEntity) shootingEntity).setMagicDamage();
+            source = DamageSource.mobAttack((LivingEntity) shootingEntity).setMagic();
           } else {
             source = DamageSource.MAGIC;
           }
-          living.attackEntityFrom(source, ConfigManager.getHoneycombDamage(shootingEntity));
-          BlockState state = entity.world.getBlockState(entity.getPosition());
-          VoxelShape shape = state.getShape(entity.world, entity.getPosition());
-          if (shape.isEmpty() || !(shape.getBoundingBox().getYSize() < 1)) {
-            entity.world.setBlockState(entity.getPosition().up(), Blocks.COBWEB.getDefaultState());
+          living.hurt(source, ConfigManager.getHoneycombDamage(shootingEntity));
+          BlockState state = entity.level.getBlockState(entity.blockPosition());
+          VoxelShape shape = state.getShape(entity.level, entity.blockPosition());
+          if (shape.isEmpty() || !(shape.bounds().getYsize() < 1)) {
+            entity.level.setBlockAndUpdate(entity.blockPosition().above(), Blocks.COBWEB.defaultBlockState());
           }
           double val = ConfigManager.getHoneycombSize();
-          List<LivingEntity> list = this.world.getEntitiesWithinAABBExcludingEntity(living, this.getBoundingBox().grow(val, val, val)).stream().filter(o -> o instanceof LivingEntity).map(o -> (LivingEntity) o).collect(Collectors.toList());
-          world.addParticle(ParticleTypes.FALLING_HONEY, living.getPosX(), living.getPosY(), living.getPosZ(), 0, 0, 0);
-          world.playSound(null, this.getPosition(), ModSounds.SPLOOSH.get(), SoundCategory.HOSTILE, 1f, 0.5f);
+          List<LivingEntity> list = this.level.getEntities(living, this.getBoundingBox().inflate(val, val, val)).stream().filter(o -> o instanceof LivingEntity).map(o -> (LivingEntity) o).collect(Collectors.toList());
+          level.addParticle(ParticleTypes.FALLING_HONEY, living.getX(), living.getY(), living.getZ(), 0, 0, 0);
+          level.playSound(null, this.blockPosition(), ModSounds.SPLOOSH.get(), SoundCategory.HOSTILE, 1f, 0.5f);
           for (LivingEntity l : list) {
             if (l == shootingEntity || l instanceof AppleBeeEntity || l instanceof BeeEntity) {
               continue;
             }
-            state = entity.world.getBlockState(entity.getPosition());
-            shape = state.getShape(entity.world, entity.getPosition());
-            if (shape.isEmpty() || !(shape.getBoundingBox().getYSize() < 1)) {
-              entity.world.setBlockState(entity.getPosition().up(), Blocks.COBWEB.getDefaultState());
+            state = entity.level.getBlockState(entity.blockPosition());
+            shape = state.getShape(entity.level, entity.blockPosition());
+            if (shape.isEmpty() || !(shape.bounds().getYsize() < 1)) {
+              entity.level.setBlockAndUpdate(entity.blockPosition().above(), Blocks.COBWEB.defaultBlockState());
             }
-            l.attackEntityFrom(source, ConfigManager.getHoneycombDamage(shootingEntity));
-            world.addParticle(ParticleTypes.FALLING_HONEY, l.getPosX(), l.getPosY(), l.getPosZ(), 0, 0, 0);
+            l.hurt(source, ConfigManager.getHoneycombDamage(shootingEntity));
+            level.addParticle(ParticleTypes.FALLING_HONEY, l.getX(), l.getY(), l.getZ(), 0, 0, 0);
           }
         }
       }
     }
-    if (!world.isRemote) {
+    if (!level.isClientSide) {
       this.remove();
     }
   }

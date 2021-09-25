@@ -14,9 +14,9 @@ import noobanidus.mods.carrierbees.init.ModParticles;
 public class ClientEvents {
   @SubscribeEvent
   public static void onParticle(ParticleFactoryRegisterEvent event) {
-    ParticleManager manager = Minecraft.getInstance().particles;
-    manager.registerFactory(ModParticles.DRIPPING_BOOGER.get(), BoogerParticle.DrippingBoogerFactory::new);
-    manager.registerFactory(ModParticles.LANDING_BOOGER.get(), BoogerParticle.LandingBoogerFactory::new);
-    manager.registerFactory(ModParticles.FALLING_BOOGER.get(), BoogerParticle.FallingBoogerFactory::new);
+    ParticleManager manager = Minecraft.getInstance().particleEngine;
+    manager.register(ModParticles.DRIPPING_BOOGER.get(), BoogerParticle.DrippingBoogerFactory::new);
+    manager.register(ModParticles.LANDING_BOOGER.get(), BoogerParticle.LandingBoogerFactory::new);
+    manager.register(ModParticles.FALLING_BOOGER.get(), BoogerParticle.FallingBoogerFactory::new);
   }
 }

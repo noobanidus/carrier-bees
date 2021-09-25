@@ -46,45 +46,45 @@ public class GenericCombEntity extends HoneyCombEntity {
   }
 
   @Override
-  protected IParticleData getParticle() {
+  protected IParticleData getTrailParticle() {
     return ModParticles.FALLING_BOOGER.get();
   }
 
   @Override
-  protected void onImpact(RayTraceResult ray) {
-    if (!world.isRemote) {
+  protected void onHit(RayTraceResult ray) {
+    if (!level.isClientSide) {
       BlockPos position;
       if (ray.getType() == RayTraceResult.Type.ENTITY) {
-        position = ((EntityRayTraceResult) ray).getEntity().getPosition();
+        position = ((EntityRayTraceResult) ray).getEntity().blockPosition();
       } else if (ray.getType() == RayTraceResult.Type.BLOCK) {
-        position = ((BlockRayTraceResult) ray).getPos();
+        position = ((BlockRayTraceResult) ray).getBlockPos();
       } else {
         return;
       }
 
       int counter = 15;
-      while (!world.isAirBlock(position) && counter > 0) {
+      while (!level.isEmptyBlock(position) && counter > 0) {
         counter--;
-        double x = position.getX() + (rand.nextDouble() - 0.5d) * 3;
-        double y = position.getY() + (rand.nextDouble() - 0.5d) * 3;
-        double z = position.getZ() + (rand.nextDouble() - 0.5d) * 3;
+        double x = position.getX() + (random.nextDouble() - 0.5d) * 3;
+        double y = position.getY() + (random.nextDouble() - 0.5d) * 3;
+        double z = position.getZ() + (random.nextDouble() - 0.5d) * 3;
         position = new BlockPos(x, y, z);
       }
 
-      if (!world.isAirBlock(position)) {
+      if (!level.isEmptyBlock(position)) {
         return;
       }
 
-      Entity bee = ModEntities.BOOGER_BEE.get().spawn((ServerWorld) world, null, null, position, SpawnReason.COMMAND, true, false);
-      Entity parent = func_234616_v_();
+      Entity bee = ModEntities.BOOGER_BEE.get().spawn((ServerWorld) level, null, null, position, SpawnReason.COMMAND, true, false);
+      Entity parent = getOwner();
       if (bee != null && parent != null) {
-        for (EffectInstance instance : ((LivingEntity)parent).getActivePotionEffects()) {
-          EffectInstance copy = new EffectInstance(instance.getPotion(), instance.getDuration(), instance.getAmplifier(), instance.isAmbient(), instance.doesShowParticles());
-          ((LivingEntity)bee).addPotionEffect(copy);
+        for (EffectInstance instance : ((LivingEntity)parent).getActiveEffects()) {
+          EffectInstance copy = new EffectInstance(instance.getEffect(), instance.getDuration(), instance.getAmplifier(), instance.isAmbient(), instance.isVisible());
+          ((LivingEntity)bee).addEffect(copy);
         }
       }
 
-      world.addParticle(ModParticles.FALLING_BOOGER.get(), position.getX(), position.getY(), position.getZ(), 0, 0, 0);
+      level.addParticle(ModParticles.FALLING_BOOGER.get(), position.getX(), position.getY(), position.getZ(), 0, 0, 0);
       this.remove();
     }
   }

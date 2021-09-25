@@ -34,7 +34,7 @@ public class MixinBeePathFinding {
       require = 1)
   private void newWander(CallbackInfo ci) {
     // Applies Bumblezone AI outside of the Bumblezone dimension
-    if (ConfigManager.getImprovedAI() && !beeEntity.world.getDimensionKey().equals(BumbleZone.BZ_WORLD_KEY)) {
+    if (ConfigManager.getImprovedAI() && !beeEntity.level.dimension().equals(BumbleZone.BZ_WORLD_KEY)) {
       cachedPathHolder = SmartBee.smartBee(beeEntity, cachedPathHolder);
       ci.cancel();
     }

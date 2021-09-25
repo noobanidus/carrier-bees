@@ -43,10 +43,12 @@ import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.UUID;
 
+import net.minecraft.entity.ai.goal.Goal.Flag;
+
 @SuppressWarnings("NullableProblems")
 public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnimal, IAppleBee {
-  private static final DataParameter<Integer> anger = EntityDataManager.createKey(AppleBeeEntity.class, DataSerializers.VARINT);
-  private static final DataParameter<Byte> multipleByteTracker = EntityDataManager.createKey(AppleBeeEntity.class, DataSerializers.BYTE);
+  private static final DataParameter<Integer> anger = EntityDataManager.defineId(AppleBeeEntity.class, DataSerializers.INT);
+  private static final DataParameter<Byte> multipleByteTracker = EntityDataManager.defineId(AppleBeeEntity.class, DataSerializers.BYTE);
   private UUID targetPlayer;
   private float currentPitch;
   private float lastPitch;
@@ -57,11 +59,11 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
 
   public AppleBeeEntity(EntityType<? extends AnimalEntity> type, World world) {
     super(type, world);
-    this.lookController = new BeeLookController(this);
-    this.moveController = new FlyingMovementController(this, 20, true);
-    this.setPathPriority(PathNodeType.WATER, -1.0F);
-    this.setPathPriority(PathNodeType.COCOA, -1.0F);
-    this.setPathPriority(PathNodeType.FENCE, -1.0F);
+    this.lookControl = new BeeLookController(this);
+    this.moveControl = new FlyingMovementController(this, 20, true);
+    this.setPathfindingMalus(PathNodeType.WATER, -1.0F);
+    this.setPathfindingMalus(PathNodeType.COCOA, -1.0F);
+    this.setPathfindingMalus(PathNodeType.FENCE, -1.0F);
   }
 
   @Override
@@ -73,27 +75,27 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
     this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
     this.goalSelector.addGoal(8, new AppleBeeEntity.WanderGoal());
     this.goalSelector.addGoal(9, new SwimGoal(this));
-    this.targetSelector.addGoal(1, (new AppleBeeEntity.AngerGoal(this)).setCallsForHelp(BombleBeeEntity.class, CarrierBeeEntity.class, FumbleBeeEntity.class));
-    this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, (pos) -> Math.abs(pos.getPosY() - this.getPosY()) <= 4.0D));
+    this.targetSelector.addGoal(1, (new AppleBeeEntity.AngerGoal(this)).setAlertOthers(BombleBeeEntity.class, CarrierBeeEntity.class, FumbleBeeEntity.class));
+    this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, (pos) -> Math.abs(pos.getY() - this.getY()) <= 4.0D));
   }
 
   @Override
-  protected void registerData() {
-    super.registerData();
-    this.dataManager.register(multipleByteTracker, (byte) 0);
-    this.dataManager.register(anger, 0);
+  protected void defineSynchedData() {
+    super.defineSynchedData();
+    this.entityData.define(multipleByteTracker, (byte) 0);
+    this.entityData.define(anger, 0);
   }
 
   @Override
   @SuppressWarnings("deprecation")
-  public float getBlockPathWeight(BlockPos pos, IWorldReader world) {
+  public float getWalkTargetValue(BlockPos pos, IWorldReader world) {
     return world.getBlockState(pos).isAir() ? 10.0F : 0.0F;
   }
 
   @Override
-  public void setMotionMultiplier(BlockState state, Vector3d motionMultiplierIn) {
-    if (!state.isIn(Blocks.COBWEB)) {
-      super.setMotionMultiplier(state, motionMultiplierIn);
+  public void makeStuckInBlock(BlockState state, Vector3d motionMultiplierIn) {
+    if (!state.is(Blocks.COBWEB)) {
+      super.makeStuckInBlock(state, motionMultiplierIn);
     }
   }
 
@@ -119,37 +121,37 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
   }
 
   @Override
-  public void setRevengeTarget(@Nullable LivingEntity target) {
-    super.setRevengeTarget(target);
+  public void setLastHurtByMob(@Nullable LivingEntity target) {
+    super.setLastHurtByMob(target);
     if (target != null) {
-      this.targetPlayer = target.getUniqueID();
+      this.targetPlayer = target.getUUID();
     }
   }
 
   @Override
-  protected void updateAITasks() {
+  protected void customServerAiStep() {
     boolean flag = this.hasStung();
-    if (this.isInWaterOrBubbleColumn()) {
+    if (this.isInWaterOrBubble()) {
       ++this.underWaterTicks;
     } else {
       this.underWaterTicks = 0;
     }
 
     if (this.underWaterTicks > 20) {
-      this.attackEntityFrom(DamageSource.DROWN, 1.0F);
+      this.hurt(DamageSource.DROWN, 1.0F);
     }
 
     if (flag) {
       ++this.timeSinceSting;
-      if (ConfigManager.getStingKills() && this.timeSinceSting % 5 == 0 && this.rand.nextInt(MathHelper.clamp(1200 - this.timeSinceSting, 1, 1200)) == 0) {
-        this.attackEntityFrom(DamageSource.GENERIC, this.getHealth());
+      if (ConfigManager.getStingKills() && this.timeSinceSting % 5 == 0 && this.random.nextInt(MathHelper.clamp(1200 - this.timeSinceSting, 1, 1200)) == 0) {
+        this.hurt(DamageSource.GENERIC, this.getHealth());
       }
     }
 
     if (this.isAngry()) {
       int i = this.getAnger();
       this.setAnger(i - 1);
-      LivingEntity livingentity = this.getAttackTarget();
+      LivingEntity livingentity = this.getTarget();
       if (ConfigManager.getAlwaysAngry() || (i == 0 && livingentity != null)) {
         this.setBeeAttacker(livingentity);
       }
@@ -157,14 +159,14 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
   }
 
   @Override
-  public void livingTick() {
-    super.livingTick();
-    if (!this.world.isRemote) {
-      boolean nearby = this.isAngry() && !this.hasStung() && this.getAttackTarget() != null && this.getAttackTarget().getDistanceSq(this) < 4.0D;
+  public void aiStep() {
+    super.aiStep();
+    if (!this.level.isClientSide) {
+      boolean nearby = this.isAngry() && !this.hasStung() && this.getTarget() != null && this.getTarget().distanceToSqr(this) < 4.0D;
       this.setNearTarget(nearby);
     }
-    if (this.getPosY() < 1) {
-      this.attackEntityFrom(DamageSource.OUT_OF_WORLD, Float.MAX_VALUE);
+    if (this.getY() < 1) {
+      this.hurt(DamageSource.OUT_OF_WORLD, Float.MAX_VALUE);
     }
   }
 
@@ -186,43 +188,43 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
 
   private void setBeeFlag(int value, boolean flag) {
     if (flag) {
-      this.dataManager.set(multipleByteTracker, (byte) (this.dataManager.get(multipleByteTracker) | value));
+      this.entityData.set(multipleByteTracker, (byte) (this.entityData.get(multipleByteTracker) | value));
     } else {
-      this.dataManager.set(multipleByteTracker, (byte) (this.dataManager.get(multipleByteTracker) & ~value));
+      this.entityData.set(multipleByteTracker, (byte) (this.entityData.get(multipleByteTracker) & ~value));
     }
   }
 
   private boolean getBeeFlag(int value) {
-    return (this.dataManager.get(multipleByteTracker) & value) != 0;
+    return (this.entityData.get(multipleByteTracker) & value) != 0;
   }
 
   // TODO
   public static AttributeModifierMap.MutableAttribute createAttributes() {
-    return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 16.0D).createMutableAttribute(Attributes.FLYING_SPEED, 0.6).createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.3).createMutableAttribute(Attributes.ATTACK_DAMAGE, 4.0D).createMutableAttribute(Attributes.FOLLOW_RANGE, 128.0D);
+    return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 16.0D).add(Attributes.FLYING_SPEED, 0.6).add(Attributes.MOVEMENT_SPEED, 0.3).add(Attributes.ATTACK_DAMAGE, 4.0D).add(Attributes.FOLLOW_RANGE, 128.0D);
   }
 
   @Override
-  protected PathNavigator createNavigator(World world) {
+  protected PathNavigator createNavigation(World world) {
     FlyingPathNavigator navigator = new FlyingPathNavigator(this, world) {
       @Override
       @SuppressWarnings("deprecation")
-      public boolean canEntityStandOnPos(BlockPos pos) {
-        return !this.world.getBlockState(pos.down()).isAir();
+      public boolean isStableDestination(BlockPos pos) {
+        return !this.level.getBlockState(pos.below()).isAir();
       }
     };
     navigator.setCanOpenDoors(false);
-    navigator.setCanSwim(false);
-    navigator.setCanEnterDoors(true);
+    navigator.setCanFloat(false);
+    navigator.setCanPassDoors(true);
     return navigator;
   }
 
   @Override
-  public boolean isBreedingItem(ItemStack stack) {
+  public boolean isFood(ItemStack stack) {
     return false;
   }
 
   @Override
-  protected void playStepSound(BlockPos p_180429_1_, BlockState p_180429_2_) {
+  protected void playStepSound(BlockPos pPos, BlockState pBlock) {
   }
 
   @Override
@@ -231,13 +233,13 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
   }
 
   @Override
-  protected SoundEvent getHurtSound(DamageSource p_184601_1_) {
-    return SoundEvents.ENTITY_BEE_HURT;
+  protected SoundEvent getHurtSound(DamageSource pDamageSource) {
+    return SoundEvents.BEE_HURT;
   }
 
   @Override
   protected SoundEvent getDeathSound() {
-    return SoundEvents.ENTITY_BEE_DEATH;
+    return SoundEvents.BEE_DEATH;
   }
 
   @Override
@@ -247,16 +249,16 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
 
   @Override
   protected float getStandingEyeHeight(Pose pose, EntitySize size) {
-    return this.isChild() ? size.height * 0.5F : size.height * 0.5F;
+    return this.isBaby() ? size.height * 0.5F : size.height * 0.5F;
   }
 
   @Override
-  public boolean onLivingFall(float p_225503_1_, float p_225503_2_) {
+  public boolean causeFallDamage(float p_225503_1_, float p_225503_2_) {
     return false;
   }
 
   @Override
-  protected void updateFallState(double distance, boolean flag, BlockState pos1, BlockPos pos2) {
+  protected void checkFallDamage(double distance, boolean flag, BlockState pos1, BlockPos pos2) {
   }
 
   @Override
@@ -265,17 +267,17 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
   }
 
   @Override
-  public void readAdditional(CompoundNBT tag) {
-    super.readAdditional(tag);
+  public void readAdditionalSaveData(CompoundNBT tag) {
+    super.readAdditionalSaveData(tag);
     this.setHasStung(tag.getBoolean("HasStung"));
     String hurtBy = tag.getString("HurtBy");
     if (!hurtBy.isEmpty()) {
       this.targetPlayer = UUID.fromString(hurtBy);
-      PlayerEntity player = this.world.getPlayerByUuid(this.targetPlayer);
-      this.setRevengeTarget(player);
+      PlayerEntity player = this.level.getPlayerByUUID(this.targetPlayer);
+      this.setLastHurtByMob(player);
       if (player != null) {
-        this.attackingPlayer = player;
-        this.recentlyHit = this.getRevengeTimer();
+        this.lastHurtByPlayer = player;
+        this.lastHurtByPlayerTime = this.getLastHurtByMobTimestamp();
       }
     }
     if (tag.contains("attackDamage", Constants.NBT.TAG_INT)) {
@@ -287,8 +289,8 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
   }
 
   @Override
-  public void writeAdditional(CompoundNBT tag) {
-    super.writeAdditional(tag);
+  public void addAdditionalSaveData(CompoundNBT tag) {
+    super.addAdditionalSaveData(tag);
     tag.putBoolean("HasStung", this.hasStung());
     if (this.targetPlayer != null) {
       tag.putString("HurtBy", this.targetPlayer.toString());
@@ -300,47 +302,47 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
   }
 
   private boolean setBeeAttacker(Entity attacker) {
-    this.setAnger(400 + this.rand.nextInt(400));
+    this.setAnger(400 + this.random.nextInt(400));
     if (attacker instanceof LivingEntity) {
-      this.setRevengeTarget((LivingEntity) attacker);
+      this.setLastHurtByMob((LivingEntity) attacker);
     }
 
     return true;
   }
 
   @Override
-  public boolean attackEntityFrom(DamageSource source, float amount) {
+  public boolean hurt(DamageSource source, float amount) {
     if (this.isInvulnerableTo(source)) {
       return false;
     } else {
-      Entity attacker = source.getTrueSource();
+      Entity attacker = source.getEntity();
       if (attacker instanceof IAppleBee || attacker instanceof BeeEntity) {
         return false;
       }
-      if (!this.world.isRemote && attacker instanceof PlayerEntity && !((PlayerEntity) attacker).isCreative() && this.canEntityBeSeen(attacker) && !this.isAIDisabled()) {
+      if (!this.level.isClientSide && attacker instanceof PlayerEntity && !((PlayerEntity) attacker).isCreative() && this.canSee(attacker) && !this.isNoAi()) {
         this.setBeeAttacker(attacker);
       }
 
-      return super.attackEntityFrom(source, amount);
+      return super.hurt(source, amount);
     }
   }
 
   @Override
-  public boolean attackEntityAsMob(Entity p_70652_1_) {
+  public boolean doHurtTarget(Entity pEntity) {
     this.setHasStung(true);
-    this.playSound(SoundEvents.ENTITY_BEE_STING, 1.0F, 1.0F);
-    return super.attackEntityAsMob(p_70652_1_);
+    this.playSound(SoundEvents.BEE_STING, 1.0F, 1.0F);
+    return super.doHurtTarget(pEntity);
   }
 
   @Override
-  public CreatureAttribute getCreatureAttribute() {
+  public CreatureAttribute getMobType() {
     return CreatureAttribute.ARTHROPOD;
   }
 
   // TODO
   @Override
-  protected void handleFluidJump(ITag<Fluid> fluid) {
-    this.setMotion(this.getMotion().add(0.0D, 0.01D, 0.0D));
+  protected void jumpInLiquid(ITag<Fluid> fluid) {
+    this.setDeltaMovement(this.getDeltaMovement().add(0.0D, 0.01D, 0.0D));
   }
 
   @Override
@@ -356,18 +358,18 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
     if (ConfigManager.getAlwaysAngry()) {
       return 9999;
     }
-    return this.dataManager.get(anger);
+    return this.entityData.get(anger);
   }
 
   private void setAnger(int angerTime) {
     if (!ConfigManager.getAlwaysAngry()) {
-      this.dataManager.set(anger, angerTime);
+      this.entityData.set(anger, angerTime);
     }
   }
 
   @Nullable
   @Override
-  public AgeableEntity func_241840_a(ServerWorld serverWorld, AgeableEntity ageableEntity) {
+  public AgeableEntity getBreedOffspring(ServerWorld serverWorld, AgeableEntity ageableEntity) {
     return null;
   }
 
@@ -377,18 +379,18 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
     }
 
     @Override
-    public boolean shouldExecute() {
-      return super.shouldExecute() && AppleBeeEntity.this.isAngry() && !AppleBeeEntity.this.hasStung();
+    public boolean canUse() {
+      return super.canUse() && AppleBeeEntity.this.isAngry() && !AppleBeeEntity.this.hasStung();
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
-      return super.shouldContinueExecuting() && AppleBeeEntity.this.isAngry() && !AppleBeeEntity.this.hasStung();
+    public boolean canContinueToUse() {
+      return super.canContinueToUse() && AppleBeeEntity.this.isAngry() && !AppleBeeEntity.this.hasStung();
     }
 
     @Override
     public void tick() {
-      LivingEntity livingentity = this.attacker.getAttackTarget();
+      LivingEntity livingentity = this.mob.getTarget();
       if (livingentity != null) {
         super.tick();
       }
@@ -397,7 +399,7 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
 
   public boolean noSnipe() {
     if (!ConfigManager.getSniperMode()) {
-      return this.getAttackTarget() != null && this.getDistanceSq(this.getAttackTarget()) < 400 && this.canEntityBeSeen(this.getAttackTarget());
+      return this.getTarget() != null && this.distanceToSqr(this.getTarget()) < 400 && this.canSee(this.getTarget());
     }
     return false;
   }
@@ -408,14 +410,14 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
     }
 
     @Override
-    protected boolean shouldResetPitch() {
+    protected boolean resetXRotOnTick() {
       return true;
     }
 
     @Override
-    public void setLookPositionWithEntity(Entity p_75651_1_, float p_75651_2_, float p_75651_3_) {
-      if (p_75651_1_ != null) {
-        super.setLookPositionWithEntity(p_75651_1_, p_75651_2_, p_75651_3_);
+    public void setLookAt(Entity pEntity, float pDeltaYaw, float pDeltaPitch) {
+      if (pEntity != null) {
+        super.setLookAt(pEntity, pDeltaYaw, pDeltaPitch);
       }
     }
   }
@@ -424,45 +426,45 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
     private CachedPathHolder cachedPathHolder;
 
     WanderGoal() {
-      this.setMutexFlags(EnumSet.of(Flag.MOVE));
+      this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
     @Override
-    public boolean shouldExecute() {
+    public boolean canUse() {
 /*      if (noSnipe()) {
         return false;
       }*/
 
-      return AppleBeeEntity.this.navigator.noPath() && AppleBeeEntity.this.rand.nextInt(10) == 0;
+      return AppleBeeEntity.this.navigation.isDone() && AppleBeeEntity.this.random.nextInt(10) == 0;
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
+    public boolean canContinueToUse() {
 /*      if (noSnipe()) {
         return false;
       }*/
 
-      return AppleBeeEntity.this.navigator.hasPath();
+      return AppleBeeEntity.this.navigation.isInProgress();
     }
 
     @Override
-    public void startExecuting() {
+    public void start() {
       if (ConfigManager.getImprovedAI()) {
         cachedPathHolder = SmartBee.smartBee(AppleBeeEntity.this, cachedPathHolder);
       } else {
         Vector3d pos = this.getRandomLocation();
         if (pos != null) {
-          AppleBeeEntity.this.navigator.setPath(AppleBeeEntity.this.navigator.getPathToPos(new BlockPos(pos), 1), 1.0D);
+          AppleBeeEntity.this.navigation.moveTo(AppleBeeEntity.this.navigation.createPath(new BlockPos(pos), 1), 1.0D);
         }
       }
     }
 
     @Nullable
     private Vector3d getRandomLocation() {
-      Vector3d lookVec = AppleBeeEntity.this.getLook(0.0F);
+      Vector3d lookVec = AppleBeeEntity.this.getViewVector(0.0F);
 
-      Vector3d target = RandomPositionGenerator.findAirTarget(AppleBeeEntity.this, 8, 7, lookVec, (float) (Math.PI / 2), 2, 1);
-      return target != null ? target : RandomPositionGenerator.findGroundTarget(AppleBeeEntity.this, 8, 4, -2, lookVec, Math.PI / 2);
+      Vector3d target = RandomPositionGenerator.getAboveLandPos(AppleBeeEntity.this, 8, 7, lookVec, (float) (Math.PI / 2), 2, 1);
+      return target != null ? target : RandomPositionGenerator.getAirPos(AppleBeeEntity.this, 8, 4, -2, lookVec, Math.PI / 2);
     }
   }
 
@@ -472,16 +474,16 @@ public abstract class AppleBeeEntity extends AnimalEntity implements IFlyingAnim
     }
 
     @Override
-    protected boolean isSuitableTarget(@Nullable LivingEntity potentialTarget, EntityPredicate targetPredicate) {
-      if (!super.isSuitableTarget(potentialTarget, targetPredicate)) {
+    protected boolean canAttack(@Nullable LivingEntity potentialTarget, EntityPredicate targetPredicate) {
+      if (!super.canAttack(potentialTarget, targetPredicate)) {
         return false;
       }
 
-      return potentialTarget != null && this.goalOwner.canEntityBeSeen(potentialTarget) && !(potentialTarget instanceof IAppleBee) && !(potentialTarget instanceof BeeEntity) && this.goalOwner instanceof IAppleBee;
+      return potentialTarget != null && this.mob.canSee(potentialTarget) && !(potentialTarget instanceof IAppleBee) && !(potentialTarget instanceof BeeEntity) && this.mob instanceof IAppleBee;
     }
 
     @Override
-    protected void setAttackTarget(MobEntity bee, LivingEntity target) {
+    protected void alertOther(MobEntity bee, LivingEntity target) {
       if (bee instanceof AppleBeeEntity) {
         ((AppleBeeEntity) bee).setBeeAttacker(target);
       }

@@ -20,8 +20,8 @@ public class GenericBeeRenderer extends MobRenderer<GenericBeeEntity, GenericBee
     this.addLayer(new BeeHeldItemLayer<>(this));
   }
 
-  public ResourceLocation getEntityTexture(GenericBeeEntity p_110775_1_) {
-    if (p_110775_1_.isAngry()) {
+  public ResourceLocation getTextureLocation(GenericBeeEntity pEntity) {
+    if (pEntity.isAngry()) {
       return GENERIC_ANGRY;
     }
     return GENERIC;

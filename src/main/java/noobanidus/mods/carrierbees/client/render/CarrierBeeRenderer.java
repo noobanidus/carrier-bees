@@ -46,29 +46,29 @@ public class CarrierBeeRenderer extends MobRenderer<AppleBeeEntity, CarrierBeeMo
   }
 
   @Override
-  public void render(AppleBeeEntity p_225623_1_, float p_225623_2_, float p_225623_3_, MatrixStack stack, IRenderTypeBuffer p_225623_5_, int p_225623_6_) {
-    stack.push();
+  public void render(AppleBeeEntity pEntity, float pEntityYaw, float pPartialTicks, MatrixStack stack, IRenderTypeBuffer pBuffer, int pPackedLight) {
+    stack.pushPose();
     float scale = 1.5f;
-    if (p_225623_1_ instanceof BombleBeeEntity) {
+    if (pEntity instanceof BombleBeeEntity) {
       scale = 1.9f;
-    } else if (p_225623_1_ instanceof CrumbleBeeEntity) {
+    } else if (pEntity instanceof CrumbleBeeEntity) {
       scale = 2.1f;
-    } else if (p_225623_1_ instanceof DrumbleBeeEntity) {
+    } else if (pEntity instanceof DrumbleBeeEntity) {
       scale = 3.5f;
-    } else if (p_225623_1_ instanceof TumbleBeeEntity) {
+    } else if (pEntity instanceof TumbleBeeEntity) {
       scale = 1.1f;
-    } else if (p_225623_1_ instanceof ThimbleBeeEntity || p_225623_1_ instanceof BoogerBeeEntity) {
+    } else if (pEntity instanceof ThimbleBeeEntity || pEntity instanceof BoogerBeeEntity) {
       scale = 0.6f;
-    } else if (p_225623_1_ instanceof GenericBeeEntity) {
+    } else if (pEntity instanceof GenericBeeEntity) {
       scale = 1.1f;
     }
     stack.scale(scale, scale, scale);
-    super.render(p_225623_1_, p_225623_2_, p_225623_3_, stack, p_225623_5_, p_225623_6_);
-    stack.pop();
+    super.render(pEntity, pEntityYaw, pPartialTicks, stack, pBuffer, pPackedLight);
+    stack.popPose();
   }
 
   @Override
-  public ResourceLocation getEntityTexture(AppleBeeEntity bee) {
+  public ResourceLocation getTextureLocation(AppleBeeEntity bee) {
     if (bee instanceof FumbleBeeEntity) {
       if (bee.isAngry()) {
         return FUMBLE_ANGRY_SKIN;

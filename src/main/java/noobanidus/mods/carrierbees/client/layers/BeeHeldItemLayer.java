@@ -26,29 +26,29 @@ public class BeeHeldItemLayer<T extends AnimalEntity, M extends BodyModel<T>> ex
   }
 
   @Override
-  public void render(MatrixStack matrixStack, IRenderTypeBuffer buffer, int light, T entity, float p_225628_5_, float p_225628_6_, float p_225628_7_, float p_225628_8_, float p_225628_9_, float p_225628_10_) {
-    ItemStack itemstack = entity.getHeldItemMainhand();
+  public void render(MatrixStack matrixStack, IRenderTypeBuffer buffer, int light, T entity, float pLimbSwing, float pLimbSwingAmount, float pPartialTicks, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
+    ItemStack itemstack = entity.getMainHandItem();
     if (itemstack.isEmpty()) {
-      itemstack = entity.getHeldItemOffhand();
+      itemstack = entity.getOffhandItem();
     }
     if (!itemstack.isEmpty()) {
       boolean block = itemstack.getItem() instanceof BlockItem;
-      matrixStack.push();
-      if (this.getEntityModel().isChild) {
+      matrixStack.pushPose();
+      if (this.getParentModel().young) {
         matrixStack.translate(0.0D, 0.75D, 0.0D);
         matrixStack.scale(0.5F, 0.5F, 0.5F);
       }
 
-      BodyModel<T> m = getEntityModel();
-      matrixStack.push();
+      BodyModel<T> m = getParentModel();
+      matrixStack.pushPose();
       matrixStack.translate(0, block ? 1.57 : 1.5, block ? 0.15 : 0.05);
-      matrixStack.translate(0, -m.body.rotateAngleX * 0.5f, 0);
-      matrixStack.rotate(Vector3f.XN.rotationDegrees(block ? 180f : 90f));
-      matrixStack.rotate(new Quaternion(m.body.rotateAngleX * 1f, m.body.rotateAngleY * 1f, m.body.rotateAngleZ * 1f, false));
+      matrixStack.translate(0, -m.body.xRot * 0.5f, 0);
+      matrixStack.mulPose(Vector3f.XN.rotationDegrees(block ? 180f : 90f));
+      matrixStack.mulPose(new Quaternion(m.body.xRot * 1f, m.body.yRot * 1f, m.body.zRot * 1f, false));
       matrixStack.scale(0.5f, 0.5f, 0.5f);
-      Minecraft.getInstance().getFirstPersonRenderer().renderItemSide(entity, itemstack, ItemCameraTransforms.TransformType.FIXED, true, matrixStack, buffer, light);
-      matrixStack.pop();
-      matrixStack.pop();
+      Minecraft.getInstance().getItemInHandRenderer().renderItem(entity, itemstack, ItemCameraTransforms.TransformType.FIXED, true, matrixStack, buffer, light);
+      matrixStack.popPose();
+      matrixStack.popPose();
     }
   }
 }

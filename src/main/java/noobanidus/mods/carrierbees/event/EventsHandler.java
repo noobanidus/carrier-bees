@@ -19,11 +19,11 @@ public class EventsHandler {
     if (ConfigManager.getEffectsPersist()) {
       PlayerEntity original = event.getOriginal();
       PlayerEntity newPlayer = event.getPlayer();
-      Collection<EffectInstance> instance = original.getActivePotionEffects();
+      Collection<EffectInstance> instance = original.getActiveEffects();
       if (!instance.isEmpty()) {
-        List<EffectInstance> map = potionClone.computeIfAbsent(original.getUniqueID(), (k) -> new ArrayList<>());
-        for (EffectInstance effect : original.getActivePotionEffects()) {
-          EffectInstance copy = new EffectInstance(effect.getPotion(), effect.getDuration(), effect.getAmplifier());
+        List<EffectInstance> map = potionClone.computeIfAbsent(original.getUUID(), (k) -> new ArrayList<>());
+        for (EffectInstance effect : original.getActiveEffects()) {
+          EffectInstance copy = new EffectInstance(effect.getEffect(), effect.getDuration(), effect.getAmplifier());
           map.add(copy);
         }
       }
@@ -34,12 +34,12 @@ public class EventsHandler {
   public static void playerRespawn (PlayerEvent.PlayerRespawnEvent event) {
     if (ConfigManager.getEffectsPersist() && !event.isEndConquered()) {
       PlayerEntity player = event.getPlayer();
-      List<EffectInstance> effects = potionClone.get(player.getUniqueID());
+      List<EffectInstance> effects = potionClone.get(player.getUUID());
       if (effects != null) {
         for (EffectInstance effect : effects) {
-          player.addPotionEffect(effect);
+          player.addEffect(effect);
         }
-        potionClone.remove(player.getUniqueID());
+        potionClone.remove(player.getUUID());
       }
     }
   }

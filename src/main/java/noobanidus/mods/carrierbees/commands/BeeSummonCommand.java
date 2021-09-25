@@ -26,37 +26,37 @@ public class BeeSummonCommand {
   private static final SimpleCommandExceptionType INVALID_POSITION = new SimpleCommandExceptionType(new TranslationTextComponent("commands.summon.invalidPosition"));
 
   public static void register(CommandDispatcher<CommandSource> dispatch) {
-    dispatch.register(Commands.literal("bee").requires((c) -> c.hasPermissionLevel(2)).executes((source) -> spawnRandomBee(source.getSource(), source.getSource().getPos(), new CompoundNBT(), true)).then(Commands.argument("pos", Vec3Argument.vec3()).executes((c) -> {
+    dispatch.register(Commands.literal("bee").requires((c) -> c.hasPermission(2)).executes((source) -> spawnRandomBee(source.getSource(), source.getSource().getPosition(), new CompoundNBT(), true)).then(Commands.argument("pos", Vec3Argument.vec3()).executes((c) -> {
       return spawnRandomBee(c.getSource(), Vec3Argument.getVec3(c, "pos"), new CompoundNBT(), true);
-    }).then(Commands.argument("nbt", NBTCompoundTagArgument.nbt()).executes((c) -> {
-      return spawnRandomBee(c.getSource(), Vec3Argument.getVec3(c, "pos"), NBTCompoundTagArgument.getNbt(c, "nbt"), false);
+    }).then(Commands.argument("nbt", NBTCompoundTagArgument.compoundTag()).executes((c) -> {
+      return spawnRandomBee(c.getSource(), Vec3Argument.getVec3(c, "pos"), NBTCompoundTagArgument.getCompoundTag(c, "nbt"), false);
     }))));
   }
 
   private static int spawnRandomBee(CommandSource source, Vector3d pos, CompoundNBT nbt, boolean v) throws CommandSyntaxException {
     BlockPos blockpos = new BlockPos(pos);
-    if (!World.isValid(blockpos)) {
+    if (!World.isInWorldBounds(blockpos)) {
       throw INVALID_POSITION.create();
     } else {
       CompoundNBT compoundnbt = nbt.copy();
-      ResourceLocation random = ModEntities.SUMMONABLES.get(source.getWorld().getRandom().nextInt(ModEntities.SUMMONABLES.size()));
+      ResourceLocation random = ModEntities.SUMMONABLES.get(source.getLevel().getRandom().nextInt(ModEntities.SUMMONABLES.size()));
       compoundnbt.putString("id", random.toString());
-      ServerWorld serverworld = source.getWorld();
-      Entity entity = EntityType.loadEntityAndExecute(compoundnbt, serverworld, (p_218914_1_) -> {
-        p_218914_1_.setLocationAndAngles(pos.x, pos.y, pos.z, p_218914_1_.rotationYaw, p_218914_1_.rotationPitch);
+      ServerWorld serverworld = source.getLevel();
+      Entity entity = EntityType.loadEntityRecursive(compoundnbt, serverworld, (p_218914_1_) -> {
+        p_218914_1_.moveTo(pos.x, pos.y, pos.z, p_218914_1_.yRot, p_218914_1_.xRot);
         return p_218914_1_;
       });
       if (entity == null) {
         throw ERROR_FAILED.create();
       } else {
         if (v && entity instanceof MobEntity) {
-          ((MobEntity) entity).onInitialSpawn(source.getWorld(), source.getWorld().getDifficultyForLocation(entity.getPosition()), SpawnReason.COMMAND, null, null);
+          ((MobEntity) entity).finalizeSpawn(source.getLevel(), source.getLevel().getCurrentDifficultyAt(entity.blockPosition()), SpawnReason.COMMAND, null, null);
         }
 
-        if (!serverworld.func_242106_g(entity)) {
+        if (!serverworld.tryAddFreshEntityWithPassengers(entity)) {
           throw ERROR_DUPLICATE_UUID.create();
         } else {
-          source.sendFeedback(new TranslationTextComponent("commands.summon.success", entity.getDisplayName()), true);
+          source.sendSuccess(new TranslationTextComponent("commands.summon.success", entity.getDisplayName()), true);
           return 1;
         }
       }

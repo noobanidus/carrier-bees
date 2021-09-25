@@ -26,6 +26,8 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
+import net.minecraft.world.Explosion.Mode;
+
 public class BeeExplosion extends Explosion {
   private final World world;
   private final double x;
@@ -39,8 +41,8 @@ public class BeeExplosion extends Explosion {
     final BeeExplosion explosion = new BeeExplosion(world, entity, null, null, x, y, z, 4f, false, Mode.BREAK);
     if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(world, explosion)) return explosion;
 
-    explosion.doExplosionA();
-    explosion.doExplosionB(true);
+    explosion.explode();
+    explosion.finalizeExplosion(true);
     return explosion;
   }
 
@@ -51,12 +53,12 @@ public class BeeExplosion extends Explosion {
     this.x = x;
     this.y = y;
     this.z = z;
-    this.damageSource = DamageSource.causeExplosionDamage(this);
+    this.damageSource = DamageSource.explosion(this);
     this.position = new Vector3d(this.x, this.y, this.z);
   }
 
   @Override
-  public void doExplosionA() {
+  public void explode() {
     float f3 = ConfigManager.getExplosionSize() * 2f;
     int k1 = MathHelper.floor(this.x - (double) f3 - 1.0D);
     int l1 = MathHelper.floor(this.x + (double) f3 + 1.0D);
@@ -64,24 +66,24 @@ public class BeeExplosion extends Explosion {
     int i1 = MathHelper.floor(this.y + (double) f3 + 1.0D);
     int j2 = MathHelper.floor(this.z - (double) f3 - 1.0D);
     int j1 = MathHelper.floor(this.z + (double) f3 + 1.0D);
-    List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this.exploder, new AxisAlignedBB((double) k1, (double) i2, (double) j2, (double) l1, (double) i1, (double) j1));
+    List<Entity> list = this.world.getEntities(this.exploder, new AxisAlignedBB((double) k1, (double) i2, (double) j2, (double) l1, (double) i1, (double) j1));
     ForgeEventFactory.onExplosionDetonate(this.world, this, list, f3);
 
     for (Entity entity : list) {
-      if (entity.isImmuneToExplosions() || entity instanceof BombEntity || entity instanceof IAppleBee || entity instanceof BeeEntity) {
+      if (entity.ignoreExplosion() || entity instanceof BombEntity || entity instanceof IAppleBee || entity instanceof BeeEntity) {
         continue;
       }
       if (entity instanceof LivingEntity) {
-        entity.attackEntityFrom(this.getDamageSource(), ConfigManager.getExplosionDamage());
+        entity.hurt(this.getDamageSource(), ConfigManager.getExplosionDamage());
       }
     }
   }
 
 
   @Override
-  public void doExplosionB(boolean ignored) {
-    if (this.world.isRemote) {
-      this.world.playSound(this.x, this.y, this.z, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F, false);
+  public void finalizeExplosion(boolean ignored) {
+    if (this.world.isClientSide) {
+      this.world.playLocalSound(this.x, this.y, this.z, SoundEvents.GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.random.nextFloat() - this.world.random.nextFloat()) * 0.2F) * 0.7F, false);
     }
 
     if (!(ConfigManager.getExplosionSize() < 2.0F)) {
@@ -98,15 +100,15 @@ public class BeeExplosion extends Explosion {
 
   @Override
   @Nullable
-  public LivingEntity getExplosivePlacedBy() {
+  public LivingEntity getSourceMob() {
     if (this.exploder == null) {
       return null;
     } else if (this.exploder instanceof TNTEntity) {
-      return ((TNTEntity) this.exploder).getTntPlacedBy();
+      return ((TNTEntity) this.exploder).getOwner();
     } else if (this.exploder instanceof LivingEntity) {
       return (LivingEntity) this.exploder;
     } else {
-      Entity e = ((DamagingProjectileEntity) this.exploder).func_234616_v_();
+      Entity e = ((DamagingProjectileEntity) this.exploder).getOwner();
       if (e instanceof LivingEntity) {
         return (LivingEntity) e;
       }
@@ -115,11 +117,11 @@ public class BeeExplosion extends Explosion {
   }
 
   @Override
-  public void clearAffectedBlockPositions() {
+  public void clearToBlow() {
   }
 
   @Override
-  public List<BlockPos> getAffectedBlockPositions() {
+  public List<BlockPos> getToBlow() {
     return Collections.emptyList();
   }
 

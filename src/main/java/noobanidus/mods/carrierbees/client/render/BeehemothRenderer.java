@@ -20,16 +20,16 @@ public class BeehemothRenderer extends MobRenderer<BeehemothEntity, BeehemothMod
   }
 
   @Override
-  public void render(BeehemothEntity p_225623_1_, float p_225623_2_, float p_225623_3_, MatrixStack stack, IRenderTypeBuffer p_225623_5_, int p_225623_6_) {
-    stack.push();
+  public void render(BeehemothEntity pEntity, float pEntityYaw, float pPartialTicks, MatrixStack stack, IRenderTypeBuffer pBuffer, int pPackedLight) {
+    stack.pushPose();
     float scale = 1.6f;
     stack.scale(scale, scale, scale);
-    super.render(p_225623_1_, p_225623_2_, p_225623_3_, stack, p_225623_5_, p_225623_6_);
-    stack.pop();
+    super.render(pEntity, pEntityYaw, pPartialTicks, stack, pBuffer, pPackedLight);
+    stack.popPose();
   }
 
   @Override
-  public ResourceLocation getEntityTexture(BeehemothEntity bee) {
+  public ResourceLocation getTextureLocation(BeehemothEntity bee) {
     return SKIN;
   }
 }

@@ -35,8 +35,8 @@ public class CarrierBeeEntity extends AppleBeeEntity {
   }
 
   @Override
-  public void writeAdditional(CompoundNBT tag) {
-    super.writeAdditional(tag);
+  public void addAdditionalSaveData(CompoundNBT tag) {
+    super.addAdditionalSaveData(tag);
     if (!effects.isEmpty()) {
       ListNBT list = new ListNBT();
       list.addAll(effects.stream().map(EffectBuilder::asTag).collect(Collectors.toList()));
@@ -45,8 +45,8 @@ public class CarrierBeeEntity extends AppleBeeEntity {
   }
 
   @Override
-  public void readAdditional(CompoundNBT tag) {
-    super.readAdditional(tag);
+  public void readAdditionalSaveData(CompoundNBT tag) {
+    super.readAdditionalSaveData(tag);
     effects.clear();
     if (tag.contains("effects", Constants.NBT.TAG_LIST)) {
       ListNBT listEffects = tag.getList("effects", Constants.NBT.TAG_COMPOUND);
@@ -78,43 +78,43 @@ public class CarrierBeeEntity extends AppleBeeEntity {
     }
 
     @Override
-    public boolean shouldExecute() {
-      return this.parentEntity.getAttackTarget() != null && this.parentEntity.isAngry();
+    public boolean canUse() {
+      return this.parentEntity.getTarget() != null && this.parentEntity.isAngry();
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
+    public boolean canContinueToUse() {
       return this.parentEntity.isAngry();
     }
 
     @Override
-    public void startExecuting() {
+    public void start() {
       this.attackTimer = 0;
     }
 
     @Override
-    public void resetTask() {
-      this.parentEntity.setAttackTarget(null);
-      this.parentEntity.setAggroed(false);
-      this.parentEntity.getNavigator().clearPath();
+    public void stop() {
+      this.parentEntity.setTarget(null);
+      this.parentEntity.setAggressive(false);
+      this.parentEntity.getNavigation().stop();
     }
 
     @Override
     public void tick() {
-      LivingEntity livingentity = this.parentEntity.getAttackTarget();
+      LivingEntity livingentity = this.parentEntity.getTarget();
       if (livingentity == null) {
         return;
       }
-      if (livingentity.getDistanceSq(this.parentEntity) < 400D && this.parentEntity.canEntityBeSeen(livingentity)) {
-        World world = this.parentEntity.world;
+      if (livingentity.distanceToSqr(this.parentEntity) < 400D && this.parentEntity.canSee(livingentity)) {
+        World world = this.parentEntity.level;
         ++this.attackTimer;
         if (this.attackTimer == 20) {
-          double d2 = livingentity.getPosX() - this.parentEntity.getPosX();
-          double d3 = livingentity.getPosYHeight(0.5D) - (0.5D + this.parentEntity.getPosYHeight(0.5D));
-          double d4 = livingentity.getPosZ() - this.parentEntity.getPosZ();
+          double d2 = livingentity.getX() - this.parentEntity.getX();
+          double d3 = livingentity.getY(0.5D) - (0.5D + this.parentEntity.getY(0.5D));
+          double d4 = livingentity.getZ() - this.parentEntity.getZ();
           HoneyCombEntity honeycomb = new HoneyCombEntity(this.parentEntity, d2, d3, d4, world);
-          honeycomb.setPosition(this.parentEntity.getPosX(), this.parentEntity.getPosYHeight(0.5D) + 0.5D, honeycomb.getPosZ());
-          world.addEntity(honeycomb);
+          honeycomb.setPos(this.parentEntity.getX(), this.parentEntity.getY(0.5D) + 0.5D, honeycomb.getZ());
+          world.addFreshEntity(honeycomb);
           this.attackTimer = -40;
         }
       } else if (this.attackTimer > 0) {

@@ -9,6 +9,8 @@ import noobanidus.mods.carrierbees.entities.BeehemothEntity;
 
 import java.util.EnumSet;
 
+import net.minecraft.entity.ai.goal.Goal.Flag;
+
 public class BeehemothAIRide extends Goal {
   private BeehemothEntity tameableEntity;
   private LivingEntity player;
@@ -17,11 +19,11 @@ public class BeehemothAIRide extends Goal {
   public BeehemothAIRide(BeehemothEntity dragon, double speed) {
     this.tameableEntity = dragon;
     this.speed = speed;
-    this.setMutexFlags(EnumSet.of(Flag.MOVE));
+    this.setFlags(EnumSet.of(Flag.MOVE));
   }
 
   @Override
-  public boolean shouldExecute() {
+  public boolean canUse() {
     if (tameableEntity.getControllingPassenger() instanceof PlayerEntity && tameableEntity.isSaddled()) {
       player = (PlayerEntity) tameableEntity.getControllingPassenger();
       return true;
@@ -30,21 +32,21 @@ public class BeehemothAIRide extends Goal {
   }
 
   @Override
-  public void startExecuting() {
-    tameableEntity.getNavigator().clearPath();
+  public void start() {
+    tameableEntity.getNavigation().stop();
   }
 
   @Override
   public void tick() {
-    tameableEntity.getNavigator().clearPath();
-    tameableEntity.setAttackTarget(null);
-    double x = tameableEntity.getPosX();
-    double y = tameableEntity.getPosY();
-    double z = tameableEntity.getPosZ();
-    if (player.moveForward != 0) {
-      Vector3d lookVec = player.getLookVec();
-      if (player.moveForward < 0) {
-        lookVec = lookVec.rotateYaw((float) Math.PI);
+    tameableEntity.getNavigation().stop();
+    tameableEntity.setTarget(null);
+    double x = tameableEntity.getX();
+    double y = tameableEntity.getY();
+    double z = tameableEntity.getZ();
+    if (player.zza != 0) {
+      Vector3d lookVec = player.getLookAngle();
+      if (player.zza < 0) {
+        lookVec = lookVec.yRot((float) Math.PI);
       }
       x += lookVec.x * 10;
       z += lookVec.z * 10;
@@ -52,8 +54,8 @@ public class BeehemothAIRide extends Goal {
         y += lookVec.y * 10;
       }
     }
-    tameableEntity.moveStrafing = player.moveStrafing * 0.35F;
-    tameableEntity.stepHeight = 1;
-    tameableEntity.getMoveHelper().setMoveTo(x, y, z, speed);
+    tameableEntity.xxa = player.xxa * 0.35F;
+    tameableEntity.maxUpStep = 1;
+    tameableEntity.getMoveControl().setWantedPosition(x, y, z, speed);
   }
 }

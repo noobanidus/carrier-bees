@@ -13,7 +13,7 @@ import noobanidus.mods.carrierbees.init.ModSounds;
 public class GenericBeeAngrySound<T extends AnimalEntity & IAppleBee> extends CarrierBeeSound<T> {
   public GenericBeeAngrySound(T p_i226058_1_) {
     super(p_i226058_1_, ModSounds.GENERIC_BEE_LOOP_AGGRESSIVE.get(), SoundCategory.NEUTRAL);
-    this.repeatDelay = 0;
+    this.delay = 0;
   }
 
   protected TickableSound getNextSound() {

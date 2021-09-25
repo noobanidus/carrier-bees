@@ -11,7 +11,7 @@ import noobanidus.mods.carrierbees.entities.IAppleBee;
 @OnlyIn(Dist.CLIENT)
 public class CarrierBeeFlightSound<T extends AnimalEntity & IAppleBee> extends CarrierBeeSound<T> {
   public CarrierBeeFlightSound(T p_i226059_1_) {
-    super(p_i226059_1_, SoundEvents.ENTITY_BEE_LOOP, SoundCategory.NEUTRAL);
+    super(p_i226059_1_, SoundEvents.BEE_LOOP, SoundCategory.NEUTRAL);
   }
 
   protected TickableSound getNextSound() {

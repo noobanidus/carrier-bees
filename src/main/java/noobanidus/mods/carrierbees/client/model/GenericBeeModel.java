@@ -30,170 +30,170 @@ public class GenericBeeModel extends BodyModel<GenericBeeEntity> {
   private float bodyPitch;
 
   public GenericBeeModel() {
-    textureWidth = 64;
-    textureHeight = 64;
+    texWidth = 64;
+    texHeight = 64;
 
     body = new ModelRenderer(this);
-    body.setRotationPoint(0.5F, 19.0F, 0.0F);
-    body.setTextureOffset(0, 0).addBox(-3.5F, -4.0F, -5.0F, 7.0F, 7.0F, 10.0F, 0.0F, false);
+    body.setPos(0.5F, 19.0F, 0.0F);
+    body.texOffs(0, 0).addBox(-3.5F, -4.0F, -5.0F, 7.0F, 7.0F, 10.0F, 0.0F, false);
 
     rightAntenna = new ModelRenderer(this);
-    rightAntenna.setRotationPoint(-0.5F, 5.0F, 0.0F);
+    rightAntenna.setPos(-0.5F, 5.0F, 0.0F);
     body.addChild(rightAntenna);
-    rightAntenna.setTextureOffset(2, 3).addBox(-2.0F, -9.0F, -8.0F, 1.0F, 2.0F, 3.0F, 0.0F, false);
+    rightAntenna.texOffs(2, 3).addBox(-2.0F, -9.0F, -8.0F, 1.0F, 2.0F, 3.0F, 0.0F, false);
 
     leftAntenna = new ModelRenderer(this);
-    leftAntenna.setRotationPoint(-0.5F, 5.0F, 0.0F);
+    leftAntenna.setPos(-0.5F, 5.0F, 0.0F);
     body.addChild(leftAntenna);
-    leftAntenna.setTextureOffset(2, 0).addBox(2.0F, -9.0F, -8.0F, 1.0F, 2.0F, 3.0F, 0.0F, false);
+    leftAntenna.texOffs(2, 0).addBox(2.0F, -9.0F, -8.0F, 1.0F, 2.0F, 3.0F, 0.0F, false);
 
     stinger = new ModelRenderer(this);
-    stinger.setRotationPoint(0.0F, -1.0F, 1.0F);
+    stinger.setPos(0.0F, -1.0F, 1.0F);
     body.addChild(stinger);
-    stinger.setTextureOffset(26, 7).addBox(0.0F, 0.0F, 4.0F, 0.0F, 1.0F, 2.0F, 0.0F, false);
+    stinger.texOffs(26, 7).addBox(0.0F, 0.0F, 4.0F, 0.0F, 1.0F, 2.0F, 0.0F, false);
 
     rightWing = new ModelRenderer(this);
-    rightWing.setRotationPoint(-1.5F, -4.0F, -3.0F);
+    rightWing.setPos(-1.5F, -4.0F, -3.0F);
     body.addChild(rightWing);
     setRotationAngle(rightWing, 0.2618F, -0.2618F, 0.0F);
-    rightWing.setTextureOffset(0, 18).addBox(-9.0F, 0.0F, 0.0F, 9.0F, 0.0F, 6.0F, 0.0F, false);
+    rightWing.texOffs(0, 18).addBox(-9.0F, 0.0F, 0.0F, 9.0F, 0.0F, 6.0F, 0.0F, false);
 
     leftWing = new ModelRenderer(this);
-    leftWing.setRotationPoint(1.5F, -4.0F, -3.0F);
+    leftWing.setPos(1.5F, -4.0F, -3.0F);
     body.addChild(leftWing);
     setRotationAngle(leftWing, 0.2618F, 0.2618F, 0.0F);
-    leftWing.setTextureOffset(9, 24).addBox(0.0F, 0.0F, 0.0F, 9.0F, 0.0F, 6.0F, 0.0F, false);
+    leftWing.texOffs(9, 24).addBox(0.0F, 0.0F, 0.0F, 9.0F, 0.0F, 6.0F, 0.0F, false);
 
     frontLegs = new ModelRenderer(this);
-    frontLegs.setRotationPoint(1.5F, 3.0F, -2.0F);
+    frontLegs.setPos(1.5F, 3.0F, -2.0F);
     body.addChild(frontLegs);
-    frontLegs.setTextureOffset(26, 1).addBox(-5.0F, 0.0F, 0.0F, 7.0F, 2.0F, 0.0F, 0.0F, false);
+    frontLegs.texOffs(26, 1).addBox(-5.0F, 0.0F, 0.0F, 7.0F, 2.0F, 0.0F, 0.0F, false);
 
     middleLegs = new ModelRenderer(this);
-    middleLegs.setRotationPoint(1.5F, 3.0F, 0.0F);
+    middleLegs.setPos(1.5F, 3.0F, 0.0F);
     body.addChild(middleLegs);
-    middleLegs.setTextureOffset(26, 3).addBox(-5.0F, 0.0F, 0.0F, 7.0F, 2.0F, 0.0F, 0.0F, false);
+    middleLegs.texOffs(26, 3).addBox(-5.0F, 0.0F, 0.0F, 7.0F, 2.0F, 0.0F, 0.0F, false);
 
     backLegs = new ModelRenderer(this);
-    backLegs.setRotationPoint(1.5F, 3.0F, 2.0F);
+    backLegs.setPos(1.5F, 3.0F, 2.0F);
     body.addChild(backLegs);
-    backLegs.setTextureOffset(26, 5).addBox(-5.0F, 0.0F, 0.0F, 7.0F, 2.0F, 0.0F, 0.0F, false);
+    backLegs.texOffs(26, 5).addBox(-5.0F, 0.0F, 0.0F, 7.0F, 2.0F, 0.0F, 0.0F, false);
 
     teeth = new ModelRenderer(this);
-    teeth.setRotationPoint(-0.5F, 5.0F, 0.0F);
+    teeth.setPos(-0.5F, 5.0F, 0.0F);
     body.addChild(teeth);
-    teeth.setTextureOffset(59, 1).addBox(0.75F, -3.25F, -5.25F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-    teeth.setTextureOffset(59, 1).addBox(0.75F, -2.75F, -5.25F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-    teeth.setTextureOffset(57, 0).addBox(-0.75F, -3.25F, -5.25F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+    teeth.texOffs(59, 1).addBox(0.75F, -3.25F, -5.25F, 1.0F, 1.0F, 1.0F, 0.0F, false);
+    teeth.texOffs(59, 1).addBox(0.75F, -2.75F, -5.25F, 1.0F, 1.0F, 1.0F, 0.0F, false);
+    teeth.texOffs(57, 0).addBox(-0.75F, -3.25F, -5.25F, 1.0F, 2.0F, 1.0F, 0.0F, false);
 
     tutu_up = new ModelRenderer(this);
-    tutu_up.setRotationPoint(0.0F, -4.75F, 5.0F);
+    tutu_up.setPos(0.0F, -4.75F, 5.0F);
     body.addChild(tutu_up);
     setRotationAngle(tutu_up, 0.3491F, 0.0F, 0.0F);
-    tutu_up.setTextureOffset(42, 3).addBox(-3.5F, -0.75F, -4.25F, 7.0F, 0.0F, 4.0F, 0.0F, false);
+    tutu_up.texOffs(42, 3).addBox(-3.5F, -0.75F, -4.25F, 7.0F, 0.0F, 4.0F, 0.0F, false);
 
     tutu_down = new ModelRenderer(this);
-    tutu_down.setRotationPoint(0.0F, 3.75F, 5.0F);
+    tutu_down.setPos(0.0F, 3.75F, 5.0F);
     body.addChild(tutu_down);
     setRotationAngle(tutu_down, -0.3491F, 0.0F, 0.0F);
-    tutu_down.setTextureOffset(42, 7).addBox(-3.5F, 0.75F, -4.25F, 7.0F, 0.0F, 4.0F, 0.0F, false);
+    tutu_down.texOffs(42, 7).addBox(-3.5F, 0.75F, -4.25F, 7.0F, 0.0F, 4.0F, 0.0F, false);
 
     tutu_east = new ModelRenderer(this);
-    tutu_east.setRotationPoint(-4.5F, -0.5F, 5.0F);
+    tutu_east.setPos(-4.5F, -0.5F, 5.0F);
     body.addChild(tutu_east);
     setRotationAngle(tutu_east, 0.0F, -0.3491F, 0.0F);
-    tutu_east.setTextureOffset(48, 11).addBox(-0.5F, -3.5F, -4.25F, 0.0F, 7.0F, 4.0F, 0.0F, false);
+    tutu_east.texOffs(48, 11).addBox(-0.5F, -3.5F, -4.25F, 0.0F, 7.0F, 4.0F, 0.0F, false);
 
     tutu_west = new ModelRenderer(this);
-    tutu_west.setRotationPoint(4.25F, -0.5F, 5.0F);
+    tutu_west.setPos(4.25F, -0.5F, 5.0F);
     body.addChild(tutu_west);
     setRotationAngle(tutu_west, 0.0F, 0.3491F, 0.0F);
-    tutu_west.setTextureOffset(56, 11).addBox(0.75F, -3.5F, -4.25F, 0.0F, 7.0F, 4.0F, 0.0F, false);
+    tutu_west.texOffs(56, 11).addBox(0.75F, -3.5F, -4.25F, 0.0F, 7.0F, 4.0F, 0.0F, false);
 
     cap = new ModelRenderer(this);
-    cap.setRotationPoint(0.0F, -5.0F, -4.0F);
+    cap.setPos(0.0F, -5.0F, -4.0F);
     body.addChild(cap);
     setRotationAngle(cap, 0.0F, -0.2618F, 0.0F);
-    cap.setTextureOffset(50, 22).addBox(-1.5F, 0.0F, -2.25F, 3.0F, 1.0F, 4.0F, 0.0F, false);
-    cap.setTextureOffset(52, 27).addBox(-1.5F, -1.0F, -1.25F, 3.0F, 1.0F, 3.0F, 0.0F, false);
+    cap.texOffs(50, 22).addBox(-1.5F, 0.0F, -2.25F, 3.0F, 1.0F, 4.0F, 0.0F, false);
+    cap.texOffs(52, 27).addBox(-1.5F, -1.0F, -1.25F, 3.0F, 1.0F, 3.0F, 0.0F, false);
   }
 
   @Override
-  public void setLivingAnimations(GenericBeeEntity entity, float limbSwing, float limbSwingAmount, float partialTicks) {
-    super.setLivingAnimations(entity, limbSwing, limbSwingAmount, partialTicks);
+  public void prepareMobModel(GenericBeeEntity entity, float limbSwing, float limbSwingAmount, float partialTicks) {
+    super.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTicks);
     this.bodyPitch = entity.getBodyPitch(partialTicks);
-    this.stinger.showModel = !entity.hasStung();
+    this.stinger.visible = !entity.hasStung();
   }
 
 
   @Override
-  public void setRotationAngles(GenericBeeEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-    this.rightWing.rotateAngleX = 0.0F;
-    this.leftAntenna.rotateAngleX = 0.0F;
-    this.rightAntenna.rotateAngleX = 0.0F;
-    this.body.rotateAngleX = 0.0F;
-    this.body.rotationPointY = 19.0F;
-    boolean onGround = entity.isOnGround() && entity.getMotion().lengthSquared() < 1.0E-7D;
+  public void setupAnim(GenericBeeEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    this.rightWing.xRot = 0.0F;
+    this.leftAntenna.xRot = 0.0F;
+    this.rightAntenna.xRot = 0.0F;
+    this.body.xRot = 0.0F;
+    this.body.y = 19.0F;
+    boolean onGround = entity.isOnGround() && entity.getDeltaMovement().lengthSqr() < 1.0E-7D;
     float v1;
     if (onGround) {
-      this.rightWing.rotateAngleY = -0.2618F;
-      this.rightWing.rotateAngleZ = 0.0F;
-      this.leftWing.rotateAngleX = 0.0F;
-      this.leftWing.rotateAngleY = 0.2618F;
-      this.leftWing.rotateAngleZ = 0.0F;
-      this.frontLegs.rotateAngleX = 0.0F;
-      this.middleLegs.rotateAngleX = 0.0F;
-      this.backLegs.rotateAngleX = 0.0F;
+      this.rightWing.yRot = -0.2618F;
+      this.rightWing.zRot = 0.0F;
+      this.leftWing.xRot = 0.0F;
+      this.leftWing.yRot = 0.2618F;
+      this.leftWing.zRot = 0.0F;
+      this.frontLegs.xRot = 0.0F;
+      this.middleLegs.xRot = 0.0F;
+      this.backLegs.xRot = 0.0F;
     } else {
       v1 = ageInTicks * 2.1F;
-      this.rightWing.rotateAngleY = 0.0F;
-      this.rightWing.rotateAngleZ = MathHelper.cos(v1) * 3.1415927F * 0.15F;
-      this.leftWing.rotateAngleX = this.rightWing.rotateAngleX;
-      this.leftWing.rotateAngleY = this.rightWing.rotateAngleY;
-      this.leftWing.rotateAngleZ = -this.rightWing.rotateAngleZ;
-      this.frontLegs.rotateAngleX = 0.7853982F;
-      this.middleLegs.rotateAngleX = 0.7853982F;
-      this.backLegs.rotateAngleX = 0.7853982F;
-      this.body.rotateAngleX = 0.0F;
-      this.body.rotateAngleY = 0.0F;
-      this.body.rotateAngleZ = 0.0F;
-      this.cap.rotateAngleY = -0.2618f;
+      this.rightWing.yRot = 0.0F;
+      this.rightWing.zRot = MathHelper.cos(v1) * 3.1415927F * 0.15F;
+      this.leftWing.xRot = this.rightWing.xRot;
+      this.leftWing.yRot = this.rightWing.yRot;
+      this.leftWing.zRot = -this.rightWing.zRot;
+      this.frontLegs.xRot = 0.7853982F;
+      this.middleLegs.xRot = 0.7853982F;
+      this.backLegs.xRot = 0.7853982F;
+      this.body.xRot = 0.0F;
+      this.body.yRot = 0.0F;
+      this.body.zRot = 0.0F;
+      this.cap.yRot = -0.2618f;
     }
 
     if (!entity.isAngry()) {
-      this.body.rotateAngleX = 0.0F;
-      this.body.rotateAngleY = 0.0F;
-      this.body.rotateAngleZ = 0.0F;
-      this.cap.rotateAngleY = -2.9671F;
+      this.body.xRot = 0.0F;
+      this.body.yRot = 0.0F;
+      this.body.zRot = 0.0F;
+      this.cap.yRot = -2.9671F;
       if (!onGround) {
         float f1 = MathHelper.cos(ageInTicks * 0.18F);
-        this.body.rotateAngleX = 0.1F + f1 * (float) Math.PI * 0.025F;
-        this.leftAntenna.rotateAngleX = f1 * (float) Math.PI * 0.03F;
-        this.rightAntenna.rotateAngleX = f1 * (float) Math.PI * 0.03F;
-        this.frontLegs.rotateAngleX = -f1 * (float) Math.PI * 0.1F + ((float) Math.PI / 8F);
-        this.backLegs.rotateAngleX = -f1 * (float) Math.PI * 0.05F + ((float) Math.PI / 4F);
-        this.body.rotationPointY = 19.0F - MathHelper.cos(ageInTicks * 0.18F) * 0.9F;
+        this.body.xRot = 0.1F + f1 * (float) Math.PI * 0.025F;
+        this.leftAntenna.xRot = f1 * (float) Math.PI * 0.03F;
+        this.rightAntenna.xRot = f1 * (float) Math.PI * 0.03F;
+        this.frontLegs.xRot = -f1 * (float) Math.PI * 0.1F + ((float) Math.PI / 8F);
+        this.backLegs.xRot = -f1 * (float) Math.PI * 0.05F + ((float) Math.PI / 4F);
+        this.body.y = 19.0F - MathHelper.cos(ageInTicks * 0.18F) * 0.9F;
       }
     }
 
     if (this.bodyPitch > 0.0F) {
-      this.body.rotateAngleX = ModelUtils.func_228283_a_(this.body.rotateAngleX, 3.0915928F, this.bodyPitch);
+      this.body.xRot = ModelUtils.rotlerpRad(this.body.xRot, 3.0915928F, this.bodyPitch);
     }
   }
 
   @Override
-  protected Iterable<ModelRenderer> getHeadParts() {
+  protected Iterable<ModelRenderer> headParts() {
     return ImmutableList.of();
   }
 
   @Override
-  protected Iterable<ModelRenderer> getBodyParts() {
+  protected Iterable<ModelRenderer> bodyParts() {
     return ImmutableList.of(this.body);
   }
 
   public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
-    modelRenderer.rotateAngleX = x;
-    modelRenderer.rotateAngleY = y;
-    modelRenderer.rotateAngleZ = z;
+    modelRenderer.xRot = x;
+    modelRenderer.yRot = y;
+    modelRenderer.zRot = z;
   }
 }

@@ -18,20 +18,20 @@ public class StumbleEffect extends Effect implements IBeeEffect {
   }
 
   @Override
-  public boolean isReady(int p_76397_1_, int p_76397_2_) {
+  public boolean isDurationEffectTick(int pDuration, int pAmplifier) {
     return true;
   }
 
   @Override
-  public void performEffect(LivingEntity entity, int amplifier) {
+  public void applyEffectTick(LivingEntity entity, int amplifier) {
     if (entity instanceof PlayerEntity) {
-      if (!entity.world.isRemote() && rand.nextInt(16) == 0) {
-        BlockState state = entity.world.getBlockState(entity.getPosition());
-        VoxelShape shape = state.getShape(entity.world, entity.getPosition());
-        if (!shape.isEmpty() && shape.getBoundingBox().getYSize() < 1) {
+      if (!entity.level.isClientSide() && rand.nextInt(16) == 0) {
+        BlockState state = entity.level.getBlockState(entity.blockPosition());
+        VoxelShape shape = state.getShape(entity.level, entity.blockPosition());
+        if (!shape.isEmpty() && shape.bounds().getYsize() < 1) {
           return;
         }
-        entity.world.setBlockState(entity.getPosition().up(), ModBlocks.CRAWL.get().getDefaultState());
+        entity.level.setBlockAndUpdate(entity.blockPosition().above(), ModBlocks.CRAWL.get().defaultBlockState());
       }
     }
   }

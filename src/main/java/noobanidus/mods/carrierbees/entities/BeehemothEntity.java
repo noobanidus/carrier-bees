@@ -45,9 +45,11 @@ import noobanidus.mods.carrierbees.init.ModSounds;
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
+import net.minecraft.entity.ai.controller.MovementController.Action;
+
 public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IAppleBee {
-  private static final DataParameter<Boolean> SADDLED = EntityDataManager.createKey(BeehemothEntity.class, DataSerializers.BOOLEAN);
-  private static final DataParameter<Boolean> QUEEN = EntityDataManager.createKey(BeehemothEntity.class, DataSerializers.BOOLEAN);
+  private static final DataParameter<Boolean> SADDLED = EntityDataManager.defineId(BeehemothEntity.class, DataSerializers.BOOLEAN);
+  private static final DataParameter<Boolean> QUEEN = EntityDataManager.defineId(BeehemothEntity.class, DataSerializers.BOOLEAN);
 
   private boolean stopWandering = false;
   private boolean hasItemTarget = false;
@@ -56,84 +58,84 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IA
 
   public BeehemothEntity(EntityType<? extends BeehemothEntity> type, World world) {
     super(type, world);
-    this.moveController = new MoveHelperController(this);
-    this.offset1 = (this.rand.nextFloat() - 0.5f);
-    this.offset2 = (this.rand.nextFloat() - 0.5f);
-    this.offset3 = (this.rand.nextFloat() - 0.5f);
-    this.offset4 = (this.rand.nextFloat() - 0.5f);
-    this.offset5 = (this.rand.nextFloat() - 0.5f);
-    this.offset6 = (this.rand.nextFloat() - 0.5f);
+    this.moveControl = new MoveHelperController(this);
+    this.offset1 = (this.random.nextFloat() - 0.5f);
+    this.offset2 = (this.random.nextFloat() - 0.5f);
+    this.offset3 = (this.random.nextFloat() - 0.5f);
+    this.offset4 = (this.random.nextFloat() - 0.5f);
+    this.offset5 = (this.random.nextFloat() - 0.5f);
+    this.offset6 = (this.random.nextFloat() - 0.5f);
   }
 
   private static TranslationTextComponent QUEEN_NAME = new TranslationTextComponent("entity.carrierbees.beehemoth_queen");
 
   @Override
-  protected ITextComponent getProfessionName() {
+  protected ITextComponent getTypeName() {
     if (isQueen()) {
       return QUEEN_NAME;
     }
-    return super.getProfessionName();
+    return super.getTypeName();
   }
 
   @Override
-  protected void registerData() {
-    super.registerData();
-    this.dataManager.register(SADDLED, false);
-    this.dataManager.register(QUEEN, false);
+  protected void defineSynchedData() {
+    super.defineSynchedData();
+    this.entityData.define(SADDLED, false);
+    this.entityData.define(QUEEN, false);
   }
 
   public boolean isQueen() {
-    return this.dataManager.get(QUEEN);
+    return this.entityData.get(QUEEN);
   }
 
   public boolean isSaddled() {
-    return this.dataManager.get(SADDLED);
+    return this.entityData.get(SADDLED);
   }
 
   public void setSaddled(boolean saddled) {
-    this.dataManager.set(SADDLED, saddled);
+    this.entityData.set(SADDLED, saddled);
   }
 
   public void setQueen(boolean queen) {
-    this.dataManager.set(QUEEN, queen);
+    this.entityData.set(QUEEN, queen);
   }
 
   @Override
-  public void writeAdditional(CompoundNBT tag) {
-    super.writeAdditional(tag);
+  public void addAdditionalSaveData(CompoundNBT tag) {
+    super.addAdditionalSaveData(tag);
     tag.putBoolean("saddled", isSaddled());
     tag.putBoolean("queen", isQueen());
   }
 
   @Override
-  public void readAdditional(CompoundNBT tag) {
-    super.readAdditional(tag);
+  public void readAdditionalSaveData(CompoundNBT tag) {
+    super.readAdditionalSaveData(tag);
     setSaddled(tag.getBoolean("saddled"));
     setQueen(tag.contains("queen") && tag.getBoolean("queen"));
   }
 
   @Override
-  protected boolean canTriggerWalking() {
+  protected boolean isMovementNoisy() {
     return false;
   }
 
   @Override
-  public boolean attackEntityFrom(DamageSource source, float amount) {
-    if (source == DamageSource.OUT_OF_WORLD || source.getTrueSource() instanceof PlayerEntity) {
-      return super.attackEntityFrom(source, amount);
+  public boolean hurt(DamageSource source, float amount) {
+    if (source == DamageSource.OUT_OF_WORLD || source.getEntity() instanceof PlayerEntity) {
+      return super.hurt(source, amount);
     }
 
     return false;
   }
 
   public static AttributeModifierMap.MutableAttribute createAttributes() {
-    return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 42.0D).createMutableAttribute(Attributes.FLYING_SPEED, 0.6).createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.3).createMutableAttribute(Attributes.ATTACK_DAMAGE, 4.0D).createMutableAttribute(Attributes.FOLLOW_RANGE, 128.0D);
+    return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 42.0D).add(Attributes.FLYING_SPEED, 0.6).add(Attributes.MOVEMENT_SPEED, 0.3).add(Attributes.ATTACK_DAMAGE, 4.0D).add(Attributes.FOLLOW_RANGE, 128.0D);
   }
 
   @Override
   protected void registerGoals() {
     this.goalSelector.addGoal(0, new BeehemothAIRide(this, 3.2D));
-    this.goalSelector.addGoal(3, new TemptGoal(this, 3.2d, Ingredient.fromItems(Items.SUGAR), false));
+    this.goalSelector.addGoal(3, new TemptGoal(this, 3.2d, Ingredient.of(Items.SUGAR), false));
     this.goalSelector.addGoal(4, new RandomFlyGoal(this));
     this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 10));
     this.goalSelector.addGoal(5, new LookRandomlyGoal(this));
@@ -141,8 +143,8 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IA
   }
 
   @Override
-  protected PathNavigator createNavigator(World p_175447_1_) {
-    return new DirectPathNavigator(this, p_175447_1_);
+  protected PathNavigator createNavigation(World pLevel) {
+    return new DirectPathNavigator(this, pLevel);
   }
 
   @Nullable
@@ -154,113 +156,113 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IA
     return null;
   }
 
-  public ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
-    ItemStack stack = player.getHeldItem(hand);
+  public ActionResultType mobInteract(PlayerEntity player, Hand hand) {
+    ItemStack stack = player.getItemInHand(hand);
     Item item = stack.getItem();
-    if (this.world.isRemote) {
-      if (this.isTamed() && this.isOwner(player)) {
+    if (this.level.isClientSide) {
+      if (this.isTame() && this.isOwnedBy(player)) {
         return ActionResultType.SUCCESS;
       } else {
-        return !(this.getHealth() < this.getMaxHealth()) && this.isTamed() ? ActionResultType.PASS : ActionResultType.SUCCESS;
+        return !(this.getHealth() < this.getMaxHealth()) && this.isTame() ? ActionResultType.PASS : ActionResultType.SUCCESS;
       }
     } else {
-      if (this.isTamed()) {
-        if (this.isOwner(player)) {
+      if (this.isTame()) {
+        if (this.isOwnedBy(player)) {
           if (item == ModItems.ROYAL_JELLY.get() && !isQueen()) {
-            this.consumeItemFromStack(player, stack);
+            this.usePlayerItem(player, stack);
             setQueen(true);
             CarrierBees.QUEEN_PREDICATE.trigger((ServerPlayerEntity) player, null);
             return ActionResultType.CONSUME;
           }
 
           if (item == Items.SUGAR && this.getHealth() < this.getMaxHealth()) {
-            this.consumeItemFromStack(player, stack);
+            this.usePlayerItem(player, stack);
             this.heal(10);
             return ActionResultType.CONSUME;
           }
 
           if (item == Items.SADDLE && !isSaddled()) {
-            this.consumeItemFromStack(player, stack);
+            this.usePlayerItem(player, stack);
             this.setSaddled(true);
             CarrierBees.STEED_PREDICATE.trigger((ServerPlayerEntity) player, null);
             return ActionResultType.CONSUME;
           }
 
-          if (stack.isEmpty() && isSaddled() && player.isSneaking()) {
+          if (stack.isEmpty() && isSaddled() && player.isShiftKeyDown()) {
             setSaddled(false);
             ItemStack saddle = new ItemStack(Items.SADDLE);
-            if (player.addItemStackToInventory(saddle)) {
-              ItemEntity entity = new ItemEntity(player.world, player.getPosX(), player.getPosY(), player.getPosZ(), saddle);
-              player.world.addEntity(entity);
+            if (player.addItem(saddle)) {
+              ItemEntity entity = new ItemEntity(player.level, player.getX(), player.getY(), player.getZ(), saddle);
+              player.level.addFreshEntity(entity);
             }
           }
 
-          if (stack.isEmpty() && !this.isBeingRidden() && !player.isSecondaryUseActive()) {
-            if (!this.world.isRemote) {
+          if (stack.isEmpty() && !this.isVehicle() && !player.isSecondaryUseActive()) {
+            if (!this.level.isClientSide) {
               player.startRiding(this);
             }
 
-            return ActionResultType.func_233537_a_(this.world.isRemote);
+            return ActionResultType.sidedSuccess(this.level.isClientSide);
           }
         }
       } else if (item == Items.SUGAR) {
-        this.consumeItemFromStack(player, stack);
-        if (this.rand.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player)) {
-          this.setTamedBy(player);
-          this.func_233687_w_(true);
-          this.world.setEntityState(this, (byte) 7);
+        this.usePlayerItem(player, stack);
+        if (this.random.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player)) {
+          this.tame(player);
+          this.setOrderedToSit(true);
+          this.level.broadcastEntityEvent(this, (byte) 7);
         } else {
-          this.world.setEntityState(this, (byte) 6);
+          this.level.broadcastEntityEvent(this, (byte) 6);
         }
 
-        this.enablePersistence();
+        this.setPersistenceRequired();
         return ActionResultType.CONSUME;
       }
 
-      ActionResultType actionresulttype1 = super.func_230254_b_(player, hand);
-      if (actionresulttype1.isSuccessOrConsume()) {
-        this.enablePersistence();
+      ActionResultType actionresulttype1 = super.mobInteract(player, hand);
+      if (actionresulttype1.consumesAction()) {
+        this.setPersistenceRequired();
       }
 
       return actionresulttype1;
     }
   }
 
-  public void updatePassenger(Entity passenger) {
-    if (this.isPassenger(passenger)) {
+  public void positionRider(Entity passenger) {
+    if (this.hasPassenger(passenger)) {
       float radius = -0.25F;
-      float angle = (0.01745329251F * this.renderYawOffset);
+      float angle = (0.01745329251F * this.yBodyRot);
       double extraX = radius * MathHelper.sin((float) (Math.PI + angle));
       double extraZ = radius * MathHelper.cos(angle);
-      passenger.setPosition(this.getPosX() + extraX, this.getPosY() + this.getMountedYOffset() + passenger.getYOffset(), this.getPosZ() + extraZ);
+      passenger.setPos(this.getX() + extraX, this.getY() + this.getPassengersRidingOffset() + passenger.getMyRidingOffset(), this.getZ() + extraZ);
     }
   }
 
-  public double getMountedYOffset() {
-    float f = Math.min(0.25F, this.limbSwingAmount);
-    float f1 = this.limbSwing;
-    return (double) this.getHeight() - 0.2D + (double) (0.12F * MathHelper.cos(f1 * 0.7F) * 0.7F * f);
+  public double getPassengersRidingOffset() {
+    float f = Math.min(0.25F, this.animationSpeed);
+    float f1 = this.animationPosition;
+    return (double) this.getBbHeight() - 0.2D + (double) (0.12F * MathHelper.cos(f1 * 0.7F) * 0.7F * f);
   }
 
-  public boolean hasNoGravity() {
+  public boolean isNoGravity() {
     return true;
   }
 
   @Override
-  protected void updateFallState(double p_184231_1_, boolean p_184231_3_, BlockState p_184231_4_, BlockPos p_184231_5_) {
+  protected void checkFallDamage(double pY, boolean pOnGround, BlockState pState, BlockPos pPos) {
   }
 
   @Override
-  public boolean onLivingFall(float p_225503_1_, float p_225503_2_) {
+  public boolean causeFallDamage(float p_225503_1_, float p_225503_2_) {
     return false;
   }
 
   @Override
-  protected void playFallSound() {
+  protected void playBlockFallSound() {
   }
 
   @Override
-  protected void playStepSound(BlockPos p_180429_1_, BlockState p_180429_2_) {
+  protected void playStepSound(BlockPos pPos, BlockState pBlock) {
   }
 
   @Override
@@ -269,7 +271,7 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IA
   }
 
   @Override
-  protected SoundEvent getHurtSound(DamageSource p_184601_1_) {
+  protected SoundEvent getHurtSound(DamageSource pDamageSource) {
     return ModSounds.BEEHEMOTH_HURT.get();
   }
 
@@ -280,22 +282,22 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IA
 
   public void tick() {
     super.tick();
-    stopWandering = getLeashed();
+    stopWandering = isLeashed();
   }
 
   private BlockPos getGroundPosition(BlockPos radialPos) {
-    while (radialPos.getY() > 1 && world.isAirBlock(radialPos)) {
-      radialPos = radialPos.down();
+    while (radialPos.getY() > 1 && level.isEmptyBlock(radialPos)) {
+      radialPos = radialPos.below();
     }
     if (radialPos.getY() <= 1) {
-      return new BlockPos(radialPos.getX(), world.getSeaLevel(), radialPos.getZ());
+      return new BlockPos(radialPos.getX(), level.getSeaLevel(), radialPos.getZ());
     }
     return radialPos;
   }
 
   @Nullable
   @Override
-  public AgeableEntity func_241840_a(ServerWorld serverWorld, AgeableEntity ageableEntity) {
+  public AgeableEntity getBreedOffspring(ServerWorld serverWorld, AgeableEntity ageableEntity) {
     return null;
   }
 
@@ -310,8 +312,8 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IA
   }
 
   @Override
-  public void setLeashHolder(Entity p_110162_1_, boolean p_110162_2_) {
-    super.setLeashHolder(p_110162_1_, p_110162_2_);
+  public void setLeashedTo(Entity pEntity, boolean pSendAttachNotification) {
+    super.setLeashedTo(pEntity, pSendAttachNotification);
     stopWandering = true;
   }
 
@@ -324,40 +326,40 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IA
     }
 
     public void tick() {
-      if (this.action == Action.STRAFE) {
-        Vector3d vector3d = new Vector3d(this.posX - parentEntity.getPosX(), this.posY - parentEntity.getPosY(), this.posZ - parentEntity.getPosZ());
+      if (this.operation == Action.STRAFE) {
+        Vector3d vector3d = new Vector3d(this.wantedX - parentEntity.getX(), this.wantedY - parentEntity.getY(), this.wantedZ - parentEntity.getZ());
         double d0 = vector3d.length();
-        parentEntity.setMotion(parentEntity.getMotion().add(0, vector3d.scale(this.speed * 0.05D / d0).getY(), 0));
+        parentEntity.setDeltaMovement(parentEntity.getDeltaMovement().add(0, vector3d.scale(this.speedModifier * 0.05D / d0).y(), 0));
         float f = (float) this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED);
-        float f1 = (float) this.speed * f;
-        this.moveForward = 1.0F;
-        this.moveStrafe = 0.0F;
+        float f1 = (float) this.speedModifier * f;
+        this.strafeForwards = 1.0F;
+        this.strafeRight = 0.0F;
 
-        this.mob.setAIMoveSpeed(f1);
-        this.mob.setMoveForward(this.moveForward);
-        this.mob.setMoveStrafing(this.moveStrafe);
-        this.action = MovementController.Action.WAIT;
-      } else if (this.action == MovementController.Action.MOVE_TO) {
-        Vector3d vector3d = new Vector3d(this.posX - parentEntity.getPosX(), this.posY - parentEntity.getPosY(), this.posZ - parentEntity.getPosZ());
+        this.mob.setSpeed(f1);
+        this.mob.setZza(this.strafeForwards);
+        this.mob.setXxa(this.strafeRight);
+        this.operation = MovementController.Action.WAIT;
+      } else if (this.operation == MovementController.Action.MOVE_TO) {
+        Vector3d vector3d = new Vector3d(this.wantedX - parentEntity.getX(), this.wantedY - parentEntity.getY(), this.wantedZ - parentEntity.getZ());
         double d0 = vector3d.length();
-        if (d0 < parentEntity.getBoundingBox().getAverageEdgeLength()) {
-          this.action = MovementController.Action.WAIT;
-          parentEntity.setMotion(parentEntity.getMotion().scale(0.5D));
+        if (d0 < parentEntity.getBoundingBox().getSize()) {
+          this.operation = MovementController.Action.WAIT;
+          parentEntity.setDeltaMovement(parentEntity.getDeltaMovement().scale(0.5D));
         } else {
-          double localSpeed = this.speed;
-          if (parentEntity.isBeingRidden()) {
+          double localSpeed = this.speedModifier;
+          if (parentEntity.isVehicle()) {
             localSpeed *= 1.5D;
           }
-          parentEntity.setMotion(parentEntity.getMotion().add(vector3d.scale(localSpeed * 0.005D / d0)));
-          if (parentEntity.getAttackTarget() == null) {
-            Vector3d vector3d1 = parentEntity.getMotion();
-            parentEntity.rotationYaw = -((float) MathHelper.atan2(vector3d1.x, vector3d1.z)) * (180F / (float) Math.PI);
-            parentEntity.renderYawOffset = parentEntity.rotationYaw;
+          parentEntity.setDeltaMovement(parentEntity.getDeltaMovement().add(vector3d.scale(localSpeed * 0.005D / d0)));
+          if (parentEntity.getTarget() == null) {
+            Vector3d vector3d1 = parentEntity.getDeltaMovement();
+            parentEntity.yRot = -((float) MathHelper.atan2(vector3d1.x, vector3d1.z)) * (180F / (float) Math.PI);
+            parentEntity.yBodyRot = parentEntity.yRot;
           } else {
-            double d2 = parentEntity.getAttackTarget().getPosX() - parentEntity.getPosX();
-            double d1 = parentEntity.getAttackTarget().getPosZ() - parentEntity.getPosZ();
-            parentEntity.rotationYaw = -((float) MathHelper.atan2(d2, d1)) * (180F / (float) Math.PI);
-            parentEntity.renderYawOffset = parentEntity.rotationYaw;
+            double d2 = parentEntity.getTarget().getX() - parentEntity.getX();
+            double d1 = parentEntity.getTarget().getZ() - parentEntity.getZ();
+            parentEntity.yRot = -((float) MathHelper.atan2(d2, d1)) * (180F / (float) Math.PI);
+            parentEntity.yBodyRot = parentEntity.yRot;
           }
         }
 
@@ -366,8 +368,8 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IA
   }
 
   public boolean isTargetBlocked(Vector3d target) {
-    Vector3d Vector3d = new Vector3d(this.getPosX(), this.getPosYEye(), this.getPosZ());
-    return this.world.rayTraceBlocks(new RayTraceContext(Vector3d, target, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this)).getType() != RayTraceResult.Type.MISS;
+    Vector3d Vector3d = new Vector3d(this.getX(), this.getEyeY(), this.getZ());
+    return this.level.clip(new RayTraceContext(Vector3d, target, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this)).getType() != RayTraceResult.Type.MISS;
   }
 
   public class DirectPathNavigator extends GroundPathNavigator {
@@ -380,16 +382,16 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IA
     }
 
     public void tick() {
-      ++this.totalTicks;
+      ++this.tick;
     }
 
-    public boolean tryMoveToXYZ(double x, double y, double z, double speedIn) {
-      mob.getMoveHelper().setMoveTo(x, y, z, speedIn);
+    public boolean moveTo(double x, double y, double z, double speedIn) {
+      mob.getMoveControl().setWantedPosition(x, y, z, speedIn);
       return true;
     }
 
-    public boolean tryMoveToEntityLiving(Entity entityIn, double speedIn) {
-      mob.getMoveHelper().setMoveTo(entityIn.getPosX(), entityIn.getPosY(), entityIn.getPosZ(), speedIn);
+    public boolean moveTo(Entity entityIn, double speedIn) {
+      mob.getMoveControl().setWantedPosition(entityIn.getX(), entityIn.getY(), entityIn.getZ(), speedIn);
       return true;
     }
   }
@@ -401,29 +403,29 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IA
 
     public RandomFlyGoal(BeehemothEntity mosquito) {
       this.parentEntity = mosquito;
-      this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE));
+      this.setFlags(EnumSet.of(Goal.Flag.MOVE));
     }
 
-    public boolean shouldExecute() {
-      MovementController movementcontroller = this.parentEntity.getMoveHelper();
+    public boolean canUse() {
+      MovementController movementcontroller = this.parentEntity.getMoveControl();
       if (parentEntity.stopWandering || parentEntity.hasItemTarget) {
         return false;
       }
-      if (!movementcontroller.isUpdating() || target == null) {
+      if (!movementcontroller.hasWanted() || target == null) {
         target = getBlockInViewBeehemoth();
         if (target != null) {
-          this.parentEntity.getMoveHelper().setMoveTo(target.getX() + 0.5D, target.getY() + 0.5D, target.getZ() + 0.5D, 1.0D);
+          this.parentEntity.getMoveControl().setWantedPosition(target.getX() + 0.5D, target.getY() + 0.5D, target.getZ() + 0.5D, 1.0D);
         }
         return true;
       }
       return false;
     }
 
-    public boolean shouldContinueExecuting() {
-      return target != null && !parentEntity.stopWandering && !parentEntity.hasItemTarget && parentEntity.getDistanceSq(Vector3d.copyCentered(target)) > 2.4D && parentEntity.getMoveHelper().isUpdating() && !parentEntity.collidedHorizontally;
+    public boolean canContinueToUse() {
+      return target != null && !parentEntity.stopWandering && !parentEntity.hasItemTarget && parentEntity.distanceToSqr(Vector3d.atCenterOf(target)) > 2.4D && parentEntity.getMoveControl().hasWanted() && !parentEntity.horizontalCollision;
     }
 
-    public void resetTask() {
+    public void stop() {
       target = null;
     }
 
@@ -432,24 +434,24 @@ public class BeehemothEntity extends TameableEntity implements IFlyingAnimal, IA
         target = getBlockInViewBeehemoth();
       }
       if (target != null) {
-        this.parentEntity.getMoveHelper().setMoveTo(target.getX() + 0.5D, target.getY() + 0.5D, target.getZ() + 0.5D, 1.0D);
-        if (parentEntity.getDistanceSq(Vector3d.copyCentered(target)) < 2.5F) {
+        this.parentEntity.getMoveControl().setWantedPosition(target.getX() + 0.5D, target.getY() + 0.5D, target.getZ() + 0.5D, 1.0D);
+        if (parentEntity.distanceToSqr(Vector3d.atCenterOf(target)) < 2.5F) {
           target = null;
         }
       }
     }
 
     public BlockPos getBlockInViewBeehemoth() {
-      float radius = 1 + parentEntity.getRNG().nextInt(5);
-      float neg = parentEntity.getRNG().nextBoolean() ? 1 : -1;
-      float renderYawOffset = parentEntity.renderYawOffset;
-      float angle = (0.01745329251F * renderYawOffset) + 3.15F + (parentEntity.getRNG().nextFloat() * neg);
+      float radius = 1 + parentEntity.getRandom().nextInt(5);
+      float neg = parentEntity.getRandom().nextBoolean() ? 1 : -1;
+      float renderYawOffset = parentEntity.yBodyRot;
+      float angle = (0.01745329251F * renderYawOffset) + 3.15F + (parentEntity.getRandom().nextFloat() * neg);
       double extraX = radius * MathHelper.sin((float) (Math.PI + angle));
       double extraZ = radius * MathHelper.cos(angle);
-      BlockPos radialPos = new BlockPos(parentEntity.getPosX() + extraX, parentEntity.getPosY() + 2, parentEntity.getPosZ() + extraZ);
+      BlockPos radialPos = new BlockPos(parentEntity.getX() + extraX, parentEntity.getY() + 2, parentEntity.getZ() + extraZ);
       BlockPos ground = parentEntity.getGroundPosition(radialPos);
-      BlockPos newPos = ground.up(1 + parentEntity.getRNG().nextInt(6));
-      if (!parentEntity.isTargetBlocked(Vector3d.copyCentered(newPos)) && parentEntity.getDistanceSq(Vector3d.copyCentered(newPos)) > 6) {
+      BlockPos newPos = ground.above(1 + parentEntity.getRandom().nextInt(6));
+      if (!parentEntity.isTargetBlocked(Vector3d.atCenterOf(newPos)) && parentEntity.distanceToSqr(Vector3d.atCenterOf(newPos)) > 6) {
         return newPos;
       }
       return null;

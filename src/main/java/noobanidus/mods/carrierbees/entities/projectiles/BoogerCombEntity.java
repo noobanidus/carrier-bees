@@ -54,47 +54,47 @@ public class BoogerCombEntity extends HoneyCombEntity {
   }
 
   @Override
-  protected IParticleData getParticle() {
+  protected IParticleData getTrailParticle() {
     return ModParticles.FALLING_BOOGER.get();
   }
 
   @Override
-  protected void onImpact(RayTraceResult ray) {
+  protected void onHit(RayTraceResult ray) {
     RayTraceResult.Type raytraceresult$type = ray.getType();
     if (raytraceresult$type == RayTraceResult.Type.ENTITY) {
-      this.onEntityHit((EntityRayTraceResult) ray);
+      this.onHitEntity((EntityRayTraceResult) ray);
     } else if (raytraceresult$type == RayTraceResult.Type.BLOCK) {
-      this.func_230299_a_((BlockRayTraceResult) ray);
+      this.onHitBlock((BlockRayTraceResult) ray);
     }
-    if (!world.isRemote()) {
+    if (!level.isClientSide()) {
       if (ray.getType() == RayTraceResult.Type.ENTITY) {
         EntityRayTraceResult ray2 = (EntityRayTraceResult) ray;
         Entity entity = ray2.getEntity();
-        Entity shootingEntity = this.func_234616_v_();
+        Entity shootingEntity = this.getOwner();
         if ((entity != this || entity != shootingEntity) && entity instanceof LivingEntity && !(entity instanceof IAppleBee) && !(entity instanceof BeeEntity)) {
           LivingEntity living = (LivingEntity) ray2.getEntity();
           DamageSource source;
           if (shootingEntity instanceof LivingEntity) {
-            source = DamageSource.causeMobDamage((LivingEntity) shootingEntity).setMagicDamage();
+            source = DamageSource.mobAttack((LivingEntity) shootingEntity).setMagic();
           } else {
             source = DamageSource.MAGIC;
           }
-          living.attackEntityFrom(source, ConfigManager.getHoneycombDamage(shootingEntity));
+          living.hurt(source, ConfigManager.getHoneycombDamage(shootingEntity));
           double val = ConfigManager.getHoneycombSize();
-          List<LivingEntity> list = this.world.getEntitiesWithinAABBExcludingEntity(living, this.getBoundingBox().grow(val, val, val)).stream().filter(o -> o instanceof LivingEntity).map(o -> (LivingEntity) o).collect(Collectors.toList());
-          world.addParticle(ModParticles.FALLING_BOOGER.get(), living.getPosX(), living.getPosY(), living.getPosZ(), 0, 0, 0);
-          world.playSound(null, this.getPosition(), ModSounds.SPLOOSH.get(), SoundCategory.HOSTILE, 1f, 0.5f);
+          List<LivingEntity> list = this.level.getEntities(living, this.getBoundingBox().inflate(val, val, val)).stream().filter(o -> o instanceof LivingEntity).map(o -> (LivingEntity) o).collect(Collectors.toList());
+          level.addParticle(ModParticles.FALLING_BOOGER.get(), living.getX(), living.getY(), living.getZ(), 0, 0, 0);
+          level.playSound(null, this.blockPosition(), ModSounds.SPLOOSH.get(), SoundCategory.HOSTILE, 1f, 0.5f);
           for (LivingEntity l : list) {
             if (l == shootingEntity || l instanceof AppleBeeEntity || l instanceof BeeEntity) {
               continue;
             }
-            l.attackEntityFrom(source, ConfigManager.getHoneycombDamage(shootingEntity));
-            world.addParticle(ModParticles.FALLING_BOOGER.get(), l.getPosX(), l.getPosY(), l.getPosZ(), 0, 0, 0);
+            l.hurt(source, ConfigManager.getHoneycombDamage(shootingEntity));
+            level.addParticle(ModParticles.FALLING_BOOGER.get(), l.getX(), l.getY(), l.getZ(), 0, 0, 0);
           }
         }
       }
     }
-    if (!world.isRemote) {
+    if (!level.isClientSide) {
       this.remove();
     }
   }

@@ -13,10 +13,10 @@ public class ExplosiveEffect extends InstantEffect implements IBeeEffect {
   }
 
   @Override
-  public void performEffect(LivingEntity entity, int amplifier) {
+  public void applyEffectTick(LivingEntity entity, int amplifier) {
     if (entity instanceof PlayerEntity) {
       PlayerEntity player = (PlayerEntity) entity;
-      player.world.createExplosion(player, DamageSource.causeExplosionDamage(player), null, player.getPosX(), player.getPosY(), player.getPosZ(), 2.0F, false, Explosion.Mode.BREAK);
+      player.level.explode(player, DamageSource.explosion(player), null, player.getX(), player.getY(), player.getZ(), 2.0F, false, Explosion.Mode.BREAK);
     }
   }
 }

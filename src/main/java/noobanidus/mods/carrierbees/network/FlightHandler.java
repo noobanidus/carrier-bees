@@ -6,7 +6,7 @@ import noobanidus.mods.carrierbees.entities.BeehemothEntity;
 
 public class FlightHandler {
   public static boolean isFlying(PlayerEntity player) {
-    Entity lowest = player.getLowestRidingEntity();
+    Entity lowest = player.getRootVehicle();
     return lowest instanceof BeehemothEntity && lowest.getControllingPassenger() == player;
 
   }

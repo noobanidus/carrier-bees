@@ -20,12 +20,12 @@ public class KeybindHandler {
   private static void tickEnd() {
     Minecraft mc = Minecraft.getInstance();
     if (mc.player != null) {
-      boolean flyState = mc.player.movementInput.jump;
-      boolean descendState = mc.player.movementInput.sneaking;
-      boolean forwardState = mc.player.movementInput.forwardKeyDown;
-      boolean backwardState = mc.player.movementInput.backKeyDown;
-      boolean leftState = mc.player.movementInput.leftKeyDown;
-      boolean rightState = mc.player.movementInput.rightKeyDown;
+      boolean flyState = mc.player.input.jumping;
+      boolean descendState = mc.player.input.shiftKeyDown;
+      boolean forwardState = mc.player.input.up;
+      boolean backwardState = mc.player.input.down;
+      boolean leftState = mc.player.input.left;
+      boolean rightState = mc.player.input.right;
       if (flyState != lastFlyState || descendState != lastDescendState || forwardState != lastForwardState || backwardState != lastBackwardState || leftState != lastLeftState || rightState != lastRightState) {
         lastFlyState = flyState;
         lastDescendState = descendState;

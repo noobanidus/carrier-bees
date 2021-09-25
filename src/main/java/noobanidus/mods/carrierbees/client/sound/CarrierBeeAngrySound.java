@@ -11,8 +11,8 @@ import noobanidus.mods.carrierbees.entities.IAppleBee;
 @OnlyIn(Dist.CLIENT)
 public class CarrierBeeAngrySound<T extends AnimalEntity & IAppleBee> extends CarrierBeeSound<T> {
   public CarrierBeeAngrySound(T p_i226058_1_) {
-    super(p_i226058_1_, SoundEvents.ENTITY_BEE_LOOP_AGGRESSIVE, SoundCategory.NEUTRAL);
-    this.repeatDelay = 0;
+    super(p_i226058_1_, SoundEvents.BEE_LOOP_AGGRESSIVE, SoundCategory.NEUTRAL);
+    this.delay = 0;
   }
 
   protected TickableSound getNextSound() {

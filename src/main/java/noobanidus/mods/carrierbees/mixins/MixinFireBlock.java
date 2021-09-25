@@ -25,22 +25,22 @@ import java.util.Random;
 public class MixinFireBlock {
   @Inject(method = "Lnet/minecraft/block/FireBlock;tick(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/server/ServerWorld;Lnet/minecraft/util/math/BlockPos;Ljava/util/Random;)V", at = @At(value = "HEAD"), require = 1)
   public void fireTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand, CallbackInfo info) {
-    if (worldIn.isRemote) {
+    if (worldIn.isClientSide) {
       return;
     }
-    if (!worldIn.getDimensionKey().equals(World.OVERWORLD)) {
+    if (!worldIn.dimension().equals(World.OVERWORLD)) {
       return;
     }
-    if (worldIn.getBlockState(pos.down()).isFireSource(worldIn, pos.down(), Direction.UP)) {
+    if (worldIn.getBlockState(pos.below()).isFireSource(worldIn, pos.below(), Direction.UP)) {
       return;
     }
-    if (ConfigManager.getDrabblebeeChance() != -1 && worldIn.rand.nextDouble() < ConfigManager.getDrabblebeeChance()) {
-      AxisAlignedBB box = DrabbleBeeEntity.FIRE_SEARCH.offset(pos);
-      List<DrabbleBeeEntity> entities = worldIn.getEntitiesWithinAABB(DrabbleBeeEntity.class, box);
+    if (ConfigManager.getDrabblebeeChance() != -1 && worldIn.random.nextDouble() < ConfigManager.getDrabblebeeChance()) {
+      AxisAlignedBB box = DrabbleBeeEntity.FIRE_SEARCH.move(pos);
+      List<DrabbleBeeEntity> entities = worldIn.getEntitiesOfClass(DrabbleBeeEntity.class, box);
       if (entities.size() <= 3) {
-        for (BlockPos spot : BlockPos.getAllInBoxMutable((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.maxX, (int) box.maxY, (int) box.maxZ)) {
-          if (spot.distanceSq(pos) < 1.5) {
-            if (worldIn.isAirBlock(spot)) {
+        for (BlockPos spot : BlockPos.betweenClosed((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.maxX, (int) box.maxY, (int) box.maxZ)) {
+          if (spot.distSqr(pos) < 1.5) {
+            if (worldIn.isEmptyBlock(spot)) {
               Entity entity = ModEntities.DRABBLE_BEE.get().spawn(worldIn, null, null, spot, SpawnReason.TRIGGERED, true, true);
               if (entity instanceof DrabbleBeeEntity) {
                 ((DrabbleBeeEntity) entity).setTTL(60 * 20 + (rand.nextInt(30) * 20));

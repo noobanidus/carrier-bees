@@ -40,7 +40,7 @@ public class MixinClientWorld {
         beeSound = new CarrierBeeFlightSound<>((DrabbleBeeEntity) entityToSpawn);
       }
       if (beeSound != null) {
-        Minecraft.getInstance().getSoundHandler().playOnNextTick(beeSound);
+        Minecraft.getInstance().getSoundManager().queueTickingSound(beeSound);
       }
     }
   }

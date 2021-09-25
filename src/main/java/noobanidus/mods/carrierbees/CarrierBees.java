@@ -38,7 +38,7 @@ public class CarrierBees {
 
   public static ItemGroup GROUP = new ItemGroup(MODID) {
     @Override
-    public ItemStack createIcon() {
+    public ItemStack makeIcon() {
       return new ItemStack(Blocks.HONEYCOMB_BLOCK);
     }
   };

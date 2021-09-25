@@ -24,7 +24,7 @@ public class JumbleBeeEntity extends AppleBeeEntity {
   }
 
   public static AttributeModifierMap.MutableAttribute createAttributes() {
-    return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 8.0D).createMutableAttribute(Attributes.FLYING_SPEED, 0.4).createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.3).createMutableAttribute(Attributes.ATTACK_DAMAGE, 4.0D).createMutableAttribute(Attributes.FOLLOW_RANGE, 128.0D);
+    return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 8.0D).add(Attributes.FLYING_SPEED, 0.4).add(Attributes.MOVEMENT_SPEED, 0.3).add(Attributes.ATTACK_DAMAGE, 4.0D).add(Attributes.FOLLOW_RANGE, 128.0D);
   }
 
   static class HoneycombProjectileAttackGoal extends Goal {
@@ -36,43 +36,43 @@ public class JumbleBeeEntity extends AppleBeeEntity {
     }
 
     @Override
-    public boolean shouldExecute() {
-      return this.parentEntity.getAttackTarget() != null && this.parentEntity.isAngry();
+    public boolean canUse() {
+      return this.parentEntity.getTarget() != null && this.parentEntity.isAngry();
     }
 
     @Override
-    public void startExecuting() {
+    public void start() {
       this.attackTimer = 0;
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
+    public boolean canContinueToUse() {
       return this.parentEntity.isAngry();
     }
 
     @Override
-    public void resetTask() {
-      this.parentEntity.setAttackTarget(null);
-      this.parentEntity.setAggroed(false);
-      this.parentEntity.getNavigator().clearPath();
+    public void stop() {
+      this.parentEntity.setTarget(null);
+      this.parentEntity.setAggressive(false);
+      this.parentEntity.getNavigation().stop();
     }
 
     @Override
     public void tick() {
-      LivingEntity livingentity = this.parentEntity.getAttackTarget();
+      LivingEntity livingentity = this.parentEntity.getTarget();
       if (livingentity == null) {
         return;
       }
-      if (livingentity.getDistanceSq(this.parentEntity) < 400D && this.parentEntity.canEntityBeSeen(livingentity)) {
-        World world = this.parentEntity.world;
+      if (livingentity.distanceToSqr(this.parentEntity) < 400D && this.parentEntity.canSee(livingentity)) {
+        World world = this.parentEntity.level;
         ++this.attackTimer;
         if (this.attackTimer == 20) {
-          double d2 = livingentity.getPosX() - this.parentEntity.getPosX();
-          double d3 = livingentity.getPosYHeight(0.5D) - (0.5D + this.parentEntity.getPosYHeight(0.5D));
-          double d4 = livingentity.getPosZ() - this.parentEntity.getPosZ();
+          double d2 = livingentity.getX() - this.parentEntity.getX();
+          double d3 = livingentity.getY(0.5D) - (0.5D + this.parentEntity.getY(0.5D));
+          double d4 = livingentity.getZ() - this.parentEntity.getZ();
           JumbleCombEntity honeycomb = new JumbleCombEntity(this.parentEntity, d2, d3, d4, world);
-          honeycomb.setPosition(this.parentEntity.getPosX(), this.parentEntity.getPosYHeight(0.5D) + 0.2D, honeycomb.getPosZ());
-          world.addEntity(honeycomb);
+          honeycomb.setPos(this.parentEntity.getX(), this.parentEntity.getY(0.5D) + 0.2D, honeycomb.getZ());
+          world.addFreshEntity(honeycomb);
           this.attackTimer = -40;
         }
       } else if (this.attackTimer > 0) {

@@ -9,7 +9,7 @@ public class TumbleEffect extends Effect implements IBeeEffect {
   }
 
   @Override
-  public boolean isReady(int p_76397_1_, int p_76397_2_) {
+  public boolean isDurationEffectTick(int pDuration, int pAmplifier) {
     return true;
   }
 }

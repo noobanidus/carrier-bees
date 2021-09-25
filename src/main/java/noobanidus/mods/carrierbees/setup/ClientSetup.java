@@ -21,7 +21,7 @@ public class ClientSetup {
   public static void setup(FMLClientSetupEvent event) {
     event.enqueueWork(() -> {
       Minecraft mc = event.getMinecraftSupplier().get();
-      EntityRendererManager manager = mc.getRenderManager();
+      EntityRendererManager manager = mc.getEntityRenderDispatcher();
       manager.register(ModEntities.CARRIER_BEE.get(), new CarrierBeeRenderer(manager));
       manager.register(ModEntities.FUMBLE_BEE.get(), new CarrierBeeRenderer(manager));
       manager.register(ModEntities.BOMBLE_BEE.get(), new CarrierBeeRenderer(manager));

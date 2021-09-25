@@ -43,14 +43,14 @@ public class HoneyCombEntity extends DamagingProjectileEntity implements IEntity
 
   @Nullable
   public EffectInstance getInstance() {
-    return new EffectInstance(Effects.SLOWNESS, 2, ConfigManager.getHoneycombSlow());
+    return new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 2, ConfigManager.getHoneycombSlow());
   }
 
   @Override
   public void tick() {
     super.tick();
 
-    if (!world.isRemote && this.ticksExisted > 30 * 20) {
+    if (!level.isClientSide && this.tickCount > 30 * 20) {
       this.remove();
     }
   }
@@ -73,91 +73,91 @@ public class HoneyCombEntity extends DamagingProjectileEntity implements IEntity
   }
 
   @Override
-  protected IParticleData getParticle() {
+  protected IParticleData getTrailParticle() {
     return ParticleTypes.FALLING_HONEY;
   }
 
   @Override
-  protected boolean isFireballFiery() {
+  protected boolean shouldBurn() {
     return false;
   }
 
   @Override
-  protected void onImpact(RayTraceResult ray) {
-    super.onImpact(ray);
-    if (!world.isRemote()) {
+  protected void onHit(RayTraceResult ray) {
+    super.onHit(ray);
+    if (!level.isClientSide()) {
       if (ray.getType() == RayTraceResult.Type.ENTITY) {
         EntityRayTraceResult ray2 = (EntityRayTraceResult) ray;
         Entity entity = ray2.getEntity();
-        Entity shootingEntity = this.func_234616_v_();
+        Entity shootingEntity = this.getOwner();
         if ((entity != this || entity != shootingEntity) && entity instanceof LivingEntity && !(entity instanceof IAppleBee) && !(entity instanceof BeeEntity)) {
           LivingEntity living = (LivingEntity) ray2.getEntity();
           EffectInstance instance = getInstance();
           if (instance != null) {
-            living.addPotionEffect(instance);
+            living.addEffect(instance);
           }
           DamageSource source;
           if (shootingEntity instanceof LivingEntity) {
-            source = DamageSource.causeMobDamage((LivingEntity) shootingEntity).setMagicDamage();
+            source = DamageSource.mobAttack((LivingEntity) shootingEntity).setMagic();
           } else {
             source = DamageSource.MAGIC;
           }
           float damage = ConfigManager.getHoneycombDamage(shootingEntity);
           if (damage > 0) {
-            living.attackEntityFrom(source, damage);
+            living.hurt(source, damage);
           }
           double val = ConfigManager.getHoneycombSize();
-          List<LivingEntity> list = this.world.getEntitiesWithinAABBExcludingEntity(living, this.getBoundingBox().grow(val, val, val)).stream().filter(o -> o instanceof LivingEntity).map(o -> (LivingEntity) o).collect(Collectors.toList());
-          world.addParticle(ParticleTypes.FALLING_HONEY, living.getPosX(), living.getPosY(), living.getPosZ(), 0, 0, 0);
-          world.playSound(null, this.getPosition(), ModSounds.SPLOOSH.get(), SoundCategory.HOSTILE, 1f, 0.5f);
+          List<LivingEntity> list = this.level.getEntities(living, this.getBoundingBox().inflate(val, val, val)).stream().filter(o -> o instanceof LivingEntity).map(o -> (LivingEntity) o).collect(Collectors.toList());
+          level.addParticle(ParticleTypes.FALLING_HONEY, living.getX(), living.getY(), living.getZ(), 0, 0, 0);
+          level.playSound(null, this.blockPosition(), ModSounds.SPLOOSH.get(), SoundCategory.HOSTILE, 1f, 0.5f);
           for (LivingEntity l : list) {
             if (l == shootingEntity || l instanceof IAppleBee || l instanceof BeeEntity) {
               continue;
             }
             if (instance != null) {
-              l.addPotionEffect(instance);
+              l.addEffect(instance);
             }
             if (damage > 0) {
-              l.attackEntityFrom(source, damage);
+              l.hurt(source, damage);
             }
-            world.addParticle(ParticleTypes.FALLING_HONEY, l.getPosX(), l.getPosY(), l.getPosZ(), 0, 0, 0);
+            level.addParticle(ParticleTypes.FALLING_HONEY, l.getX(), l.getY(), l.getZ(), 0, 0, 0);
           }
         }
       }
     }
-    if (!world.isRemote) {
+    if (!level.isClientSide) {
       this.remove();
     }
   }
 
   @Override
-  public IPacket<?> createSpawnPacket() {
+  public IPacket<?> getAddEntityPacket() {
     return NetworkHooks.getEntitySpawningPacket(this);
   }
 
   @Override
   public void writeSpawnData(PacketBuffer buffer) {
-    buffer.writeDouble(accelerationX);
-    buffer.writeDouble(accelerationY);
-    buffer.writeDouble(accelerationZ);
+    buffer.writeDouble(xPower);
+    buffer.writeDouble(yPower);
+    buffer.writeDouble(zPower);
   }
 
   @Override
   public void readSpawnData(PacketBuffer additionalData) {
-    accelerationX = additionalData.readDouble();
-    accelerationY = additionalData.readDouble();
-    accelerationZ = additionalData.readDouble();
+    xPower = additionalData.readDouble();
+    yPower = additionalData.readDouble();
+    zPower = additionalData.readDouble();
   }
 
   @OnlyIn(Dist.CLIENT)
   @Override
-  public void handleStatusUpdate(byte id) {
+  public void handleEntityEvent(byte id) {
     if (id == 3) {
       for (int i = 0; i < 8; ++i) {
-        this.world.addParticle(new ItemParticleData(ParticleTypes.ITEM, getItem()), false, this.getPosX(), this.getPosY(), this.getPosZ(), 0.0D, 0.0D, 0.0D);
+        this.level.addParticle(new ItemParticleData(ParticleTypes.ITEM, getItem()), false, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
       }
     } else {
-      super.handleStatusUpdate(id);
+      super.handleEntityEvent(id);
     }
   }
 }

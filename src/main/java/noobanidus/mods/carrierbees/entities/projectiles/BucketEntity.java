@@ -45,18 +45,18 @@ public class BucketEntity extends DamagingProjectileEntity implements IEntityAdd
 
   @Override
   public void tick() {
-    if (!world.isRemote && world.getBlockState(getPosition()).getBlock() == Blocks.FIRE) {
-      removeFire(world, getPosition());
+    if (!level.isClientSide && level.getBlockState(blockPosition()).getBlock() == Blocks.FIRE) {
+      removeFire(level, blockPosition());
       this.remove();
     }
 
     super.tick();
 
     for (int i = 0; i < 8; i++) {
-      world.addParticle(ParticleTypes.SPLASH, getPosX() + world.rand.nextDouble() - 0.5, getPosY() + world.rand.nextFloat() - 0.5, getPosZ() + world.rand.nextDouble() - 0.5, accelerationX, accelerationY, accelerationZ);
+      level.addParticle(ParticleTypes.SPLASH, getX() + level.random.nextDouble() - 0.5, getY() + level.random.nextFloat() - 0.5, getZ() + level.random.nextDouble() - 0.5, xPower, yPower, zPower);
     }
 
-    if (!world.isRemote && this.ticksExisted > 30 * 20) {
+    if (!level.isClientSide && this.tickCount > 30 * 20) {
       this.remove();
     }
   }
@@ -71,21 +71,21 @@ public class BucketEntity extends DamagingProjectileEntity implements IEntityAdd
   }
 
   @Override
-  protected IParticleData getParticle() {
+  protected IParticleData getTrailParticle() {
     return ParticleTypes.SPLASH;
   }
 
   @Override
-  protected boolean isFireballFiery() {
+  protected boolean shouldBurn() {
     return false;
   }
 
   @Nullable
   private BlockPos firePosition(World world, BlockPos pos) {
-    for (BlockPos possible : BlockPos.getAllInBoxMutable(pos.getX() - 2, pos.getY() - 2, pos.getZ() - 2, pos.getX() + 2, pos.getY() + 2, pos.getZ() + 2)) {
+    for (BlockPos possible : BlockPos.betweenClosed(pos.getX() - 2, pos.getY() - 2, pos.getZ() - 2, pos.getX() + 2, pos.getY() + 2, pos.getZ() + 2)) {
       if (world.getBlockState(possible).getBlock() == Blocks.FIRE) {
-        if (!world.getBlockState(possible.down()).isFireSource(world, possible.down(), Direction.UP)) {
-          return possible.toImmutable();
+        if (!world.getBlockState(possible.below()).isFireSource(world, possible.below(), Direction.UP)) {
+          return possible.immutable();
         }
       }
     }
@@ -94,61 +94,61 @@ public class BucketEntity extends DamagingProjectileEntity implements IEntityAdd
 
   private void removeFire(World world, BlockPos firePos) {
     world.removeBlock(firePos, false);
-    world.playSound(null, firePos, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.NEUTRAL, 1, 1);
+    world.playSound(null, firePos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundCategory.NEUTRAL, 1, 1);
     for (int i = 0; i < 5; i++) {
-      world.addParticle(ParticleTypes.SPLASH, firePos.getX() + 0.5 + world.rand.nextFloat() - 0.5, firePos.getY() + 0.5 + world.rand.nextFloat() - 0.5, firePos.getZ() + 0.5 + world.rand.nextFloat() - 0.5, 0, 0, 0);
+      world.addParticle(ParticleTypes.SPLASH, firePos.getX() + 0.5 + world.random.nextFloat() - 0.5, firePos.getY() + 0.5 + world.random.nextFloat() - 0.5, firePos.getZ() + 0.5 + world.random.nextFloat() - 0.5, 0, 0, 0);
     }
   }
 
   @Override
-  protected void onImpact(RayTraceResult ray) {
-    super.onImpact(ray);
-    if (!world.isRemote()) {
+  protected void onHit(RayTraceResult ray) {
+    super.onHit(ray);
+    if (!level.isClientSide()) {
       if (ray.getType() == RayTraceResult.Type.BLOCK) {
         BlockRayTraceResult blockTrace = (BlockRayTraceResult) ray;
-        BlockPos firePos = this.firePosition(world, blockTrace.getPos());
+        BlockPos firePos = this.firePosition(level, blockTrace.getBlockPos());
         if (firePos != null) {
-          removeFire(world, firePos);
+          removeFire(level, firePos);
         }
       }
     }
-    if (!world.isRemote) {
+    if (!level.isClientSide) {
       this.remove();
     }
   }
 
   @Override
-  public void setFire(int seconds) {
+  public void setSecondsOnFire(int seconds) {
   }
 
   @Override
-  public IPacket<?> createSpawnPacket() {
+  public IPacket<?> getAddEntityPacket() {
     return NetworkHooks.getEntitySpawningPacket(this);
   }
 
   @Override
   public void writeSpawnData(PacketBuffer buffer) {
-    buffer.writeDouble(accelerationX);
-    buffer.writeDouble(accelerationY);
-    buffer.writeDouble(accelerationZ);
+    buffer.writeDouble(xPower);
+    buffer.writeDouble(yPower);
+    buffer.writeDouble(zPower);
   }
 
   @Override
   public void readSpawnData(PacketBuffer additionalData) {
-    accelerationX = additionalData.readDouble();
-    accelerationY = additionalData.readDouble();
-    accelerationZ = additionalData.readDouble();
+    xPower = additionalData.readDouble();
+    yPower = additionalData.readDouble();
+    zPower = additionalData.readDouble();
   }
 
   @OnlyIn(Dist.CLIENT)
   @Override
-  public void handleStatusUpdate(byte id) {
+  public void handleEntityEvent(byte id) {
     if (id == 3) {
       for (int i = 0; i < 8; ++i) {
-        this.world.addParticle(new ItemParticleData(ParticleTypes.ITEM, getItem()), false, this.getPosX(), this.getPosY(), this.getPosZ(), 0.0D, 0.0D, 0.0D);
+        this.level.addParticle(new ItemParticleData(ParticleTypes.ITEM, getItem()), false, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
       }
     } else {
-      super.handleStatusUpdate(id);
+      super.handleEntityEvent(id);
     }
   }
 }

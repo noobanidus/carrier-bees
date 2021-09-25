@@ -17,18 +17,18 @@ public class DrumbleEffect extends Effect implements IBeeEffect {
   }
 
   @Override
-  public boolean isReady(int p_76397_1_, int p_76397_2_) {
+  public boolean isDurationEffectTick(int pDuration, int pAmplifier) {
     return true;
   }
 
   @Override
-  public void performEffect(LivingEntity entity, int amplifier) {
+  public void applyEffectTick(LivingEntity entity, int amplifier) {
     if (rand.nextInt(8) == 0) {
-      entity.world.addParticle(ParticleTypes.END_ROD, entity.getPosXRandom(1.0), entity.getPosYRandom() + 0.5, entity.getPosZRandom(1.0), 0, 0, 0);
+      entity.level.addParticle(ParticleTypes.END_ROD, entity.getRandomX(1.0), entity.getRandomY() + 0.5, entity.getRandomZ(1.0), 0, 0, 0);
     }
-    if (!entity.world.isRemote && rand.nextInt(30) == 0) {
-      if (entity.getActivePotionEffect(Effects.SLOWNESS) == null) {
-        entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 15, 10, false, false, true));
+    if (!entity.level.isClientSide && rand.nextInt(30) == 0) {
+      if (entity.getEffect(Effects.MOVEMENT_SLOWDOWN) == null) {
+        entity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 15, 10, false, false, true));
       }
     }
   }

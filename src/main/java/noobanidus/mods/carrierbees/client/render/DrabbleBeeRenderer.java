@@ -22,7 +22,7 @@ public class DrabbleBeeRenderer extends MobRenderer<DrabbleBeeEntity, DrabbleBee
     this.addLayer(new BeeHeldItemLayer<>(this));
   }
 
-  public ResourceLocation getEntityTexture(DrabbleBeeEntity p_110775_1_) {
+  public ResourceLocation getTextureLocation(DrabbleBeeEntity pEntity) {
     return DRABBLE;
 }
 }

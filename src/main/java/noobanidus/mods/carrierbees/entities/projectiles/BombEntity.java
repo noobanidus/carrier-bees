@@ -43,7 +43,7 @@ public class BombEntity extends DamagingProjectileEntity implements IEntityAddit
   }
 
   @Override
-  protected IParticleData getParticle() {
+  protected IParticleData getTrailParticle() {
     return new ItemParticleData(ParticleTypes.ITEM, getItem());
   }
 
@@ -51,7 +51,7 @@ public class BombEntity extends DamagingProjectileEntity implements IEntityAddit
   public void tick() {
     super.tick();
 
-    if (!world.isRemote && this.ticksExisted > 30 * 20) {
+    if (!level.isClientSide && this.tickCount > 30 * 20) {
       this.remove();
     }
   }
@@ -62,56 +62,56 @@ public class BombEntity extends DamagingProjectileEntity implements IEntityAddit
   }
 
   @Override
-  protected boolean isFireballFiery() {
+  protected boolean shouldBurn() {
     return false;
   }
 
   @Override
-  protected void onImpact(RayTraceResult ray) {
-    super.onImpact(ray);
-    if (!world.isRemote) {
+  protected void onHit(RayTraceResult ray) {
+    super.onHit(ray);
+    if (!level.isClientSide) {
       if (ray instanceof EntityRayTraceResult) {
         EntityRayTraceResult eray = (EntityRayTraceResult) ray;
         Entity entity = eray.getEntity();
-        if (entity != this && entity != this.func_234616_v_() && !(entity instanceof IAppleBee) && !(entity instanceof BeeEntity) && !(entity instanceof ItemEntity)) {
-          entity.attackEntityFrom(DamageSource.GENERIC, ConfigManager.getExplosionDamage());
+        if (entity != this && entity != this.getOwner() && !(entity instanceof IAppleBee) && !(entity instanceof BeeEntity) && !(entity instanceof ItemEntity)) {
+          entity.hurt(DamageSource.GENERIC, ConfigManager.getExplosionDamage());
         }
       }
     }
-    BeeExplosion.createExplosion(this.world, this, this.getPosX(), this.getPosYHeight(0.0625D), this.getPosZ());
-    if (!world.isRemote) {
+    BeeExplosion.createExplosion(this.level, this, this.getX(), this.getY(0.0625D), this.getZ());
+    if (!level.isClientSide) {
       this.remove();
     }
   }
 
   @Override
-  public IPacket<?> createSpawnPacket() {
+  public IPacket<?> getAddEntityPacket() {
     return NetworkHooks.getEntitySpawningPacket(this);
   }
 
   @Override
   public void writeSpawnData(PacketBuffer buffer) {
-    buffer.writeDouble(accelerationX);
-    buffer.writeDouble(accelerationY);
-    buffer.writeDouble(accelerationZ);
+    buffer.writeDouble(xPower);
+    buffer.writeDouble(yPower);
+    buffer.writeDouble(zPower);
   }
 
   @Override
   public void readSpawnData(PacketBuffer additionalData) {
-    accelerationX = additionalData.readDouble();
-    accelerationY = additionalData.readDouble();
-    accelerationZ = additionalData.readDouble();
+    xPower = additionalData.readDouble();
+    yPower = additionalData.readDouble();
+    zPower = additionalData.readDouble();
   }
 
   @OnlyIn(Dist.CLIENT)
   @Override
-  public void handleStatusUpdate(byte id) {
+  public void handleEntityEvent(byte id) {
     if (id == 3) {
       for (int i = 0; i < 8; ++i) {
-        this.world.addParticle(new ItemParticleData(ParticleTypes.ITEM, getItem()), false, this.getPosX(), this.getPosY(), this.getPosZ(), 0.0D, 0.0D, 0.0D);
+        this.level.addParticle(new ItemParticleData(ParticleTypes.ITEM, getItem()), false, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
       }
     } else {
-      super.handleStatusUpdate(id);
+      super.handleEntityEvent(id);
     }
   }
 }

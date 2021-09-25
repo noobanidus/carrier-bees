@@ -16,27 +16,27 @@ public abstract class CarrierBeeSound<T extends AnimalEntity & IAppleBee> extend
   public CarrierBeeSound(T bee, SoundEvent p_i46532_1_, SoundCategory p_i46532_2_) {
     super(p_i46532_1_, p_i46532_2_);
     this.beeInstance = bee;
-    this.x = bee.getPosX();
-    this.y = bee.getPosY();
-    this.z = bee.getPosZ();
-    this.repeat = true;
-    this.repeatDelay = 0;
+    this.x = bee.getX();
+    this.y = bee.getY();
+    this.z = bee.getZ();
+    this.looping = true;
+    this.delay = 0;
     this.volume = 0.0f;
   }
 
   @Override
   public void tick() {
     Minecraft mc = Minecraft.getInstance();
-    if (this.shouldSwitchSound() && !isDonePlaying()) {
-      mc.getSoundHandler().playOnNextTick(this.getNextSound());
+    if (this.shouldSwitchSound() && !isStopped()) {
+      mc.getSoundManager().queueTickingSound(this.getNextSound());
       this.hasSwitchedSound = true;
     }
 
     if (!this.beeInstance.removed && !this.hasSwitchedSound) {
-      this.x = this.beeInstance.getPosX();
-      this.y = this.beeInstance.getPosY();
-      this.z = this.beeInstance.getPosZ();
-      float dist = MathHelper.sqrt(Entity.horizontalMag(this.beeInstance.getMotion()));
+      this.x = this.beeInstance.getX();
+      this.y = this.beeInstance.getY();
+      this.z = this.beeInstance.getZ();
+      float dist = MathHelper.sqrt(Entity.getHorizontalDistanceSqr(this.beeInstance.getDeltaMovement()));
       if (this.beeInstance.isBeehemoth()) {
         dist *= 100;
       }
@@ -48,31 +48,31 @@ public abstract class CarrierBeeSound<T extends AnimalEntity & IAppleBee> extend
         this.volume = 0.0F;
       }
     } else {
-      this.finishPlaying();
+      this.stop();
     }
   }
 
   private float getMinPitch() {
     if (this.beeInstance.isBeehemoth()) {
-      return this.beeInstance.isChild() ? 0.4F : 0.2F;
+      return this.beeInstance.isBaby() ? 0.4F : 0.2F;
     } else {
-      return this.beeInstance.isChild() ? 1.1F : 0.7F;
+      return this.beeInstance.isBaby() ? 1.1F : 0.7F;
     }
   }
 
   private float getMaxPitch() {
     if (this.beeInstance.isBeehemoth()) {
-      return this.beeInstance.isChild() ? 0.6F : 0.4F;
+      return this.beeInstance.isBaby() ? 0.6F : 0.4F;
     } else {
-      return this.beeInstance.isChild() ? 1.5F : 1.1F;
+      return this.beeInstance.isBaby() ? 1.5F : 1.1F;
     }
   }
 
-  public boolean canBeSilent() {
+  public boolean canStartSilent() {
     return true;
   }
 
-  public boolean shouldPlaySound() {
+  public boolean canPlaySound() {
     return !this.beeInstance.isSilent();
   }
 

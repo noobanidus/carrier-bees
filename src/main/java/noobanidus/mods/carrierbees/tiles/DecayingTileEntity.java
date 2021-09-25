@@ -16,20 +16,20 @@ public class DecayingTileEntity extends TileEntity implements ITickableTileEntit
 
   @Override
   public void tick() {
-    if (world != null && !world.isRemote && decay-- <= 0) {
-      world.setBlockState(pos, Blocks.AIR.getDefaultState());
+    if (level != null && !level.isClientSide && decay-- <= 0) {
+      level.setBlockAndUpdate(worldPosition, Blocks.AIR.defaultBlockState());
     }
   }
 
   @Override
-  public void read(BlockState p_230337_1_, CompoundNBT p_230337_2_) {
+  public void load(BlockState p_230337_1_, CompoundNBT p_230337_2_) {
     this.decay = p_230337_2_.getInt("decay");
-    super.read(p_230337_1_, p_230337_2_);
+    super.load(p_230337_1_, p_230337_2_);
   }
 
   @Override
-  public CompoundNBT write(CompoundNBT p_189515_1_) {
-    CompoundNBT result = super.write(p_189515_1_);
+  public CompoundNBT save(CompoundNBT pCompound) {
+    CompoundNBT result = super.save(pCompound);
     result.putInt("decay", this.decay);
     return result;
   }

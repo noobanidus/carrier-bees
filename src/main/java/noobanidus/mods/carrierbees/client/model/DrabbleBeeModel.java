@@ -33,61 +33,61 @@ public class DrabbleBeeModel<T extends DrabbleBeeEntity> extends BodyModel<T> {
 
   public DrabbleBeeModel() {
     super(false, 24.0F, 0.0F);
-    this.textureWidth = 64;
-    this.textureHeight = 64;
+    this.texWidth = 64;
+    this.texHeight = 64;
     this.body = new ModelRenderer(this);
-    this.body.setRotationPoint(0.0F, 19.0F, 0.0F);
+    this.body.setPos(0.0F, 19.0F, 0.0F);
     this.torso = new ModelRenderer(this, 0, 0);
-    this.torso.setRotationPoint(0.0F, 0.0F, 0.0F);
+    this.torso.setPos(0.0F, 0.0F, 0.0F);
     this.body.addChild(this.torso);
     this.torso.addBox(-3.5F, -4.0F, -5.0F, 7.0F, 7.0F, 10.0F, 0.0F);
     this.stinger = new ModelRenderer(this, 26, 7);
     this.stinger.addBox(0.0F, -1.0F, 5.0F, 0.0F, 1.0F, 2.0F, 0.0F);
     this.torso.addChild(this.stinger);
     this.leftAntenna = new ModelRenderer(this, 2, 0);
-    this.leftAntenna.setRotationPoint(0.0F, -2.0F, -5.0F);
+    this.leftAntenna.setPos(0.0F, -2.0F, -5.0F);
     this.leftAntenna.addBox(1.5F, -2.0F, -3.0F, 1.0F, 2.0F, 3.0F, 0.0F);
     this.rightAntenna = new ModelRenderer(this, 2, 3);
-    this.rightAntenna.setRotationPoint(0.0F, -2.0F, -5.0F);
+    this.rightAntenna.setPos(0.0F, -2.0F, -5.0F);
     this.rightAntenna.addBox(-2.5F, -2.0F, -3.0F, 1.0F, 2.0F, 3.0F, 0.0F);
     this.torso.addChild(this.leftAntenna);
     this.torso.addChild(this.rightAntenna);
     this.rightWing = new ModelRenderer(this, 0, 18);
-    this.rightWing.setRotationPoint(-1.5F, -4.0F, -3.0F);
-    this.rightWing.rotateAngleX = 0.0F;
-    this.rightWing.rotateAngleY = -0.2618F;
-    this.rightWing.rotateAngleZ = 0.0F;
+    this.rightWing.setPos(-1.5F, -4.0F, -3.0F);
+    this.rightWing.xRot = 0.0F;
+    this.rightWing.yRot = -0.2618F;
+    this.rightWing.zRot = 0.0F;
     this.body.addChild(this.rightWing);
     this.rightWing.addBox(-9.0F, 0.0F, 0.0F, 9.0F, 0.0F, 6.0F, 0.001F);
     this.leftWing = new ModelRenderer(this, 0, 18);
-    this.leftWing.setRotationPoint(1.5F, -4.0F, -3.0F);
-    this.leftWing.rotateAngleX = 0.0F;
-    this.leftWing.rotateAngleY = 0.2618F;
-    this.leftWing.rotateAngleZ = 0.0F;
+    this.leftWing.setPos(1.5F, -4.0F, -3.0F);
+    this.leftWing.xRot = 0.0F;
+    this.leftWing.yRot = 0.2618F;
+    this.leftWing.zRot = 0.0F;
     this.leftWing.mirror = true;
     this.body.addChild(this.leftWing);
     this.leftWing.addBox(0.0F, 0.0F, 0.0F, 9.0F, 0.0F, 6.0F, 0.001F);
     this.frontLegs = new ModelRenderer(this);
-    this.frontLegs.setRotationPoint(1.5F, 3.0F, -2.0F);
+    this.frontLegs.setPos(1.5F, 3.0F, -2.0F);
     this.body.addChild(this.frontLegs);
     this.frontLegs.addBox("frontLegBox", -5.0F, 0.0F, 0.0F, 7, 2, 0, 0.0F, 26, 1);
     this.middleLegs = new ModelRenderer(this);
-    this.middleLegs.setRotationPoint(1.5F, 3.0F, 0.0F);
+    this.middleLegs.setPos(1.5F, 3.0F, 0.0F);
     this.body.addChild(this.middleLegs);
     this.middleLegs.addBox("midLegBox", -5.0F, 0.0F, 0.0F, 7, 2, 0, 0.0F, 26, 3);
     this.backLegs = new ModelRenderer(this);
-    this.backLegs.setRotationPoint(1.5F, 3.0F, 2.0F);
+    this.backLegs.setPos(1.5F, 3.0F, 2.0F);
     this.body.addChild(this.backLegs);
     this.backLegs.addBox("backLegBox", -5.0F, 0.0F, 0.0F, 7, 2, 0, 0.0F, 26, 5);
 
     this.hat1 = new ModelRenderer(this, 0, 0);
-    this.hat1.setRotationPoint(0.0F, -4.0F, -5.0F);
+    this.hat1.setPos(0.0F, -4.0F, -5.0F);
     this.hat1.addBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, 0.0F, 0.0F, 0.0F);
     this.hat2 = new ModelRenderer(this, 44, 0);
-    this.hat2.setRotationPoint(0.0F, 0.0F, 0.0F);
+    this.hat2.setPos(0.0F, 0.0F, 0.0F);
     this.hat2.addBox(-2.0F, -3.0F, 0.1F, 4.0F, 2.0F, 4.0F, 0.0F, 0.0F, 0.0F);
     this.hat3 = new ModelRenderer(this, 40, 6);
-    this.hat3.setRotationPoint(0.0F, 0.0F, 0.0F);
+    this.hat3.setPos(0.0F, 0.0F, 0.0F);
     this.hat3.addBox(-3.0F, -1.0F, -0.5F, 6.0F, 1.0F, 6.0F, 0.0F, 0.0F, 0.0F);
     this.body.addChild(this.hat1);
     this.hat1.addChild(this.hat2);
@@ -95,73 +95,73 @@ public class DrabbleBeeModel<T extends DrabbleBeeEntity> extends BodyModel<T> {
   }
 
   @Override
-  public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+  public void renderToBuffer(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
     ImmutableList.of(this.body).forEach((modelRenderer) -> {
       modelRenderer.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
     });
   }
 
-  public void setLivingAnimations(T p_212843_1_, float p_212843_2_, float p_212843_3_, float p_212843_4_) {
-    super.setLivingAnimations(p_212843_1_, p_212843_2_, p_212843_3_, p_212843_4_);
-    this.bodyPitch = p_212843_1_.getBodyPitch(p_212843_4_);
-    this.stinger.showModel = false;
+  public void prepareMobModel(T pEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTick) {
+    super.prepareMobModel(pEntity, pLimbSwing, pLimbSwingAmount, pPartialTick);
+    this.bodyPitch = pEntity.getBodyPitch(pPartialTick);
+    this.stinger.visible = false;
   }
 
-  public void setRotationAngles(T p_225597_1_, float p_225597_2_, float p_225597_3_, float p_225597_4_, float p_225597_5_, float p_225597_6_) {
-    this.rightWing.rotateAngleX = 0.0F;
-    this.leftAntenna.rotateAngleX = 0.0F;
-    this.rightAntenna.rotateAngleX = 0.0F;
-    this.body.rotateAngleX = 0.0F;
-    this.body.rotationPointY = 19.0F;
-    boolean lvt_7_1_ = p_225597_1_.isOnGround() && p_225597_1_.getMotion().lengthSquared() < 1.0E-7D;
+  public void setupAnim(T pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
+    this.rightWing.xRot = 0.0F;
+    this.leftAntenna.xRot = 0.0F;
+    this.rightAntenna.xRot = 0.0F;
+    this.body.xRot = 0.0F;
+    this.body.y = 19.0F;
+    boolean lvt_7_1_ = pEntity.isOnGround() && pEntity.getDeltaMovement().lengthSqr() < 1.0E-7D;
     float lvt_8_2_;
     if (lvt_7_1_) {
-      this.rightWing.rotateAngleY = -0.2618F;
-      this.rightWing.rotateAngleZ = 0.0F;
-      this.leftWing.rotateAngleX = 0.0F;
-      this.leftWing.rotateAngleY = 0.2618F;
-      this.leftWing.rotateAngleZ = 0.0F;
-      this.frontLegs.rotateAngleX = 0.0F;
-      this.middleLegs.rotateAngleX = 0.0F;
-      this.backLegs.rotateAngleX = 0.0F;
+      this.rightWing.yRot = -0.2618F;
+      this.rightWing.zRot = 0.0F;
+      this.leftWing.xRot = 0.0F;
+      this.leftWing.yRot = 0.2618F;
+      this.leftWing.zRot = 0.0F;
+      this.frontLegs.xRot = 0.0F;
+      this.middleLegs.xRot = 0.0F;
+      this.backLegs.xRot = 0.0F;
     } else {
-      lvt_8_2_ = p_225597_4_ * 2.1F;
-      this.rightWing.rotateAngleY = 0.0F;
-      this.rightWing.rotateAngleZ = MathHelper.cos(lvt_8_2_) * 3.1415927F * 0.15F;
-      this.leftWing.rotateAngleX = this.rightWing.rotateAngleX;
-      this.leftWing.rotateAngleY = this.rightWing.rotateAngleY;
-      this.leftWing.rotateAngleZ = -this.rightWing.rotateAngleZ;
-      this.frontLegs.rotateAngleX = 0.7853982F;
-      this.middleLegs.rotateAngleX = 0.7853982F;
-      this.backLegs.rotateAngleX = 0.7853982F;
-      this.body.rotateAngleX = 0.0F;
-      this.body.rotateAngleY = 0.0F;
-      this.body.rotateAngleZ = 0.0F;
+      lvt_8_2_ = pAgeInTicks * 2.1F;
+      this.rightWing.yRot = 0.0F;
+      this.rightWing.zRot = MathHelper.cos(lvt_8_2_) * 3.1415927F * 0.15F;
+      this.leftWing.xRot = this.rightWing.xRot;
+      this.leftWing.yRot = this.rightWing.yRot;
+      this.leftWing.zRot = -this.rightWing.zRot;
+      this.frontLegs.xRot = 0.7853982F;
+      this.middleLegs.xRot = 0.7853982F;
+      this.backLegs.xRot = 0.7853982F;
+      this.body.xRot = 0.0F;
+      this.body.yRot = 0.0F;
+      this.body.zRot = 0.0F;
     }
 
-    this.body.rotateAngleX = 0.0F;
-    this.body.rotateAngleY = 0.0F;
-    this.body.rotateAngleZ = 0.0F;
+    this.body.xRot = 0.0F;
+    this.body.yRot = 0.0F;
+    this.body.zRot = 0.0F;
     if (!lvt_7_1_) {
-      lvt_8_2_ = MathHelper.cos(p_225597_4_ * 0.18F);
-      this.body.rotateAngleX = 0.1F + lvt_8_2_ * 3.1415927F * 0.025F;
-      this.leftAntenna.rotateAngleX = lvt_8_2_ * 3.1415927F * 0.03F;
-      this.rightAntenna.rotateAngleX = lvt_8_2_ * 3.1415927F * 0.03F;
-      this.frontLegs.rotateAngleX = -lvt_8_2_ * 3.1415927F * 0.1F + 0.3926991F;
-      this.backLegs.rotateAngleX = -lvt_8_2_ * 3.1415927F * 0.05F + 0.7853982F;
-      this.body.rotationPointY = 19.0F - MathHelper.cos(p_225597_4_ * 0.18F) * 0.9F;
+      lvt_8_2_ = MathHelper.cos(pAgeInTicks * 0.18F);
+      this.body.xRot = 0.1F + lvt_8_2_ * 3.1415927F * 0.025F;
+      this.leftAntenna.xRot = lvt_8_2_ * 3.1415927F * 0.03F;
+      this.rightAntenna.xRot = lvt_8_2_ * 3.1415927F * 0.03F;
+      this.frontLegs.xRot = -lvt_8_2_ * 3.1415927F * 0.1F + 0.3926991F;
+      this.backLegs.xRot = -lvt_8_2_ * 3.1415927F * 0.05F + 0.7853982F;
+      this.body.y = 19.0F - MathHelper.cos(pAgeInTicks * 0.18F) * 0.9F;
     }
 
     if (this.bodyPitch > 0.0F) {
-      this.body.rotateAngleX = ModelUtils.func_228283_a_(this.body.rotateAngleX, 3.0915928F, this.bodyPitch);
+      this.body.xRot = ModelUtils.rotlerpRad(this.body.xRot, 3.0915928F, this.bodyPitch);
     }
   }
 
-  protected Iterable<ModelRenderer> getHeadParts() {
+  protected Iterable<ModelRenderer> headParts() {
     return ImmutableList.of();
   }
 
-  protected Iterable<ModelRenderer> getBodyParts() {
+  protected Iterable<ModelRenderer> bodyParts() {
     return ImmutableList.of(this.body);
   }
 }
