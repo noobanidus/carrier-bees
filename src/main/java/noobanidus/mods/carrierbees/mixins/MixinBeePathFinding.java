@@ -28,7 +28,7 @@ public class MixinBeePathFinding {
    * @author TelepathicGrunt
    * @reason Make bees not get stuck on ceiling anymore and lag people as a result. (Only applies in Bumblezone dimension)
    */
-  @Inject(method = "Lnet/minecraft/entity/passive/BeeEntity$WanderGoal;startExecuting()V",
+  @Inject(method = "start",
       at = @At(value = "HEAD"),
       cancellable = true,
       require = 1)
